@@ -1,0 +1,179 @@
+{
+  "title": "Gleniff Barytes Mill",
+  "place": "Ballintrillick, Co. Sligo",
+  "credit": "ATU Sligo · Department of Architecture",
+  "staffPin": "1234",
+  "idleSeconds": 180,
+  "cut": {
+    "A": [
+      28,
+      118
+    ],
+    "B": [
+      312,
+      168
+    ],
+    "look": -1,
+    "depth": 60
+  },
+  "maps": [
+    {
+      "id": "osi6",
+      "name": "OSi 6-inch, first edition",
+      "date": "1830s",
+      "file": "exhibition/maps/osi-6inch-1830s.svg",
+      "opacity": 60
+    },
+    {
+      "id": "osi25",
+      "name": "OSi 25-inch",
+      "date": "c. 1900",
+      "file": "exhibition/maps/osi-25inch-1900.svg",
+      "opacity": 80
+    },
+    {
+      "id": "cassini",
+      "name": "Cassini 6-inch",
+      "date": "1930s",
+      "file": "exhibition/maps/cassini-6inch-1930s.svg",
+      "opacity": 50
+    }
+  ],
+  "layers": [
+    {
+      "id": "rivers",
+      "name": "Rivers and streams",
+      "source": "site survey",
+      "color": "#64d2ff",
+      "width": 2.5,
+      "file": "exhibition/layers/rivers.geojson",
+      "crs": "site",
+      "on": true
+    },
+    {
+      "id": "low",
+      "name": "Low ground near the river",
+      "source": "from the lidar",
+      "color": "#0a84ff",
+      "width": 1,
+      "file": "exhibition/layers/low-ground.geojson",
+      "crs": "site"
+    },
+    {
+      "id": "steep",
+      "name": "Steep ground, over 1:4",
+      "source": "from the lidar",
+      "color": "#ff9f0a",
+      "width": 1,
+      "file": "exhibition/layers/steep-ground.geojson",
+      "crs": "site"
+    },
+    {
+      "id": "woodland",
+      "name": "Woodland and tree cover",
+      "source": "from the scan",
+      "color": "#30d158",
+      "width": 1,
+      "file": "exhibition/layers/woodland.geojson",
+      "crs": "site"
+    },
+    {
+      "id": "geology",
+      "name": "Bedrock geology",
+      "source": "GSI",
+      "color": "#bf5af2",
+      "width": 1,
+      "file": "exhibition/layers/geology.geojson",
+      "crs": "auto",
+      "colorBy": ""
+    },
+    {
+      "id": "mill",
+      "name": "Mine and mill workings",
+      "source": "site survey",
+      "color": "#ffd60a",
+      "width": 1.5,
+      "file": "exhibition/layers/mill.geojson",
+      "crs": "site"
+    },
+    {
+      "id": "sac",
+      "name": "Protected habitat (SAC)",
+      "source": "NPWS",
+      "color": "#5ac8a8",
+      "width": 1.5,
+      "file": "exhibition/layers/habitat-sac.geojson",
+      "crs": "auto"
+    },
+    {
+      "id": "archaeology",
+      "name": "Archaeology and monuments",
+      "source": "National Monuments Service",
+      "color": "#ff6482",
+      "width": 2.5,
+      "file": "exhibition/layers/archaeology.geojson",
+      "crs": "auto"
+    },
+    {
+      "id": "paths",
+      "name": "Paths and access",
+      "source": "site survey",
+      "color": "#f4f4f2",
+      "width": 2.5,
+      "file": "exhibition/layers/paths.geojson",
+      "crs": "site"
+    },
+    {
+      "id": "landcover",
+      "name": "Land cover",
+      "source": "CORINE",
+      "color": "#ac8e68",
+      "width": 1,
+      "file": "exhibition/layers/land-cover.geojson",
+      "crs": "auto",
+      "colorBy": ""
+    }
+  ],
+  "sounds": [
+    {
+      "id": "river",
+      "name": "River",
+      "where": "Ballintrillick River, west of the mill",
+      "file": "exhibition/sounds/river.mp3",
+      "at": [
+        25,
+        160
+      ]
+    },
+    {
+      "id": "waterfall",
+      "name": "Waterfall",
+      "where": "Gorge on the tributary",
+      "file": "exhibition/sounds/waterfall.mp3",
+      "at": [
+        275,
+        74.6
+      ]
+    },
+    {
+      "id": "woodland",
+      "name": "Woodland",
+      "where": "Trees above the gorge",
+      "file": "exhibition/sounds/woodland.mp3",
+      "at": [
+        173,
+        139
+      ]
+    },
+    {
+      "id": "hillside",
+      "name": "Open hillside",
+      "where": "North-east slope",
+      "file": "exhibition/sounds/hillside.mp3",
+      "at": [
+        256.0,
+        140.0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Waters and the Wild</title>
+<meta name="description" content="Site analysis resources for Project 1, Stage 1 at the Gleniff Barytes Mill: the brief mapped to tasks, base drawings, and guides. ATU Sligo, ARCT06004.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/contours.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/splash.css">
+<script>
+/* Splash gate: runs before paint so the home page never flashes first. Plays once per browser session;
+   add ?intro to the address to replay it (?intro=laser or ?intro=sweep to choose). See js/splash.js. */
+(function () {
+  var d = document.documentElement, f = /[?&]intro\b/.test(location.search), seen = false;
+  try { seen = sessionStorage.getItem('sitekit-intro') === '1'; } catch (e) { }
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (f || (!seen && !reduce)) {
+    d.classList.add('intro-pending');
+    setTimeout(function () { if (!window.__introStarted) d.classList.remove('intro-pending'); }, 4000);   // safety net
+  }
+})();
+window.SPLASH = { title: 'Gleniff <em>Mill</em>', lede: 'The ground, layer by layer.', label: 'Gleniff Mill' };
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Site analysis</span></a>
+    <nav aria-label="Pages">
+      <a href="index.html" class="nav-current" aria-current="page">Start here</a><a href="contours.html">Contours</a><a href="sun.html">Sun &amp; climate</a><a href="kit.html">Model kit</a><a href="model.html">Your model</a><a href="advanced.html">Advanced</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">ARCT06004 Architecture Design Studio 1 · Project 1 · Stage 1</div>
+      <h1>The Waters and <em>the Wild</em>.</h1>
+      <p class="lede">You'll design a temporary, sustainable pavilion for shelter, play and education for children at the old Barytes Mill in Gleniff. Stage 1 is about getting to know the place. This site turns the brief into a working checklist: what to produce, what to look for, and where to find help.</p>
+      <p class="onpage"><a href="#tasks">Tasks A–E</a> · <a href="#analyse">What to analyse</a> · <a href="#base">Base drawings</a> · <a href="#sdgs">SDGs</a> · <a href="#guides">All guides</a> · <a href="#reading">Reading</a></p>
+    </div>
+    <dl class="dates">
+      <div><dt>Brief and site visit</dt><dd>Mon 5 Oct<small>Morning brief, afternoon on site</small></dd></div>
+      <div><dt>Submission and review</dt><dd>Mon 2 Nov<small>10:00 · formative review</small></dd></div>
+    </dl>
+  </div>
+
+  <section id="tasks">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">01 · What you hand in</div>
+        <div>
+          <h2>Five tasks</h2>
+          <p>A, B and C are individual. D and E are group work. Each task lists the guides on this site that help with it. <span class="pill">Live guide</span> &nbsp; <span class="pill soon">Coming soon</span> &nbsp; <span class="pill site">Do this on site</span></p>
+        </div>
+      </div>
+      <div class="tasks">
+        <article class="task">
+          <div class="letter">A</div>
+          <div>
+            <h3>Site analysis sequence of views</h3>
+            <div class="meta">Individual · 6 freehand drawings · A2 landscape · mixed media</div>
+            <p>A storyboard of views on the approach to your potential site. Include a key plan showing where each view was taken and which way it looks.</p>
+          </div>
+          <div class="help"><div class="lbl">Help</div>
+            <a class="pill" href="#base">1:500 base for your key plan</a>
+            <span class="pill soon">Sequence of views</span>
+            <span class="pill site">Walk the route, sketch and photograph</span>
+          </div>
+        </article>
+        <article class="task">
+          <div class="letter">B</div>
+          <div>
+            <h3>Experiential representation of site</h3>
+            <div class="meta">Individual · A2 landscape · mixed media</div>
+            <p>An experiential mental map of the place, in any abstract medium: atmosphere, character, thresholds, light, sound, colour, smell, texture, time. Focus on your own experience.</p>
+          </div>
+          <div class="help"><div class="lbl">Help</div>
+            <a class="pill" href="sun.html#micro">Microclimate: sound, damp, shelter</a>
+            <span class="pill soon">Experiencing the site</span>
+            <span class="pill soon">3D splat model of the site</span>
+          </div>
+        </article>
+        <article class="task">
+          <div class="letter">C</div>
+          <div>
+            <h3>Site analysis drawings</h3>
+            <div class="meta">Individual · trace overlays · 1:20,000 location plan on A3 · 1:500 site analysis plan on A2</div>
+            <p>Explore each heading on consistently sized trace overlays, then transcribe your conclusions onto the base drawings in freehand black ink with north point, scale, line weights and title block. Keep the overlays; bull-clip them together.</p>
+          </div>
+          <div class="help"><div class="lbl">Help</div>
+            <a class="pill" href="#base">Base underlays to trace</a>
+            <a class="pill" href="model.html">1:100 plan of your area</a>
+            <a class="pill" href="contours.html">Reading contours</a>
+            <a class="pill" href="sun.html">Sun, shadow and climate</a>
+            <span class="pill soon">Drawing toolkit</span>
+          </div>
+        </article>
+        <article class="task">
+          <div class="letter">D</div>
+          <div>
+            <h3>Site analysis A3 research dossier</h3>
+            <div class="meta">Group · one bound A3 dossier per group</div>
+            <p>Field and desktop research in one consistent document: site information, timeline, historic maps at one scale, GeoHive environment and heritage maps, climate, human impact, EPA ecology, and arts, culture, folklore and mythology.</p>
+          </div>
+          <div class="help"><div class="lbl">Help</div>
+            <a class="pill" href="sun.html#climate">Climate</a>
+            <a class="pill" href="contours.html#build">Mill history</a>
+            <a class="pill" href="lidar.html">How the survey was made</a>
+            <span class="pill soon">Timeline and historic maps</span>
+            <span class="pill soon">Ecology · Human impact · Culture</span>
+          </div>
+        </article>
+        <article class="task">
+          <div class="letter">E</div>
+          <div>
+            <h3>Site context model</h3>
+            <div class="meta">Group · with the studio team</div>
+            <p>A context model to refine your analysis and test your design ideas in Stage 2.</p>
+          </div>
+          <div class="help"><div class="lbl">Help</div>
+            <a class="pill" href="kit.html">Laser-cut contour model kit</a>
+            <a class="pill" href="kit.html#assemble">3D assembly guide</a>
+            <a class="pill" href="model.html">Your own 300 mm model</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="analyse">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">02 · What to analyse</div>
+        <div>
+          <h2>The four headings in the brief</h2>
+          <p>Your analysis should be quantitative and qualitative, tangible and intangible. Each item below is from the brief, with where to start.</p>
+        </div>
+      </div>
+      <div class="matrix">
+        <div class="mcol"><h3>Physical site and landscape</h3><ul>
+          <li><span>Built, manmade or natural</span><span><span class="pill soon">Human impact</span></span></li>
+          <li><span>Surface textures, colours</span><span><span class="pill site">On site</span></span></li>
+          <li><span>Light and shade</span><span><a class="pill" href="sun.html#sun">Sun and shadow</a></span></li>
+          <li><span>Contours, slope in the site</span><span><a class="pill" href="contours.html">Reading contours</a></span></li>
+          <li><span>Geology: soil, rock, clay, gravel</span><span><span class="pill soon">Geology</span></span></li>
+          <li><span>Hydromorphology: banks, erosion</span><span><a class="pill" href="contours.html#water">Water</a><span class="pill soon">River</span></span></li>
+          <li><span>Local material resources</span><span><span class="pill soon">Materials</span></span></li>
+          <li><span>Impact of humans on the site</span><span><a class="pill" href="contours.html#read">Made ground</a></span></li>
+        </ul></div>
+        <div class="mcol"><h3>Ecology</h3><ul>
+          <li><span>Biodiversity</span><span><span class="pill soon">Ecology</span></span></li>
+          <li><span>Flora and fauna: species</span><span><span class="pill site">On site</span></span></li>
+          <li><span>Habitats: wetland, grassland, woodland, riparian</span><span><span class="pill soon">Ecology</span></span></li>
+        </ul></div>
+        <div class="mcol"><h3>Climate</h3><ul>
+          <li><span>Regional weather and microclimate</span><span><a class="pill" href="sun.html#micro">Microclimate</a></span></li>
+          <li><span>Prevailing wind direction</span><span><a class="pill" href="sun.html#climate">Wind and rain</a></span></li>
+          <li><span>Direction of rain</span><span><a class="pill" href="sun.html#climate">Wind and rain</a></span></li>
+          <li><span>Orientation: sun and shadow</span><span><a class="pill" href="sun.html#sun">Sun path</a></span></li>
+        </ul></div>
+        <div class="mcol"><h3>Experiential elements</h3><ul>
+          <li><span>Sight, sound, touch, taste, smell</span><span><span class="pill site">On site</span></span></li>
+          <li><span>Sequence from arrival to the heart of the site</span><span><span class="pill soon">Sequence of views</span></span></li>
+          <li><span>Aspect and views, positive and negative</span><span><a class="pill" href="sun.html#sun">Aspect map</a></span></li>
+          <li><span>Health benefits of natural landscape</span><span><span class="pill soon">Experiencing the site</span></span></li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="base">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">03 · Base drawings</div>
+        <div>
+          <h2>Underlays for Task C</h2>
+          <p>Print these at 100% and trace over them. They're underlays, not finished drawings: your base drawings are drawn by you, in freehand black ink. Contours are at 1 m from the drone lidar survey.</p>
+        </div>
+      </div>
+      <div class="bases">
+        <a class="base" href="downloads/base/Gleniff_1-500_A2_sheet1_west.pdf" download><img src="img/base/Gleniff_1-500_A2_sheet1_west.png" alt="Preview of 1:500 A2 sheet 1" loading="lazy"><div><span class="ext">PDF · A2</span><strong>1:500 · sheet 1 of 2 · west</strong><span>Mill, river and the west half of the survey.</span></div></a>
+        <a class="base" href="downloads/base/Gleniff_1-500_A2_sheet2_east.pdf" download><img src="img/base/Gleniff_1-500_A2_sheet2_east.png" alt="Preview of 1:500 A2 sheet 2" loading="lazy"><div><span class="ext">PDF · A2</span><strong>1:500 · sheet 2 of 2 · east</strong><span>The gorge and the slopes above it.</span></div></a>
+        <a class="base" href="downloads/base/Gleniff_1-500_A1_whole_survey.pdf" download><img src="img/base/Gleniff_1-500_A1_whole_survey.png" alt="Preview of 1:500 A1 whole survey" loading="lazy"><div><span class="ext">PDF · A1</span><strong>1:500 · whole survey</strong><span>The full survey on one sheet, for reference and group work.</span></div></a>
+        <a class="base" href="downloads/base/Gleniff_1-20000_A3_location_template.pdf" download><img src="img/base/Gleniff_1-20000_A3_location_template.png" alt="Preview of 1:20,000 A3 template" loading="lazy"><div><span class="ext">PDF · A3</span><strong>1:20,000 · location plan template</strong><span>Frame, scale bar, north point and the site to scale. You add the landscape.</span></div></a>
+      </div>
+      <div class="two" style="margin-top:22px">
+        <div class="callout">The whole survey is about 394 × 184 m, which at 1:500 is 788 × 368 mm. That's wider than an A2 sheet, so the 1:500 plan is rotated to fit the site's length and split over two sheets. The north point shows the rotation. Check the brief's site selection boundary (p.2) against the sheets and work on the part that holds your site.</div>
+        <div class="callout">For the 1:20,000 plan, use <a href="https://www.geohive.ie" target="_blank" rel="noopener">GeoHive</a> or the Tailte Éireann map viewers to trace the landscape around Gleniff. Check your scale: a 1 km grid square must measure 50 mm on the sheet.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sdgs">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">04 · Sustainable Development Goals</div>
+        <div>
+          <h2>Five goals, read through this site</h2>
+          <p>The brief asks you to consider the site in light of these UN Sustainable Development Goals. Use the questions to start your notes.</p>
+        </div>
+      </div>
+      <div class="sdgs">
+        <div class="sdg" style="--c:#4C9F38"><b>3</b><strong>Good health and well-being</strong><span>What does this place do for a child's body and mind? Where would they run, climb, rest?</span></div>
+        <div class="sdg" style="--c:#BF8B2E"><b>12</b><strong>Responsible consumption and production</strong><span>What materials are already here? What could a temporary pavilion borrow and give back?</span></div>
+        <div class="sdg" style="--c:#3F7E44"><b>13</b><strong>Climate action</strong><span>How do sun, wind and rain shape where and how you'd build?</span></div>
+        <div class="sdg" style="--c:#0A97D9"><b>14</b><strong>Life below water</strong><span>What lives in the river? How would building near it affect the water?</span></div>
+        <div class="sdg" style="--c:#56C02B"><b>15</b><strong>Life on land</strong><span>Which habitats are on site, and what would your pavilion disturb or protect?</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guides">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">05 · All guides</div>
+        <div>
+          <h2>On this site</h2>
+          <p>New guides are added through Stage 1.</p>
+        </div>
+      </div>
+      <div class="pages">
+        <a class="pagecard" href="contours.html"><span class="st live">Live</span><strong>Reading contours</strong><span>Build the hill in layers, read landforms, measure gradients and sections, follow water.</span></a>
+        <a class="pagecard" href="sun.html"><span class="st live">Live</span><strong>Sun and climate</strong><span>Sun path, shadows on any day, hours of sun, aspect, wind, rain and microclimate.</span></a>
+        <a class="pagecard" href="model.html"><span class="st live">Live</span><strong>Your model</strong><span>Pick your own square: a contour plan and laser sheets, a 3D print or a CNC carving at 1:100 to 1:1000.</span></a>
+        <a class="pagecard" href="kit.html"><span class="st live">Live</span><strong>Site model kit</strong><span>Laser-cut contour model of the whole site at the scale you choose, with build sequence and 3D assembly guide.</span></a>
+        <a class="pagecard" href="advanced.html"><span class="st live">Advanced</span><strong>Advanced</strong><span>Lidar survey, the photoreal splat, sections through the scan and projection. Only when you need them.</span></a>
+        <div class="pagecard soon"><span class="st soon">Coming soon</span><strong>Timeline and historic maps</strong><span>The site from the 1830s to today, at one scale.</span></div>
+        <div class="pagecard soon"><span class="st soon">Coming soon</span><strong>Sequence of views</strong><span>Serial vision, key plans and experiential mapping.</span></div>
+        <div class="pagecard soon"><span class="st soon">Coming soon</span><strong>River, ecology, geology</strong><span>Habitats, species, rock and local materials.</span></div>
+        <div class="pagecard soon"><span class="st soon">Coming soon</span><strong>Culture and folklore</strong><span>Yeats, Diarmuid and Gráinne, the Schools' Collection.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reading">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">06 · Reading</div>
+        <div>
+          <h2>Recommended reading</h2>
+          <p>From the brief.</p>
+        </div>
+      </div>
+      <ul class="reading">
+        <li>Radford, Morkoç and Srivastava (2020) <em>The Elements of Modern Architecture</em>. Thames &amp; Hudson.</li>
+        <li>Pallasmaa (2012) <em>The Eyes of the Skin</em>. Wiley.</li>
+        <li>Pallasmaa (2020) <em>Atmospheric Architectures</em>. Bloomsbury.</li>
+        <li>Tanizaki (1977) <em>In Praise of Shadows</em>. Vintage.</li>
+        <li>Zumthor (2012) <em>Thinking Architecture</em>. Birkhäuser.</li>
+        <li>Zumthor (2006) <em>Atmospheres</em>. Birkhäuser.</li>
+        <li>Sambuichi (2016) <em>Sambuichi and the Inland Sea</em>. Toto.</li>
+        <li>Unwin (2014) <em>Analysing Architecture</em>. Routledge.</li>
+        <li>Royal Danish Academy and UIA (2023) <em>An Architecture Guide to the UN 17 Sustainable Development Goals</em>, vols 1 and 2, and <em>A Map of Global Efforts</em>.</li>
+        <li><em>Architecture Ireland</em> (RIAI) and <em>The Architects' Journal</em>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>ATU Sligo · Department of Architecture · ARCT06004 · 2026/27</span><span class="credit">Created by R McNally</span><span>Gleniff Barytes Mill</span></div>
+</footer>
+
+<script src="js/sitepack.js"></script>
+<script src="js/splash.js"></script>
+</body>
+</html>

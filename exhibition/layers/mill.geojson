@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"Mill platform"},"geometry":{"type":"Polygon","coordinates":[[[82.4,118],[113,118],[113,153],[82.4,153],[82.4,118]]]}},{"type":"Feature","properties":{"name":"Bank behind the mill"},"geometry":{"type":"Polygon","coordinates":[[[80,120],[114,120],[114,129],[80,129],[80,120]]]}}]}

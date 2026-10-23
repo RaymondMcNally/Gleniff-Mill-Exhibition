@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gleniff Barytes Mill · Exhibition</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/kiosk.css">
+</head>
+<body>
+<div id="stage" class="stage">
+
+  <header class="k-top">
+    <div class="k-mono" id="kPlace">GLENIFF BARYTES MILL · BALLINTRILLICK, CO. SLIGO</div>
+    <div class="k-mono" id="kCredit">ATU SLIGO · DEPARTMENT OF ARCHITECTURE</div>
+  </header>
+
+  <nav class="k-tabs" aria-label="Sections">
+    <button type="button" class="k-tab" data-tab="cut" aria-pressed="true"><span class="k-num">01</span><span><b>Cut the site</b><small>Section on the big screen</small></span></button>
+    <button type="button" class="k-tab" data-tab="maps" aria-pressed="false"><span class="k-num">02</span><span><b>Old maps</b><small>Ordnance Survey, 1830s on</small></span></button>
+    <button type="button" class="k-tab" data-tab="gis" aria-pressed="false"><span class="k-num">03</span><span><b>Map layers</b><small>Ten switches for the model</small></span></button>
+    <button type="button" class="k-tab" data-tab="sound" aria-pressed="false"><span class="k-num">04</span><span><b>Sounds</b><small>Recorded on the site</small></span></button>
+  </nav>
+
+  <main class="k-body">
+    <div class="k-map" id="mapBox">
+      <canvas id="map" width="1100" height="788" aria-label="Map of the Gleniff site, north up"></canvas>
+      <div class="k-chip" id="hint">Drag A or B to move the cut</div>
+      <div class="k-stacklabel" id="stackLabel" hidden></div>
+      <div id="markers"></div>
+    </div>
+
+    <div class="k-panel">
+      <section id="pCut" class="k-pane">
+        <p class="k-lede">Move the red line across the site. The model lights where you cut; the big screen behind shows the section, trees and ruins included.</p>
+        <div class="k-preview">
+          <canvas id="prev" width="632" height="356" aria-label="Preview of the section"></canvas>
+          <div class="k-prevcap"><b>On the big screen now</b><span id="prevCap">Section A–B</span></div>
+        </div>
+        <div class="k-two">
+          <button type="button" class="k-btn k-btn-acc" id="flip">Look the other way</button>
+          <button type="button" class="k-btn" id="trees" aria-pressed="true">Trees on</button>
+        </div>
+        <div class="k-field">
+          <label for="depth"><span>How much to show behind the cut</span><span class="k-mono k-dim" id="depthOut">60 m</span></label>
+          <input id="depth" type="range" min="5" max="201" value="60">
+        </div>
+      </section>
+
+      <section id="pMaps" class="k-pane" hidden>
+        <div class="k-row">
+          <p class="k-lede">Switch on as many maps as you like and fade each one in or out. They are projected onto the model together.</p>
+          <button type="button" class="k-btn k-btn-sm" id="todayOnly">Today only</button>
+        </div>
+        <div class="k-maps" id="mapsList"></div>
+      </section>
+
+      <section id="pGis" class="k-pane" hidden>
+        <div class="k-row">
+          <span class="k-count" id="gisCount">0 of 10 layers on the model</span>
+          <button type="button" class="k-btn k-btn-sm" id="allOff">Switch all off</button>
+        </div>
+        <div class="k-tiles" id="gisList"></div>
+      </section>
+
+      <section id="pSound" class="k-pane" hidden>
+        <p class="k-lede">Four places, four recordings. Play one while the model lights up, or let the sound follow your cut.</p>
+        <div class="k-sounds" id="soundList"></div>
+        <button type="button" class="k-follow" id="follow" aria-pressed="true">
+          <span><b>Follow the cut</b><small>Play the recording nearest the red line</small></span>
+          <span class="k-switch"><i></i></span>
+        </button>
+      </section>
+    </div>
+  </main>
+
+  <footer class="k-foot">
+    <div class="k-now">
+      <button type="button" class="k-play" id="playBtn" aria-label="Play sound"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path id="playIcon" d="M8 5v14l11-7z"/></svg></button>
+      <span id="nowPlaying">No sound playing</span>
+    </div>
+    <div class="k-vol k-mono"><label for="vol">VOLUME</label><input id="vol" type="range" min="0" max="100" value="70"></div>
+  </footer>
+
+  <button type="button" class="k-exit" id="exitBtn" aria-label="Staff: hold for 3 seconds to leave exhibition mode">
+    <svg class="k-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18"/></svg>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+  </button>
+
+  <div class="k-modal" id="pinModal" hidden>
+    <div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="pinTitle">
+      <h2 id="pinTitle">Staff PIN</h2>
+      <div class="k-pinshow k-mono" id="pinShow" aria-live="polite">····</div>
+      <div class="k-pad" id="pinPad"></div>
+      <button type="button" class="k-btn" id="pinCancel">Back to the exhibit</button>
+    </div>
+  </div>
+
+  <div class="k-modal" id="staffModal" hidden>
+    <div class="k-dialog k-dialog-wide" role="dialog" aria-modal="true" aria-labelledby="staffTitle">
+      <h2 id="staffTitle">Exhibition set-up</h2>
+      <div class="k-status k-mono"><span><i id="stProj"></i>Projector window</span><span><i id="stBig"></i>Big screen</span></div>
+      <div class="k-grid2">
+        <button type="button" class="k-btn" id="openProj">Open projector window</button>
+        <button type="button" class="k-btn" id="openBig">Open big-screen window</button>
+        <button type="button" class="k-btn" id="fullK">Full screen this display</button>
+        <button type="button" class="k-btn" id="calib">Calibrate the projector</button>
+      </div>
+      <p class="k-small">Drag each new window onto its display, click it and press F. Calibration opens the Projection page; come back with the browser's back button.</p>
+      <div class="k-grid2">
+        <button type="button" class="k-btn k-btn-acc" id="staffBack">Back to the exhibit</button>
+        <button type="button" class="k-btn" id="leave">Leave exhibition mode</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-toast" id="toast" hidden></div>
+</div>
+
+<script src="js/sitepack.js"></script>
+<script src="js/dem-import.js"></script>
+<script src="js/gis-layers.js"></script>
+<script src="js/kiosk.js"></script>
+</body>
+</html>

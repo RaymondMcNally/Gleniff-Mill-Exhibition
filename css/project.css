@@ -1,0 +1,68 @@
+/* Projection page. The projector window (html.proj-out) is a black page holding only the mapped image. */
+.pj-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 18px; align-items: start }
+.pj-left { position: sticky; top: 70px; display: flex; flex-direction: column; gap: 10px; min-width: 0 }
+.pj-preview { position: relative; background: #000; border: 1px solid var(--rule); aspect-ratio: 16 / 10; max-width: 100%; touch-action: none }
+.pj-preview canvas, .pj-out canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block }
+.pj-preview:fullscreen { border: 0; aspect-ratio: auto; width: 100vw; height: 100vh }
+.pj-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+.pj-link { font: .74rem var(--mono); color: var(--muted) }
+.pj-link[data-on="1"] { color: var(--flat, #4e7a4a) }
+.pj-panel { display: flex; flex-direction: column; gap: 14px; min-width: 0 }
+.pj-group { border: 1px solid var(--rule); background: var(--paper); padding: 14px; display: flex; flex-direction: column; gap: 9px }
+.pj-group h3 { margin: 0; font: 500 .7rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted) }
+.pj-l { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: .92rem }
+.pj-l input[type=checkbox] { accent-color: var(--accent) }
+.pj-l select { margin-left: auto }
+.pj-sub { padding-left: 22px; font-size: .86rem }
+.pj-l output { margin-left: auto; font: .74rem var(--mono); color: var(--muted) }
+.pj-l input[type=file] { font: .72rem var(--mono); max-width: 100%; margin-left: auto }
+.pj-key { margin-left: auto; font: .7rem var(--mono); color: var(--muted); display: inline-flex; gap: 6px; align-items: center }
+.pj-key i { display: inline-block; width: 10px; height: 10px; background: var(--c) }
+.pj-group input[type=range] { width: 100%; accent-color: var(--accent) }
+.pj-group input[type=date] { font: 500 .82rem var(--mono); background: var(--paper); color: var(--ink); border: 1px solid var(--rule); border-radius: 3px; padding: 5px 8px; width: 100% }
+/* GIS layers */
+.pj-group input[type=number], .pj-group input[type=url], .pj-group select { font: 500 .85rem var(--display); background: var(--paper); color: var(--ink); border: 1px solid var(--rule); border-radius: 3px; padding: 6px 8px; min-width: 0 }
+.pj-group .cfield input[type=number] { width: 100% }
+.pj-url { display: flex; gap: 6px }
+.pj-url input { flex: 1; font: .78rem var(--mono) !important }
+.pj-msg { margin: 0; padding: 6px 8px; border-left: 3px solid var(--rule) }
+.pj-msg[data-k="ok"] { border-color: var(--flat, #4e7a4a) }
+.pj-msg[data-k="warn"] { border-color: var(--gold, #d99a1e) }
+.pj-msg[data-k="err"] { border-color: var(--cut); color: var(--cut) }
+.pj-glist { display: flex; flex-direction: column; gap: 8px }
+.pj-glist:empty { display: none }
+.pj-gl { border: 1px solid var(--rule); padding: 8px 9px; display: flex; flex-direction: column; gap: 7px }
+.pj-gl[data-on="0"] { opacity: .6 }
+.pj-gh { display: flex; align-items: center; gap: 8px; min-width: 0 }
+.pj-gh input[type=checkbox] { accent-color: var(--accent); flex: none }
+.pj-gh input[type=color] { width: 26px; height: 22px; padding: 0; border: 1px solid var(--rule); border-radius: 3px; background: none; flex: none; cursor: pointer }
+.pj-gn { flex: 1; min-width: 0; font-weight: 600; font-size: .9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.pj-gb { display: flex; gap: 2px; flex: none }
+.pj-gb button { padding: 2px 7px; font-size: .8rem; line-height: 1.3 }
+.pj-gmeta { font: .7rem var(--mono); color: var(--muted) }
+.pj-gmeta b { color: var(--gold, #d99a1e); font-weight: 500 }
+.pj-gopts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; align-items: center; font-size: .82rem }
+.pj-gopts label { display: flex; align-items: center; gap: 6px; min-width: 0 }
+.pj-gopts input[type=range] { flex: 1; min-width: 0 }
+.pj-gopts select { flex: 1; min-width: 0; font-size: .8rem; padding: 4px 6px }
+.pj-gopts .wide { grid-column: 1 / -1 }
+.pj-leg { display: flex; flex-wrap: wrap; gap: 4px 10px; font: .7rem var(--mono); color: var(--muted) }
+.pj-leg span { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.pj-leg i { width: 10px; height: 10px; background: var(--c); flex: none }
+.pj-place summary { cursor: pointer; font-size: .88rem; font-weight: 600 }
+.pj-place summary span { font: .72rem var(--mono); color: var(--muted); font-weight: 400; margin-left: 6px }
+.pj-place[open] summary { margin-bottom: 8px }
+.pj-place .mrow { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) }
+.pj-place > * + * { margin-top: 8px }
+
+kbd { font: .72rem var(--mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 3px; padding: 0 4px; background: var(--paper) }
+
+/* projector window */
+html.proj-out, html.proj-out body { background: #000; height: 100%; overflow: hidden; margin: 0 }
+html.proj-out header, html.proj-out main, html.proj-out footer { display: none !important }
+html.proj-out .pj-out { display: block !important; position: fixed; inset: 0; background: #000; cursor: none }
+html.proj-out .pj-out.cal { cursor: crosshair }
+.pj-hint { position: absolute; left: 16px; bottom: 12px; margin: 0; font: 12px var(--mono); color: #777; transition: opacity .6s }
+.pj-out.quiet .pj-hint { opacity: 0 }
+
+@media (max-width: 900px) { .pj-grid { grid-template-columns: 1fr } .pj-left { position: static } }

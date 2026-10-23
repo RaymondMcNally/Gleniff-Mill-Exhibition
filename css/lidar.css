@@ -1,0 +1,23 @@
+/* Lidar page */
+.figure img{display:block;width:100%;height:auto;background:#000}
+.figure.diag svg{display:block;width:100%;height:auto;padding:14px}
+.figure.inline{margin:6px 0 10px;max-width:560px}
+.field{border:1px solid var(--rule);border-left:4px solid var(--gold);background:var(--paper);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.field p{margin:0;font-size:1.02rem;line-height:1.5}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tabs [role=tab][aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tabfig img{aspect-ratio:865/435;object-fit:cover}
+.compare{position:relative;max-width:100%;border:1px solid var(--rule);background:#000;overflow:hidden;--pos:50%;user-select:none}
+.compare img{display:block;width:100%;height:auto}
+.compare img.top{position:absolute;inset:0;height:100%;object-fit:cover;clip-path:inset(0 0 0 var(--pos))}
+.compare input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.compare::after{content:"";position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none}
+.compare::before{content:"⇆";position:absolute;top:50%;left:var(--pos);transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#fff;color:#1d2120;display:grid;place-items:center;font:600 16px var(--mono);z-index:2;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.compare:focus-within::before{outline:2px solid var(--accent);outline-offset:2px}
+.compare .tag{position:absolute;top:10px;font:600 .74rem var(--mono);background:rgba(20,24,28,.75);color:#fff;padding:4px 8px;border-radius:3px;pointer-events:none}
+.compare .tag.l{left:10px} .compare .tag.r{right:10px}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vcol{border:1px solid var(--rule);background:var(--paper);padding:16px 18px}
+.vcol h3{margin:0 0 8px}
+@media (max-width:860px){.vs{grid-template-columns:1fr}}
+.compare .tag.key{left:10px;top:auto;bottom:10px}

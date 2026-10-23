@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lidar at Gleniff</title>
+<meta name="description" content="How the Gleniff Mill ground model was made: drone lidar survey, point cloud, ground classification, DSM and DEM. ATU Sligo, Department of Architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/contours.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/lidar.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Advanced · Lidar survey</span></a>
+    <nav aria-label="Pages">
+      <a href="index.html">Start here</a><a href="contours.html">Contours</a><a href="sun.html">Sun &amp; climate</a><a href="kit.html">Model kit</a><a href="model.html">Your model</a><a href="advanced.html" class="nav-current">Advanced</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">How the ground model was made</div>
+      <h1>Seeing the ground <em>through</em> the trees.</h1>
+      <p class="lede">Most of the Gleniff site is under woodland. A photograph from above shows only the tops of the trees. To model the ground you'll build on, the site was surveyed with a drone-mounted laser scanner, a lidar, which can find the ground through gaps in the canopy.</p>
+      <p class="onpage"><a href="#what">What lidar is</a> · <a href="#flight">The flight</a> · <a href="#cloud">Point cloud</a> · <a href="#trees">Removing trees</a> · <a href="#dsm">DSM and DEM</a> · <a href="#model">To your model</a> · <a href="#accuracy">How good</a> · <a href="#splat">Lidar or splat</a></p>
+    </div>
+    <dl class="spec">
+      <div><dt>Surveyed</dt><dd>October 2025</dd></div>
+      <div><dt>Area</dt><dd>about 5 ha</dd></div>
+      <div><dt>Aircraft</dt><dd>DJI Matrice 300 RTK</dd></div>
+      <div><dt>Sensor</dt><dd>DJI Zenmuse L1</dd></div>
+      <div><dt>Flight</dt><dd>1 flight · ~20 min</dd></div>
+      <div><dt>Laser pulses</dt><dd>240,000 a second</dd></div>
+    </dl>
+  </div>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">01 · What lidar is</div>
+        <div>
+          <h2>Measuring with light</h2>
+          <p>Lidar stands for <em>light detection and ranging</em>. The scanner fires short pulses of laser light and times how long each takes to bounce back. Light travels at a known speed, so the time gives the distance. Combine that with exactly where the drone was and which way the laser pointed, and every echo becomes a point in 3D space.</p>
+        </div>
+      </div>
+      <div class="two">
+        <figure class="figure diag">
+          <svg viewBox="0 0 520 330" role="img" aria-label="Diagram of laser pulses hitting a tree canopy and the ground">
+            <g font-family="IBM Plex Mono, monospace" font-size="11">
+              <rect x="226" y="18" width="68" height="16" rx="3" fill="var(--ink)"/><text x="260" y="30" text-anchor="middle" fill="var(--paper)">drone</text>
+              <path d="M0 290 C120 282 200 300 300 292 S440 278 520 286 V330 H0 Z" fill="var(--board)" opacity=".5"/>
+              <path d="M0 290 C120 282 200 300 300 292 S440 278 520 286" fill="none" stroke="var(--ink)" stroke-width="2"/>
+              <line x1="300" y1="292" x2="300" y2="205" stroke="#6b5a45" stroke-width="7"/>
+              <ellipse cx="300" cy="170" rx="85" ry="55" fill="var(--flat)" opacity=".55"/>
+              <g stroke="var(--cut)" stroke-width="1.6" fill="none">
+                <line x1="260" y1="34" x2="120" y2="286"/>
+                <line x1="260" y1="34" x2="250" y2="130"/>
+                <line x1="260" y1="34" x2="335" y2="122"/>
+                <line x1="335" y1="122" x2="352" y2="292" stroke-dasharray="4 3"/>
+                <line x1="260" y1="34" x2="440" y2="281"/>
+              </g>
+              <g fill="var(--ink)"><circle cx="120" cy="286" r="5"/><circle cx="250" cy="130" r="5"/><circle cx="335" cy="122" r="5"/><circle cx="352" cy="292" r="5"/><circle cx="440" cy="281" r="5"/></g>
+              <text x="36" y="268" fill="var(--ink)">ground</text>
+              <text x="160" y="118" fill="var(--ink)">canopy only</text>
+              <text x="350" y="112" fill="var(--ink)">1st return</text>
+              <text x="362" y="316" fill="var(--ink)">2nd return: ground</text>
+              <text x="430" y="262" fill="var(--ink)">ground</text>
+            </g>
+          </svg>
+          <figcaption>One pulse can echo more than once. Part of it bounces off leaves (first return); part slips through a gap and reaches the ground (last return). The Gleniff survey recorded two returns per pulse.</figcaption>
+        </figure>
+        <div class="prose">
+          <h3>Why it works under trees</h3>
+          <p>A tree canopy is full of small gaps. With hundreds of thousands of pulses a second, enough of them find a way through to the ground for software to build a continuous ground surface underneath. A photograph can't do that: it only sees what's on top.</p>
+          <p>The survey used <strong>dual return</strong>: each pulse could record a hit on the canopy and a second hit further down, often the ground. The scanner used a <strong>non-repetitive</strong> pattern, sweeping a rosette-shaped path that fills in more of the view the longer it looks.</p>
+          <h3>The scanner: DJI Zenmuse L1</h3>
+          <div class="tbl-wrap"><table>
+            <tbody>
+              <tr><td>Laser points per second</td><td class="num">240,000 single return · 480,000 multiple</td></tr>
+              <tr><td>Returns per pulse</td><td class="num">up to 3</td></tr>
+              <tr><td>Field of view (non-repetitive)</td><td class="num">70.4° × 77.2°</td></tr>
+              <tr><td>Accuracy at 50 m</td><td class="num">10 cm across · 5 cm in height</td></tr>
+              <tr><td>Camera</td><td class="num">1-inch sensor, 20 MP</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small">Manufacturer's published figures: <a href="https://www.dji.com/zenmuse-l1/info" target="_blank" rel="noopener">DJI Zenmuse L1 specifications</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flight">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">02 · The flight</div>
+        <div>
+          <h2>One flight, four passes</h2>
+          <p>The drone flew a planned route of parallel lines along the length of the site, with the lidar and the camera recording together. Its position came from network RTK through ATU Sligo, a live correction service that keeps a drone's location accurate to a few centimetres.</p>
+        </div>
+      </div>
+      <div class="two">
+        <figure class="figure"><img src="img/lidar/map_ortho.jpg" alt="Orthophoto of the site from the survey, with the four flight lines drawn in green" loading="lazy"><figcaption>The planned flight lines (green) over the orthophoto made from the survey photographs.</figcaption></figure>
+        <figure class="figure"><img src="img/lidar/pc_trajectory.jpg" alt="Point cloud coloured by flight pass" loading="lazy"><figcaption>Point cloud coloured by trajectory: which pass of the drone each point came from.</figcaption></figure>
+      </div>
+      <div class="two" style="margin-top:20px">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Flight</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Date and conditions</td><td>October 2025, midday · overcast · full leaf cover</td></tr>
+            <tr><td>Planned height</td><td class="num">30 m above the take-off point</td></tr>
+            <tr><td>Average height recorded</td><td class="num">58.6 m</td></tr>
+            <tr><td>Average speed</td><td class="num">3.7 m/s</td></tr>
+            <tr><td>Overlap between passes</td><td class="num">85% (lidar and photos)</td></tr>
+            <tr><td>Time recording</td><td class="num">8 min 25 s (about 20 min in the air)</td></tr>
+            <tr><td>Scan</td><td class="num">non-repetitive · dual return · 240 kHz</td></tr>
+            <tr><td>Positioning</td><td>network RTK (ATU Sligo) · fixed solution 100% of the flight</td></tr>
+          </tbody>
+        </table></div>
+        <aside class="field">
+          <div class="lbl">From the field · Ray McNally</div>
+          <p>“Planning is essential. Understand what you are trying to collect in relation to data and plan accordingly. Safety planning is paramount.”</p>
+          <p class="small">Leaf cover matters too. This survey was flown in October with the trees still in leaf, which is the hardest case for reaching the ground. The same flight in winter would find many more ground points.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="cloud">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">03 · The point cloud</div>
+        <div>
+          <h2>Millions of measured points</h2>
+          <p>The result of the flight is a <strong>point cloud</strong>: every laser echo as a dot with a position and height. The same cloud can be coloured in different ways to show different things. Switch between them.</p>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Point cloud colouring">
+        <button type="button" role="tab" aria-selected="true" data-tab="rgb">Photo colour</button>
+        <button type="button" role="tab" aria-selected="false" data-tab="intensity">Intensity</button>
+        <button type="button" role="tab" aria-selected="false" data-tab="elevation">Elevation</button>
+        <button type="button" role="tab" aria-selected="false" data-tab="class">Classification</button>
+        <button type="button" role="tab" aria-selected="false" data-tab="overlap">Coverage</button>
+      </div>
+      <figure class="figure tabfig">
+        <img id="tabImg" src="img/lidar/pc_rgb.jpg" alt="Point cloud coloured by photo colour">
+        <figcaption id="tabCap">Each point takes its colour from the survey photographs taken at the same moment. This is the closest to what you'd see.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="trees">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">04 · Removing the trees</div>
+        <div>
+          <h2>Ground points and everything else</h2>
+          <p>Software sorts the cloud into <strong>ground</strong> and <strong>not ground</strong>. Drag the handle: with the trees, then the ground points only. Where the canopy was thick, the ground points thin out and the software has to fill the gaps between them.</p>
+        </div>
+      </div>
+      <div class="compare" data-compare>
+        <img src="img/lidar/pc_all.jpg" alt="Point cloud with all points, including trees">
+        <img src="img/lidar/pc_ground.jpg" alt="Point cloud with ground points only" class="top">
+        <input type="range" min="0" max="100" value="50" aria-label="Slide between all points and ground points only">
+        <span class="tag l">All points</span><span class="tag r">Ground only</span>
+      </div>
+      <div class="two" style="margin-top:22px">
+        <figure class="figure diag">
+          <svg viewBox="0 0 520 260" role="img" aria-label="Diagram of ground classification">
+            <g font-family="IBM Plex Mono, monospace" font-size="11">
+              <g fill="var(--flat)" opacity=".8">
+                <circle cx="80" cy="70" r="4"/><circle cx="95" cy="60" r="4"/><circle cx="110" cy="80" r="4"/><circle cx="320" cy="50" r="4"/><circle cx="340" cy="65" r="4"/><circle cx="355" cy="45" r="4"/><circle cx="300" cy="95" r="4"/>
+              </g>
+              <path d="M20 210 L120 196 L220 204 L330 186 L430 176 L500 168" fill="none" stroke="var(--ink)" stroke-width="2"/>
+              <g fill="var(--ink)"><circle cx="20" cy="210" r="5"/><circle cx="120" cy="196" r="5"/><circle cx="220" cy="204" r="5"/><circle cx="330" cy="186" r="5"/><circle cx="430" cy="176" r="5"/><circle cx="500" cy="168" r="5"/></g>
+              <g fill="var(--gold)"><circle cx="170" cy="199" r="5"/><circle cx="270" cy="194" r="5"/></g>
+              <g fill="none" stroke="var(--cut)" stroke-width="1.5"><circle cx="190" cy="150" r="6"/></g>
+              <path d="M220 204 L270 194" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="20" y="240" fill="var(--ink)">1 · lowest points in big cells start the ground</text>
+              <text x="20" y="20" fill="var(--ink)">2 · nearby points join if close and not too steep (gold)</text>
+              <text x="200" y="146" fill="var(--cut)">rejected: too high</text>
+            </g>
+          </svg>
+          <figcaption>The ground is grown from the lowest points outwards. A point is added only if it sits close to the surface built so far and doesn't make it too steep.</figcaption>
+        </figure>
+        <div class="prose">
+          <h3>The settings used at Gleniff</h3>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Setting in DJI Terra</th><th>Value</th><th>What it means</th></tr></thead>
+            <tbody>
+              <tr><td>Scene</td><td class="num">Gentle slope</td><td>tuned for ground that isn't cliff-like</td></tr>
+              <tr><td>Building max diagonal</td><td class="num">20 m</td><td>size of the cells used to find the first, lowest ground points; anything smaller than this, like a tree or shed, can't be mistaken for ground</td></tr>
+              <tr><td>Iteration angle</td><td class="num">6°</td><td>how steeply a new point may rise from the ground already found</td></tr>
+              <tr><td>Iteration distance</td><td class="num">0.5 m</td><td>how far above that ground a new point may sit</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small">Ground classification took about a minute of computer time. The settings are a balance: too strict and real banks get cut off; too loose and low bushes become "ground".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dsm">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">05 · DSM and DEM</div>
+        <div>
+          <h2>Two height maps of the same place</h2>
+          <p>From the points, the software makes two height maps. The <strong>DSM</strong> (digital surface model) follows the top of everything: trees, the stable roof, the ground where it's open. The <strong>DEM</strong> (digital elevation model) uses only ground points: the bare earth with the trees taken away. The DEM is the one your contours and model come from.</p>
+        </div>
+      </div>
+      <div class="compare" data-compare>
+        <img src="img/lidar/r_dsm.jpg" alt="Digital surface model, including trees, 145 to 190 m">
+        <img src="img/lidar/r_dem.jpg" alt="Digital elevation model, bare earth, 144 to 180 m" class="top">
+        <input type="range" min="0" max="100" value="50" aria-label="Slide between surface model and elevation model">
+        <span class="tag l">DSM · with trees · 145–190 m</span><span class="tag r">DEM · bare earth · 144–180 m</span><span class="tag key">blue low → red high</span>
+      </div>
+      <div class="two" style="margin-top:22px">
+        <figure class="figure diag">
+          <svg viewBox="0 0 520 200" role="img" aria-label="Section showing DSM line over trees and DEM line on the ground">
+            <g font-family="IBM Plex Mono, monospace" font-size="11">
+              <path d="M0 160 C80 150 160 170 260 150 S420 120 520 110 V200 H0 Z" fill="var(--board)" opacity=".45"/>
+              <g fill="var(--flat)" opacity=".6"><ellipse cx="120" cy="110" rx="45" ry="40"/><ellipse cx="200" cy="105" rx="40" ry="45"/><ellipse cx="380" cy="80" rx="45" ry="40"/></g>
+              <path d="M0 160 C40 156 70 70 120 70 S170 60 200 60 S240 150 260 150 S330 40 380 40 S430 118 520 110" fill="none" stroke="var(--cut)" stroke-width="2.5"/>
+              <path d="M0 160 C80 150 160 170 260 150 S420 120 520 110" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+              <text x="300" y="30" fill="var(--cut)">DSM: top of everything</text>
+              <text x="300" y="148" fill="var(--ink)">DEM: bare ground</text>
+            </g>
+          </svg>
+          <figcaption>A section through both. Where there are trees, the DSM can sit 10 m or more above the DEM.</figcaption>
+        </figure>
+        <div class="prose">
+          <h3>What the numbers mean</h3>
+          <p>The DSM runs from about 145 to 190 m, the DEM from about 144 to 180 m. The difference at the top is the height of the trees on the upper slopes.</p>
+          <p>These heights are measured from the <strong>WGS 84 ellipsoid</strong>, a mathematical shape used by GPS, because the survey was output in WGS 84 / UTM zone 29N. They are <em>not</em> the heights on Irish maps, which are measured from mean sea level at Malin Head. On this website, levels are given relative to the lowest point of the survey.</p>
+          <p class="small">DEM exported at 1:500 scale. Orthophoto resolution 1.23 cm per pixel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="model">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">06 · From DEM to your model</div>
+        <div>
+          <h2>Height map to board</h2>
+          <p>The DEM is a grid of heights, like a photograph where each pixel is a level instead of a colour. Everything else on this website is made from it.</p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><div class="n">DEM</div><div><figure class="figure inline"><img src="img/lidar/map_dem.jpg" alt="DEM coloured by height over the base map" loading="lazy"></figure><p>DJI Terra exports the DEM as a GeoTIFF, a georeferenced image file.</p></div></li>
+        <li><div class="n">Contours</div><div><figure class="figure inline"><img src="img/lidar/r_contour.jpg" alt="Contours generated by DJI Terra over the DEM" loading="lazy"></figure><p>Terra can draw contours straight from the DEM. Its preview uses a 10 m interval; this website and the model use 1 m. See <a href="contours.html">Reading contours</a>.</p></div></li>
+        <li><div class="n">STL</div><div><p>In <strong>QGIS</strong>, the DEM was cropped to the site and turned into an STL, a 3D mesh file, scaled to 1:200.</p></div></li>
+        <li><div class="n">Board</div><div><p>The STL was sliced into 5 mm layers, one per metre, for the laser cutter: the <a href="kit.html">site model kit</a>, and the <a href="model.html">your-model</a> tool for your own square.</p></div></li>
+      </ol>
+      <figure class="figure" style="margin-top:20px"><img src="img/lidar/mesh.jpg" alt="Textured 3D mesh of the site" loading="lazy"><figcaption>Terra also builds a textured 3D mesh from the photographs and points. It shows how the site looks, trees and all.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="accuracy">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">07 · How good is it?</div>
+        <div>
+          <h2>Know the limits of your data</h2>
+          <p>Every survey has an accuracy, and a good designer knows it before relying on a number.</p>
+        </div>
+      </div>
+      <div class="two">
+        <div class="prose">
+          <ul class="ticks">
+            <li><strong>Position.</strong> The drone held a fixed RTK position for the whole flight. The scanner's published accuracy is about 10 cm across and 5 cm in height at 50 m.</li>
+            <li><strong>No ground checks.</strong> No ground control or check points were surveyed, so the absolute position and level haven't been checked independently. Treat levels as good to within some centimetres relative to each other, and the absolute height as approximate.</li>
+            <li><strong>Under thick canopy</strong> there are few ground points, so the ground there is filled in between them and smoother than reality.</li>
+            <li><strong>Water</strong> absorbs laser light, so the river surface and bed are poorly recorded.</li>
+            <li><strong>Steep gorge sides</strong> are seen at a glancing angle and may be rounded off.</li>
+            <li><strong>Small things</strong> such as walls, steps and foundations can fall between points, which are spaced about 10 cm apart.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Processing in DJI Terra</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>Point cloud (positions, optimising, colouring)</td><td class="num">18 min</td></tr>
+              <tr><td>Ground classification</td><td class="num">1 min</td></tr>
+              <tr><td>DEM</td><td class="num">8 s</td></tr>
+              <tr><td>2D orthophoto map</td><td class="num">7 min</td></tr>
+              <tr><td>3D textured mesh</td><td class="num">34 min</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small">DJI Terra Education on a workstation with an Intel i9-10900X (20 cores), NVIDIA RTX A4000 and 64 GB of memory. Times from Terra's quality report.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="splat">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">08 · Lidar or splat?</div>
+        <div>
+          <h2>Two ways of capturing the same place</h2>
+          <p>Photographs from the same flight were also used to make a 3D Gaussian splat of the site, a photo-real model you can fly through. You can explore it in the <a href="kit.html#site">Cesium view</a>, read <a href="splat.html">how the splat was made</a>, and cut sections through it on the <a href="sections.html">Sections</a> page. The two methods answer different questions.</p>
+        </div>
+      </div>
+      <div class="vs">
+        <div class="vcol">
+          <h3>Lidar</h3>
+          <ul class="ticks">
+            <li>Measures: every point has a reliable position and height.</li>
+            <li>Sees the ground through gaps in trees.</li>
+            <li>Gives you contours, sections, levels and the model.</li>
+            <li>Looks abstract: dots, not surfaces.</li>
+            <li>Specialist sensor and processing.</li>
+          </ul>
+        </div>
+        <div class="vcol">
+          <h3>Gaussian splat</h3>
+          <ul class="ticks">
+            <li>Looks real: light, colour, texture and atmosphere.</li>
+            <li>Made from ordinary photographs.</li>
+            <li>Great for experiencing a place and recording its character.</li>
+            <li>Only sees surfaces the camera saw, so no ground under the canopy.</li>
+            <li>Not made for measuring; sizes and levels aren't reliable.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="small" style="margin-top:12px">Use the lidar for the facts of the site (Task C) and the splat to help you feel and record its character (Task B).</p>
+    </div>
+  </section>
+
+  <section id="credits">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Credits</div>
+        <div>
+          <p>Survey flown and processed by Ray McNally, ATU Sligo Department of Architecture, with a DJI Matrice 300 RTK and Zenmuse L1, processed in DJI Terra. Images from DJI Terra and its quality report.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>ATU Sligo · Department of Architecture · ARCT06004</span><span class="credit">Created by R McNally</span><a href="advanced.html">Advanced →</a></div>
+</footer>
+
+<script src="js/lidar.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gleniff Advanced</title>
+<meta name="description" content="Advanced tools for the Gleniff Mill site: the lidar survey, the Gaussian splat, section cuts through the scan, and projection onto a physical model. ATU Sligo, Department of Architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/pages.css">
+<style>
+.nav-current{color:var(--ink)!important;background:var(--paper)}
+.adv{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.adv .pagecard{padding:18px 18px 16px}
+.adv .pagecard strong{font-size:1.15rem}
+.adv .pagecard .need{font:500 .72rem var(--mono);color:var(--muted);margin-top:auto;padding-top:6px;border-top:1px dashed var(--rule)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Advanced</span></a>
+    <nav aria-label="Pages">
+      <a href="index.html">Start here</a><a href="contours.html">Contours</a><a href="sun.html">Sun &amp; climate</a><a href="kit.html">Model kit</a><a href="model.html">Your model</a><a href="advanced.html" class="nav-current" aria-current="page">Advanced</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Gleniff Mill · beyond Stage 1</div>
+      <h1>Advanced.</h1>
+      <p class="lede">How the survey was made, the photoreal scan of the site, sections cut through it, and projecting drawings onto a physical model. You don't need these for Stage 1: everything you hand in can be made from <a href="contours.html">Contours</a>, <a href="sun.html">Sun &amp; climate</a>, the <a href="kit.html">Model kit</a> and <a href="model.html">Your model</a>. Come here when your tutor sends you, or when you want to go further.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="adv">
+        <a class="pagecard" href="lidar.html"><span class="st live">Survey</span><strong>Lidar survey</strong><span>How the drone's laser saw through the trees to make the ground model: the flight, the point cloud, ground classification, DSM and DEM.</span><span class="need">Useful for: where the contours come from, and how accurate they are</span></a>
+        <a class="pagecard" href="splat.html"><span class="st live">Scan</span><strong>Gaussian splat</strong><span>A photoreal 3D model of the site made from the survey photos: what a splat is, how it was made, and what it can and can't tell you.</span><span class="need">Useful for: seeing the trees, walls and ruins in 3D</span></a>
+        <a class="pagecard" href="sections.html"><span class="st live">Tool</span><strong>Sections</strong><span>Cut the scan along any line and draw a section with solid ground from the survey. Download it as PDF or SVG at 1:100, 1:200 or 1:500, or show it full screen on a big monitor while the cut is projected on the model.</span><span class="need">Useful for: Stage 2 site sections with trees and buildings</span></a>
+        <a class="pagecard" href="kiosk.html"><span class="st live">Exhibition</span><strong>Exhibition kiosk</strong><span>The public screen for the exhibition: cut the site, lay old maps over the model, switch map layers and play sounds from the site. Drives the projector and the big screen.</span><span class="need">Staff: hold the bottom-right corner for 3 seconds to leave it</span></a>
+        <a class="pagecard" href="project.html"><span class="st live">Workshop</span><strong>Projection</strong><span>Project contours, shadows, slopes, GIS layers from QGIS or ArcGIS, the section cut and your own drawings onto a physical site model from a projector above it.</span><span class="need">Useful for: crits and the exhibition; staff set it up</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>ATU Sligo · Department of Architecture · ARCT06004</span><span class="credit">Created by R McNally</span><a href="index.html">Start here →</a></div>
+</footer>
+</body>
+</html>

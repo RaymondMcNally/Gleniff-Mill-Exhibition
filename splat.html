@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gaussian splat of Gleniff</title>
+<meta name="description" content="How the 3D Gaussian splat of Gleniff Mill was made from drone photographs, what is in it, and how it compares with the lidar survey. ATU Sligo, Department of Architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/contours.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/lidar.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Advanced · Gaussian splat</span></a>
+    <nav aria-label="Pages">
+      <a href="index.html">Start here</a><a href="contours.html">Contours</a><a href="sun.html">Sun &amp; climate</a><a href="kit.html">Model kit</a><a href="model.html">Your model</a><a href="advanced.html" class="nav-current">Advanced</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">How the photo-real model was made</div>
+      <h1>Building the site from <em>photographs</em>.</h1>
+      <p class="lede">The lidar measured the ground. The camera on the same flight took 500 photographs, and from those the computer built a 3D Gaussian splat: nearly four million small, soft, coloured blobs that together look like the real place. It records what the mill site looks like, not what it measures.</p>
+      <p class="onpage"><a href="#what">What a splat is</a> · <a href="#photos">The photos</a> · <a href="#training">Training</a> · <a href="#file">The file</a> · <a href="#together">With the lidar</a> · <a href="#sees">What it sees</a> · <a href="#cut">Cutting it</a> · <a href="#accuracy">How good</a></p>
+    </div>
+    <dl class="spec">
+      <div><dt>Photographed</dt><dd>October 2025</dd></div>
+      <div><dt>Photos</dt><dd>500 · DJI Zenmuse L1</dd></div>
+      <div><dt>Software</dt><dd>DJI Terra Education</dd></div>
+      <div><dt>Training</dt><dd>about 4 hours</dd></div>
+      <div><dt>Splats</dt><dd>3,686,822</dd></div>
+      <div><dt>Area</dt><dd>about 4.4 ha</dd></div>
+    </dl>
+  </div>
+
+  <div class="wrap"><figure class="figure"><img src="img/splat/axo.jpg" alt="The Gaussian splat of the mill site seen from the south-west: woodland, the road with parked cars, the mill ruins and the stone shed" loading="lazy"><figcaption>The whole splat seen from the south-west: the road and parked cars, the mill platform and its ruins, the stone shed, and the woodland on every side. Rendered straight from the 3.7 million splats in the file.</figcaption></figure></div>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">01 · What a splat is</div>
+        <div>
+          <h2>Millions of soft blobs</h2>
+          <p>A lidar point is a dot. A <strong>Gaussian splat</strong> is a small, soft, see-through blob of colour, a bit like a smudge of paint in 3D. Each one has a position, a size and shape, a direction it is turned, a colour and how see-through it is. Millions of them, overlapping, make a picture that looks real from any angle. Drag the handle to pull the blobs apart.</p>
+        </div>
+      </div>
+      <div class="compare" data-compare>
+        <img src="img/splat/ruins_splat.jpg" alt="Close-up of the mill ruin walls from above, as the splat draws them">
+        <img src="img/splat/ruins_blobs.jpg" alt="The same view with every blob shrunk so the individual splats can be seen" class="top">
+        <input type="range" min="0" max="100" value="50" aria-label="Slide between the finished splat and the separate blobs">
+        <span class="tag l">As it looks</span><span class="tag r">Blobs pulled apart</span><span class="tag key">mill ruins from above · 16 × 10 m</span>
+      </div>
+      <div class="two" style="margin-top:22px">
+        <figure class="figure diag">
+          <svg viewBox="0 0 520 300" role="img" aria-label="Diagram of one Gaussian splat with its position, three sizes, rotation, colour and opacity">
+            <defs><radialGradient id="g1"><stop offset="0" stop-color="#7d8f5a" stop-opacity=".95"/><stop offset=".6" stop-color="#7d8f5a" stop-opacity=".45"/><stop offset="1" stop-color="#7d8f5a" stop-opacity="0"/></radialGradient></defs>
+            <g font-family="IBM Plex Mono, monospace" font-size="11">
+              <g transform="translate(200 150) rotate(-24)">
+                <ellipse rx="150" ry="62" fill="url(#g1)"/>
+                <ellipse rx="100" ry="41" fill="none" stroke="var(--ink)" stroke-dasharray="4 3"/>
+                <line x1="0" y1="0" x2="100" y2="0" stroke="var(--cut)" stroke-width="2"/>
+                <line x1="0" y1="0" x2="0" y2="-41" stroke="var(--cut)" stroke-width="2"/>
+              </g>
+              <circle cx="200" cy="150" r="4" fill="var(--ink)"/>
+              <text x="170" y="178" fill="var(--ink)">position x y z</text>
+              <text x="300" y="136" fill="var(--cut)">size: 3 radii</text>
+              <path d="M330 60 A 150 150 0 0 1 356 104" fill="none" stroke="var(--ink)"/><path d="M349 99 L357 106 L359 96" fill="none" stroke="var(--ink)"/>
+              <text x="364" y="70" fill="var(--ink)">rotation</text>
+              <rect x="372" y="200" width="18" height="18" fill="#7d8f5a"/><text x="396" y="213" fill="var(--ink)">colour</text>
+              <rect x="372" y="228" width="18" height="18" fill="#7d8f5a" opacity=".35"/><text x="396" y="241" fill="var(--ink)">opacity</text>
+              <text x="20" y="282" fill="var(--muted)">soft edge: strongest in the middle, fading out</text>
+            </g>
+          </svg>
+          <figcaption>One splat. It is a 3D Gaussian: strongest at its centre and fading smoothly towards its edge, stretched into an ellipsoid and turned to lie along whatever it represents.</figcaption>
+        </figure>
+        <div class="prose">
+          <h3>What each blob stores in this file</h3>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Value</th><th>Stored as</th><th>Bytes</th></tr></thead>
+            <tbody>
+              <tr><td>Position</td><td>x, y, z to 1/4096 m</td><td class="num">9</td></tr>
+              <tr><td>Size and shape</td><td>three radii</td><td class="num">3</td></tr>
+              <tr><td>Rotation</td><td>which way it is turned</td><td class="num">4</td></tr>
+              <tr><td>Colour</td><td>red, green, blue</td><td class="num">3</td></tr>
+              <tr><td>Opacity</td><td>how see-through</td><td class="num">1</td></tr>
+              <tr><td><strong>Each splat</strong></td><td></td><td class="num"><strong>20</strong></td></tr>
+            </tbody>
+          </table></div>
+          <p>A typical blob here has a radius of about <strong>5 cm</strong>; the largest 1% are over 40 cm across their long side, mostly filling in sky gaps and soft foliage. The median blob is a little more than half opaque, so the picture is built up in overlapping layers, the way a watercolour is.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="photos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">02 · The photos</div>
+        <div>
+          <h2>500 photographs from the lidar flight</h2>
+          <p>No extra flight was needed. The Zenmuse L1 carries a 20-megapixel camera beside the laser, and it photographed the site on the same <a href="lidar.html#flight">October 2025 flight</a>, with 85% overlap between neighbouring pictures. 500 of those photos were used, the most DJI Terra Education accepts for a Gaussian splat.</p>
+        </div>
+      </div>
+      <div class="two">
+        <div class="prose">
+          <h3>Why overlap matters</h3>
+          <p>The computer works out the shape of the place by finding the same feature, the corner of a wall or a gatepost, in many photos taken from different positions. The more photos that see a point, and the more different their angles, the better it is placed. That is why the flight lines overlap so much.</p>
+          <h3>What the camera can't see</h3>
+          <p>A photo only records surfaces that face the camera and are lit. Under the canopy, inside the gorge, beneath the cars and behind walls there is little or nothing to go on, so the splat is thin or missing there. Overhead photos also see roofs and treetops far better than walls.</p>
+        </div>
+        <aside class="field">
+          <div class="lbl">One flight, two products</div>
+          <p>The same flight gave the lidar points and the photos for the splat. One measures the site; the other records how it looks.</p>
+          <p class="small">The 500-photo limit is DJI Terra Education's. More photos, especially low, angled ones around the ruins, would give a sharper splat with better walls.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="training">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">03 · Training</div>
+        <div>
+          <h2>Guess, compare, adjust, thousands of times</h2>
+          <p>A splat isn't drawn by hand or calculated in one go. It is <strong>trained</strong>. The computer starts with rough blobs, draws them from the exact position of each photo, compares its drawing with the real photo, and nudges every blob to make the difference smaller. It repeats this many thousands of times.</p>
+        </div>
+      </div>
+      <div class="two">
+        <figure class="figure diag">
+          <svg viewBox="0 0 520 300" role="img" aria-label="Diagram of the training loop">
+            <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--ink)">
+              <rect x="20" y="20" width="150" height="46" rx="4" fill="var(--paper)" stroke="var(--ink)"/><text x="95" y="40" text-anchor="middle">1 · photos</text><text x="95" y="56" text-anchor="middle" fill="var(--muted)">find each camera</text>
+              <rect x="20" y="100" width="150" height="46" rx="4" fill="var(--paper)" stroke="var(--ink)"/><text x="95" y="120" text-anchor="middle">2 · sparse points</text><text x="95" y="136" text-anchor="middle" fill="var(--muted)">first blobs here</text>
+              <line x1="95" y1="66" x2="95" y2="100" stroke="var(--ink)"/><path d="M90 92 L95 100 L100 92" fill="none" stroke="var(--ink)"/>
+              <line x1="95" y1="146" x2="95" y2="200" stroke="var(--ink)"/><path d="M90 192 L95 200 L100 192" fill="none" stroke="var(--ink)"/>
+              <rect x="20" y="200" width="150" height="46" rx="4" fill="var(--ink)"/><text x="95" y="220" text-anchor="middle" fill="var(--paper)">3 · draw from a</text><text x="95" y="236" text-anchor="middle" fill="var(--paper)">photo's viewpoint</text>
+              <rect x="320" y="200" width="180" height="46" rx="4" fill="var(--paper)" stroke="var(--cut)"/><text x="410" y="220" text-anchor="middle">4 · compare with</text><text x="410" y="236" text-anchor="middle">the real photo</text>
+              <rect x="320" y="100" width="180" height="46" rx="4" fill="var(--paper)" stroke="var(--cut)"/><text x="410" y="120" text-anchor="middle">5 · nudge every blob</text><text x="410" y="136" text-anchor="middle" fill="var(--muted)">split · copy · delete</text>
+              <g stroke="var(--cut)" fill="none" stroke-width="1.6">
+                <path d="M170 223 H320"/><path d="M312 218 L320 223 L312 228"/>
+                <path d="M410 200 V146"/><path d="M405 154 L410 146 L415 154"/>
+                <path d="M320 123 C250 123 240 180 172 218"/><path d="M182 215 L172 218 L176 209"/>
+              </g>
+              <text x="236" y="166" fill="var(--cut)">repeat</text>
+              <text x="320" y="40" fill="var(--muted)">blobs are split where</text>
+              <text x="320" y="56" fill="var(--muted)">detail is missing, deleted</text>
+              <text x="320" y="72" fill="var(--muted)">where they do nothing</text>
+            </g>
+          </svg>
+          <figcaption>Training. First the software works out where every photo was taken from and builds a sparse cloud of matched points; blobs start there. Then the draw–compare–adjust loop runs until the drawings match the photos.</figcaption>
+        </figure>
+        <div class="prose">
+          <h3>How Gleniff was processed</h3>
+          <div class="tbl-wrap"><table>
+            <tbody>
+              <tr><td>Software</td><td>DJI Terra Education</td></tr>
+              <tr><td>Photos</td><td class="num">500 (Terra Education's limit for splats)</td></tr>
+              <tr><td>Camera</td><td>Zenmuse L1 · 1-inch sensor · 20 MP</td></tr>
+              <tr><td>Computer</td><td>Dell Precision 5820 · Intel i9-10900X · NVIDIA RTX A4000 · 64 GB</td></tr>
+              <tr><td>Training time</td><td class="num">about 4 hours</td></tr>
+              <tr><td>Result</td><td class="num">3,686,822 splats</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small">Compare the lidar: its ground model took about 20 minutes of processing in the same software on the same computer. A splat takes far longer because every blob has to be learned, not just measured.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="file">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">04 · The file</div>
+        <div>
+          <h2>From Terra to Cesium to your browser</h2>
+          <p>The full splat was exported from Terra as a <code>.ply</code> file: every blob stored plainly, 293 MB. For the web it was packed into a single compressed <code>.spz</code> file, which the <a href="sections.html">Sections</a> page loads (see below for the lighter copy). A splat can also be hosted online on <strong>Cesium ion</strong> and explored in the <a href="https://ion.cesium.com/stories/viewer/?id=40d040ce-b2e5-43e7-91b8-aff9905d9b06" target="_blank" rel="noopener">Gleniff Cesium story</a>.</p>
+        </div>
+      </div>
+      <div class="two">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>In the file</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Format</td><td>SPZ (.spz)</td></tr>
+            <tr><td>Compression</td><td>SPZ, Niantic's open splat format</td></tr>
+            <tr><td>Full scan as SPZ</td><td class="num">61.8 MB</td></tr>
+            <tr><td>The same scan as a plain .ply</td><td class="num">293 MB</td></tr>
+            <tr><td>Splats in the full scan</td><td class="num">3,686,822</td></tr>
+            <tr><td>On this website</td><td class="num">1,750,000 splats · 28.3 MB</td></tr>
+            <tr><td>Typical blob</td><td class="num">about 5 cm radius</td></tr>
+            <tr><td>Median opacity</td><td class="num">0.62</td></tr>
+            <tr><td>Colour</td><td>one colour per blob (no shine)</td></tr>
+          </tbody>
+        </table></div>
+        <div class="prose">
+          <h3>One colour per blob</h3>
+          <p>Some splats store colour that changes with the viewing angle, so wet tarmac or a window can shine as you move. This one stores a single colour per blob. It is smaller and loads faster, and on an overcast day like this survey the difference is slight. The light of that October midday is baked in: you can't change the time of day in a splat. For that, use the <a href="sun.html">sun and shadow</a> tools on the lidar ground.</p>
+          <h3>Why compression matters</h3>
+          <p>Stored plainly as a .ply, this scan takes 293 MB. SPZ packs each splat into 20 bytes, then zips the lot, so the file is about a fifth of the size. The faintest blobs, under 2% opaque, were left out: you can't see them, and there were 160,000 of them. Even so, 62 MB is a lot for a phone, so this website loads a lighter copy: every blob around the mill and ruins is kept, and elsewhere the smallest, faintest blobs are dropped until 1.75 million remain, 28 MB. From a distance you can't tell; up close the woodland looks a little patchier. The figures on this page come from the full scan. That is the difference between a page that loads in seconds and one that doesn't load on a phone at all.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="together">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">05 · Splat and lidar together</div>
+        <div>
+          <h2>Lined up on the survey</h2>
+          <p>The splat and the lidar come out of the software in different coordinates. To use them together, the splat was fitted onto the lidar ground once: wherever the splat can see open ground, that ground should sit on the lidar surface. Drag the handle: the splat from directly above, and the lidar ground with its 1 m contours, in exactly the same frame.</p>
+        </div>
+      </div>
+      <div class="compare" data-compare>
+        <img src="img/splat/top_splat.jpg" alt="The splat seen from directly above">
+        <img src="img/splat/top_lidar.jpg" alt="The lidar ground model with 1 m contours, same area" class="top">
+        <input type="range" min="0" max="100" value="50" aria-label="Slide between the splat and the lidar ground">
+        <span class="tag l">Splat · from above</span><span class="tag r">Lidar · bare earth</span><span class="tag key">346 × 248 m · north up</span>
+      </div>
+      <div class="two" style="margin-top:22px">
+        <div class="prose">
+          <h3>How well do they agree?</h3>
+          <p>The fit needed a turn of less than half a degree and no change of size, because both came from the same RTK-positioned flight. After fitting, about half of the lowest blobs the splat has in each square metre lie within half a metre of the lidar ground; most of the rest are in trees and scrub. The road, the ruins and the platform carry straight across the line in the slider.</p>
+        </div>
+        <div class="prose">
+          <h3>Different areas</h3>
+          <p>The lidar covers about 5 ha, the whole survey. The full splat covers about 4.4 ha: nearly all of the survey, running a little past it to the east and west. The gaps are at its edges, along the south-east boundary and where the photos ran out, and there you only have the lidar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sees">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">06 · What the splat sees</div>
+        <div>
+          <h2>Tops of things, not the ground beneath</h2>
+          <p>Because the splat is lined up on the lidar, we can test it metre by metre. In every 1&nbsp;m square, is the lowest blob on the lidar ground, or is it sitting up in the trees?</p>
+        </div>
+      </div>
+      <div class="two">
+        <figure class="figure"><img src="img/splat/see_ground.jpg" alt="Map of where the splat reaches the ground (green) and where it only sees the tops of trees (amber)" loading="lazy"><figcaption><strong>Green:</strong> the splat reaches the ground (within 0.5 m of the lidar), 56% of its area. <strong>Amber:</strong> it only sees the tops of things, 44%. There its lowest blob is typically 3.5 m above the real ground.</figcaption></figure>
+        <figure class="figure"><img src="img/splat/canopy.jpg" alt="Map of how high the top of the splat is above the lidar ground, light to dark green" loading="lazy"><figcaption>Height of the top of the splat above the lidar ground, pale (0 m) to dark green (20 m and over). This is a canopy height map: the trees reach about 23 m, and 95% of the area is under 13 m.</figcaption></figure>
+      </div>
+      <p class="small" style="margin-top:12px">This is why the contours, sections, levels and models on this website all come from the lidar. Where the splat is amber, there is no ground in it to measure. Compare the <a href="lidar.html#dsm">DSM and DEM</a>: the top of the splat behaves like the DSM.</p>
+    </div>
+  </section>
+
+  <section id="cut">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">07 · Cutting it</div>
+        <div>
+          <h2>A section through scan and survey</h2>
+          <p>Put the two together and you get a section that neither could make alone: the trees, walls, cars and ruins from the splat, and solid ground from the lidar. On the <a href="sections.html">Sections</a> page you can cut it anywhere, look either way, take off the canopy and print the ground at 1:200.</p>
+        </div>
+      </div>
+      <figure class="figure"><img src="img/splat/section.jpg" alt="Section looking north through the mill platform: trees and the road from the splat, ground in solid black from the lidar" loading="lazy"><figcaption>Section looking north through the mill platform, 156 m long, showing 25 m of the splat behind the cut. The black ground and red line are the lidar; everything above is the splat. On the left, trees hang over the gorge; in the middle, a parked car and the platform.</figcaption></figure>
+      <p style="margin-top:14px"><a href="sections.html"><strong>Open the Sections page →</strong></a></p>
+    </div>
+  </section>
+
+  <section id="accuracy">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">08 · How good is it?</div>
+        <div>
+          <h2>Good to look at, careful to measure</h2>
+          <p>A splat is trained to look right from where the photos were taken, not to be right everywhere. Know its limits before you rely on it.</p>
+        </div>
+      </div>
+      <div class="two">
+        <div class="prose">
+          <ul class="ticks">
+            <li><strong>Scale and position</strong> come from the drone's RTK positions for each photo, so the splat is the right size and fits the lidar closely, as section 05 shows. Individual blobs are not measurements.</li>
+            <li><strong>No ground under trees.</strong> Section 06: 44% of the splat sees only the tops of things.</li>
+            <li><strong>Floaters and haze.</strong> At the edges, and where few photos overlap, blobs smear and float. They are visible round the outside of the view at the top of this page.</li>
+            <li><strong>Thin things</strong> such as wires, fence rails and bare branches become soft or ghostly.</li>
+            <li><strong>Things that moved</strong> while the photos were taken, such as people, leaves in wind or a car driving off, blur or vanish. The parked cars stayed put, so they are in it.</li>
+            <li><strong>Walls and undersides</strong> are weak because most photos look down.</li>
+          </ul>
+        </div>
+        <div class="vs">
+          <div class="vcol">
+            <h3>Use the splat for</h3>
+            <ul class="ticks">
+              <li>what the place looks like: materials, colour, vegetation</li>
+              <li>views and walkthroughs</li>
+              <li>the backdrop to a section</li>
+              <li>recording the site's character (Task B)</li>
+            </ul>
+          </div>
+          <div class="vcol">
+            <h3>Use the lidar for</h3>
+            <ul class="ticks">
+              <li>levels, contours and slopes</li>
+              <li>the ground in a section</li>
+              <li>your physical model</li>
+              <li>the facts of the site (Task C)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="credits">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Credits</div>
+        <div>
+          <p>Photographs and splat by Ray McNally, ATU Sligo Department of Architecture: DJI Matrice 300 RTK with Zenmuse L1, trained in DJI Terra Education, hosted on Cesium ion. Figures on this page are drawn directly from the splat file and the lidar survey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>ATU Sligo · Department of Architecture · ARCT06004</span><span class="credit">Created by R McNally</span><a href="sections.html">Sections →</a></div>
+</footer>
+
+<script src="js/lidar.js"></script>
+</body>
+</html>
