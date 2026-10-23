@@ -139,7 +139,7 @@
       "id": "river",
       "name": "River",
       "where": "Ballintrillick River, west of the mill",
-      "file": "exhibition/sounds/river.mp3",
+      "file": "exhibition/sounds/river.m4a",
       "at": [
         25,
         160
@@ -149,7 +149,7 @@
       "id": "waterfall",
       "name": "Waterfall",
       "where": "Gorge on the tributary",
-      "file": "exhibition/sounds/waterfall.mp3",
+      "file": "exhibition/sounds/waterfall.m4a",
       "at": [
         275,
         74.6
@@ -159,7 +159,7 @@
       "id": "woodland",
       "name": "Woodland",
       "where": "Trees above the gorge",
-      "file": "exhibition/sounds/woodland.mp3",
+      "file": "exhibition/sounds/woodland.m4a",
       "at": [
         173,
         139
@@ -169,7 +169,7 @@
       "id": "hillside",
       "name": "Open hillside",
       "where": "North-east slope",
-      "file": "exhibition/sounds/hillside.mp3",
+      "file": "exhibition/sounds/hillside.m4a",
       "at": [
         256.0,
         140.0
