@@ -5,7 +5,7 @@ rem 2. Set the X positions to where each display starts: Windows Settings > Syst
 rem    With three 1920-wide displays left to right (kiosk, projector, big screen) the values below are right.
 rem 3. Double-click this file. If a window lands on the wrong display, drag it across and press F.
 
-set SITE=https://raymondmcnally.github.io/gleniff-mill-exhibition
+set SITE=https://raymondmcnally.github.io/Gleniff-Mill-Exhibition
 set KIOSK_X=0
 set PROJECTOR_X=1920
 set BIGSCREEN_X=3840
