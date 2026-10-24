@@ -18,6 +18,13 @@
   },
   "maps": [
     {
+      "id": "aerial",
+      "name": "Aerial photo (drone survey)",
+      "date": "2025",
+      "file": "exhibition/maps/aerial-2025.jpg",
+      "opacity": 100
+    },
+    {
       "id": "osi6",
       "name": "OSi 6-inch, first edition",
       "date": "1830s",
@@ -37,13 +44,6 @@
       "date": "1930s",
       "file": "exhibition/maps/cassini-6inch-1930s.svg",
       "opacity": 50
-    },
-    {
-      "id": "aerial",
-      "name": "Aerial photo (drone survey)",
-      "date": "2025",
-      "file": "exhibition/maps/aerial-2025.jpg",
-      "opacity": 100
     }
   ],
   "layers": [

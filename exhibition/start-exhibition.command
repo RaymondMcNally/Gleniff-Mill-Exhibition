@@ -3,7 +3,7 @@
 # Set SITE to the website's address and the X positions to where each display starts (System Settings > Displays > Arrange).
 # The first time, right-click this file and choose Open. If a window lands on the wrong display, drag it across and press F.
 
-SITE="https://raymondmcnally.github.io/Gleniff-Exhibition"
+SITE="https://raymondmcnally.github.io/gleniff-mill-exhibition"
 KIOSK_X=0
 PROJECTOR_X=1920
 BIGSCREEN_X=3840

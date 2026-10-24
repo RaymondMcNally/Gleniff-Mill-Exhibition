@@ -6,7 +6,7 @@ Static website for the 1:200 Gleniff Mill contour site model.
 Students download the laser sheets, follow the build sequence and use the 3D assembly guide to find every piece.
 
 ## Publishing this copy
-Make a new repository (for example `Gleniff-Exhibition`), add these files with **GitHub Desktop** or git (the web uploader takes at most 100 files at a time and 25 MB per file; `data/gleniff-lite.spz` is 28 MB), then Settings › Pages › Deploy from branch › `main` / root. The launch scripts in `exhibition/` assume the address `https://raymondmcnally.github.io/Gleniff-Exhibition`.
+Make a new repository (for example `Gleniff-Exhibition`), add these files with **GitHub Desktop** or git (the web uploader takes at most 100 files at a time and 25 MB per file; `data/gleniff-lite.spz` is 28 MB), then Settings › Pages › Deploy from branch › `main` / root. The launch scripts in `exhibition/` assume the address `https://raymondmcnally.github.io/gleniff-mill-exhibition`.
 
 ## Trying it on your own computer
 The pages load data and the 3D viewer as separate files, which browsers block when a page is opened straight from the folder (a `file://` address). The Sections page then says so; other pages show "needs the website served over http". To test locally, open Terminal in the website folder and run `python3 -m http.server 8000`, then go to http://localhost:8000. VS Code's Live Server works too. GitHub Pages needs nothing extra.
