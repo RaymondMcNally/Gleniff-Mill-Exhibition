@@ -78,7 +78,7 @@
     {
       "id": "woodland",
       "name": "Woodland and tree cover",
-      "source": "from the scan",
+      "source": "drone survey (canopy height)",
       "color": "#30d158",
       "width": 1,
       "file": "exhibition/layers/woodland.geojson",
