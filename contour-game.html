@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Plan to Section · Gleniff Mill</title>
+<meta name="description" content="A drag-and-drop game for reading contours: match each contour plan to its section, from simple landforms to cuts through the Gleniff survey. ATU Sligo, Department of Architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/contour-game.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Plan to section</span></a>
+    <nav aria-label="Pages">
+      <a href="index.html">Start here</a><a href="contours.html" class="nav-current" aria-current="page">Contours</a><a href="sun.html">Sun &amp; climate</a><a href="kit.html">Model kit</a><a href="model.html">Your model</a><a href="advanced.html">Advanced</a>
+    </nav>
+  </div>
+</header>
+
+<main class="cg">
+<div class="wrap">
+  <div class="cg-head">
+    <div>
+      <p class="eyebrow">Gleniff Mill · Reading contours</p>
+      <h1>Plan to <em>section</em>.</h1>
+      <p class="lede">Each plan has a cut line from A to A′. Drag the section that matches it onto the plan, or tap a section and then tap the plan. Every round is new.</p>
+    </div>
+    <div class="score" aria-live="polite">
+      <div><span class="lbl">Matched</span><b id="sMatched">0/0</b></div>
+      <div><span class="lbl">Mistakes</span><b id="sMiss">0</b></div>
+      <div><span class="lbl">Rounds</span><b id="sRounds">0</b></div>
+    </div>
+  </div>
+
+  <div class="stages" role="group" aria-label="Stages">
+    <button type="button" data-stage="0" aria-pressed="true"><span class="n">Stage 1</span><b>Shapes</b><small>four landforms</small></button>
+    <button type="button" data-stage="1" aria-pressed="false"><span class="n">Stage 2</span><b>Read the heights</b><small>mirror pairs and hollows</small></button>
+    <button type="button" data-stage="2" aria-pressed="false"><span class="n">Stage 3</span><b>One hill, four cuts</b><small>lines A to D</small></button>
+    <button type="button" data-stage="3" aria-pressed="false"><span class="n">Stage 4</span><b>Gleniff</b><small>the real survey</small></button>
+  </div>
+
+  <ul class="rules" id="rules">
+    <li>Contours close together: steep</li>
+    <li>Far apart: gentle or flat</li>
+    <li>Rings closing in: a summit, or a hollow if the labels go down</li>
+    <li>Sections run from A on the left to A′ on the right</li>
+  </ul>
+
+  <div class="board">
+    <div class="plans" id="plans"></div>
+    <aside class="tray" aria-label="Sections">
+      <span class="lbl" id="trayLbl">Sections</span>
+      <div class="cards" id="cards"></div>
+      <p id="trayNote">Drag a section onto its plan.</p>
+    </aside>
+  </div>
+
+  <div class="done-panel" id="done" hidden>
+    <div>
+      <div class="stars" id="stars" aria-hidden="true">★★★</div>
+      <h2 id="doneTitle">Round cleared</h2>
+      <p id="doneText"></p>
+    </div>
+    <div class="btns">
+      <button type="button" class="btn ghostbtn" id="again">New round</button>
+      <button type="button" class="btn" id="next">Next stage</button>
+    </div>
+  </div>
+
+  <div class="foot"><span>Shapes and cut lines are new every round. Stage 4 uses the drone lidar survey of the site.</span><span id="best"></span></div>
+  <p class="lbl" id="live" aria-live="assertive" style="position:absolute;left:-9999px"></p>
+</div>
+</main>
+
+<footer>
+  <div class="wrap"><span>ATU Sligo · Department of Architecture · ARCT06004</span><span class="credit">Created by R McNally</span><a href="contours.html">Reading contours →</a></div>
+</footer>
+
+<script src="js/contour-game-data.js"></script>
+<script src="js/contour-game.js"></script>
+</body>
+</html>
