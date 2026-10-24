@@ -17,22 +17,25 @@
   const SIZE = { print: PRINT, mould: MOULD };
   const S = { size: 300, x: G.focus[0] - 150, y: G.focus[1] - 150, board: 5, sheet: [841, 594], hollow: true, name: '',
     output: 'card', cardSize: 300, base: 3, vex: 1, arrow: true, castBase: 10, lastPrint: 'print',
-    cncSize: 400, stock: 100, fit: 'true', cncBase: 6, cardKind: 'layers', spacing: 20, dpi: 254, tile: false, scale: 200, lam: 1 };
+    cncSize: 400, stock: 100, fit: 'true', cncBase: 6, cardKind: 'layers', spacing: 20, dpi: 254, tile: false, scale: 200, lam: 1, card: 2, handSize: 250 };
   const SCALES = [100, 200, 500, 1000];
   const BEDCNC = [2500, 1300];                             // Mantech Falcon 1325 bed, mm (Z travel 200 mm)
   try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) Object.assign(S, s); const n = localStorage.getItem('sitekit-name'); if (n && !S.name) S.name = n; } catch (e) { }
   if (!['layers', 'waffle', 'relief'].includes(S.cardKind)) S.cardKind = 'layers';
   if (!SCALES.includes(+S.scale)) S.scale = 200;
   if (![1, 2, 3, 4, 5].includes(+S.lam)) S.lam = 1;
+  if (![1, 1.5, 2, 2.5, 3].includes(+S.card)) S.card = 2;
+  if (![150, 200, 250].includes(+S.handSize)) S.handSize = 250;
+  const HANDSIZES = [150, 200, 250], CARDSIZES = [200, 250, 300];   // hand-cut: the square must fit an A3 sheet with its title block
   const MPM = () => S.scale / 1000;
-  const LT = () => S.board * (S.cardKind === 'layers' ? S.lam : 1);   // layer thickness: sheets glued per contour × board                          // metres on site per mm of model
+  const LT = () => S.output === 'hand' ? S.card : S.board * (S.cardKind === 'layers' ? S.lam : 1);   // layer thickness: sheets glued per contour × board                          // metres on site per mm of model
   const Q = () => S.size * S.scale / 200;                    // square side in plan units
   const mFmt = v => (Math.abs(v - Math.round(v)) < 1e-6 ? String(Math.round(v)) : v.toFixed(v < 10 ? 1 : 0));
-  if (S.output === 'cnc') S.size = S.cncSize; else if (!SIZE[S.output]) S.output = 'card'; else S.size = SIZE[S.output];
+  if (S.output === 'cnc') S.size = S.cncSize; else if (S.output === 'hand') S.size = S.handSize; else if (!SIZE[S.output]) S.output = 'card'; else S.size = SIZE[S.output];
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); localStorage.setItem('sitekit-name', S.name); } catch (e) { } };
   $('mSize').value = S.size; $('mBoard').value = S.board; $('mLam').value = S.lam; $('mSheet').value = S.sheet.join('x'); $('mHollow').checked = S.hollow; $('mName').value = S.name;
   $('mBase').value = S.base; $('mVex').value = S.vex; $('mArrow').checked = S.arrow; $('mCast').value = S.castBase;
-  $('mSpacing').value = S.spacing; $('mDpi').value = S.dpi; $('mTile').checked = !!S.tile;
+  $('mCard').value = S.card; $('mSpacing').value = S.spacing; $('mDpi').value = S.dpi; $('mTile').checked = !!S.tile;
   $('mCncSize').value = S.cncSize; $('mStock').value = S.stock; $('mFit').value = S.fit; $('mCncBase').value = S.cncBase;
   const snap = v => Math.round(v / 2) * 2;
   // class tile model: the survey is divided into a grid of squares from its south-west corner; columns A, B, C… run
@@ -86,7 +89,7 @@
     if (!m) return; e.preventDefault(); S.x += m[0]; S.y += m[1]; clampSel(); P.draw(); queue();
   });
   const resize = fn => { const c = [S.x + Q() / 2, S.y + Q() / 2]; fn(); S.x = c[0] - Q() / 2; S.y = c[1] - Q() / 2; clampSel(); };
-  $('mSize').onchange = e => { resize(() => S.size = +e.target.value); P.draw(); queue(); };
+  $('mSize').onchange = e => { resize(() => { S.size = +e.target.value; if (S.output === 'hand') S.handSize = S.size; }); P.draw(); queue(); };
   document.querySelectorAll('[data-scale]').forEach(b => b.onclick = () => { const v = +b.dataset.scale; if (v === S.scale) return; resize(() => S.scale = v); scaleLabels(); fitted = false; P.draw(); queue(); });
   // every label that names a scale or a real-world size follows the chosen scale
   function scaleLabels() {
@@ -97,11 +100,13 @@
     opt('mLam', v => `${v} sheet${+v === 1 ? '' : 's'} · ${mFmt(v * S.board * MPM())} m`);
     opt('mCncSize', v => `${v} × ${v} mm (${mFmt(v * MPM())} m)`);
     opt('mSpacing', v => `${v} mm (${mFmt(v * MPM())} m)`);
+    opt('mCard', v => `${v} mm · ${mFmt(v * MPM())} m per layer`);
     $('mFit').options[0].textContent = `True scale (1:${S.scale})`; $('mVex').options[0].textContent = `True scale (1:${S.scale})`;
     $('specModel').textContent = `1:${S.scale}`; $('specPrint').textContent = `${PRINT} mm · ${mFmt(PRINT * MPM())} × ${mFmt(PRINT * MPM())} m`;
   }
   $('mBoard').onchange = e => { S.board = +e.target.value; scaleLabels(); queue(); };
   $('mLam').onchange = e => { S.lam = +e.target.value; queue(); };
+  $('mCard').onchange = e => { S.card = +e.target.value; queue(); };
   $('mSheet').onchange = e => { S.sheet = e.target.value.split('x').map(Number); queue(); };
   $('mHollow').onchange = e => { S.hollow = e.target.checked; queue(); };
   $('mName').oninput = e => { S.name = e.target.value.trim(); save(); };
@@ -120,13 +125,14 @@
   $('mCncBase').onchange = e => { S.cncBase = +e.target.value; queue(); };
 
   // ---------- output: card model (laser) or 3D print. The same square drives both.
-  const LABELS = { card: ['Layers', 'Laser sheets', 'Model height'], print: ['Tallest point', 'Print size', 'Height scale'], mould: ['Mould height', 'Cast size', 'Plaster to fill'], cnc: ['Carving height', 'Block needed', 'Height scale'] };
+  const LABELS = { card: ['Layers', 'Laser sheets', 'Model height'], print: ['Tallest point', 'Print size', 'Height scale'], mould: ['Mould height', 'Cast size', 'Plaster to fill'], cnc: ['Carving height', 'Block needed', 'Height scale'], hand: ['Layers of card', 'Template', 'Model height'] };
   function showOutput() {
     const o = S.output;
     $('main').dataset.out = o;
-    $('oCard').setAttribute('aria-pressed', o === 'card'); $('oPrint').setAttribute('aria-pressed', o === 'print' || o === 'mould'); $('oCnc').setAttribute('aria-pressed', o === 'cnc');
+    $('oCard').setAttribute('aria-pressed', o === 'card'); $('oPrint').setAttribute('aria-pressed', o === 'print' || o === 'mould'); $('oCnc').setAttribute('aria-pressed', o === 'cnc'); $('oHand').setAttribute('aria-pressed', o === 'hand');
     $('kModel').setAttribute('aria-pressed', o === 'print'); $('kMould').setAttribute('aria-pressed', o === 'mould');
-    $('mSize').value = S.size; $('mSize').disabled = o !== 'card';
+    [...$('mSize').options].forEach(op => op.hidden = !(o === 'hand' ? HANDSIZES : CARDSIZES).includes(+op.value));
+    $('mSize').value = S.size; $('mSize').disabled = o !== 'card' && o !== 'hand';
     $('dlPrint').textContent = o === 'mould' ? 'Download mould (3MF)' : 'Download 3D print (3MF)';
     $('p3dLbl').textContent = o === 'mould' ? 'Printed mould' : 'Finished model';
     const KLAB = { layers: LABELS.card, waffle: ['Sections', 'Laser sheets', 'Model height'], relief: ['Image', 'Resolution', 'Black to white'] };
@@ -137,12 +143,14 @@
   function setOutput(o) {
     if (o === S.output) return;
     if (S.output === 'card') S.cardSize = S.size;
-    resize(() => { S.size = o === 'cnc' ? S.cncSize : SIZE[o] || S.cardSize || 300; if (SIZE[o]) S.lastPrint = o; S.output = o; });
+    if (S.output === 'hand') S.handSize = S.size;
+    resize(() => { S.size = o === 'cnc' ? S.cncSize : o === 'hand' ? S.handSize : SIZE[o] || (CARDSIZES.includes(+S.cardSize) ? S.cardSize : 300); if (SIZE[o]) S.lastPrint = o; S.output = o; });
     showOutput(); fitted = false; P.draw(); queue();
   }
   $('oCard').onclick = () => setOutput('card');
   $('oPrint').onclick = () => setOutput(SIZE[S.output] ? S.output : S.lastPrint || 'print');
   $('oCnc').onclick = () => setOutput('cnc');
+  $('oHand').onclick = () => setOutput('hand');
   $('kModel').onclick = () => setOutput('print');
   $('kMould').onclick = () => setOutput('mould');
 
@@ -150,12 +158,13 @@
   // ---------- compute
   let model = null, packed = null, pm = null, Gcur = null, sheetIx = 0, timer = 0, wf = null, wpk = null, rel = null, r3d = null, sheetSrc = null;
   const datum = () => S.tile ? DEM.lo : undefined;                       // class tiles: one base level for the whole site
-  const outBtns = ['dlPlan', 'dlKit', 'dlPrint', 'dlStl', 'dlCnc', 'dlWaffle', 'dlRelief'];
+  const outBtns = ['dlPlan', 'dlKit', 'dlPrint', 'dlStl', 'dlCnc', 'dlWaffle', 'dlRelief', 'dlHand'];
   function queue() { clearTimeout(timer); status('Working out your model…'); outBtns.forEach(id => $(id).disabled = true); timer = setTimeout(compute, 180); }
   const selM = () => ({ x0: S.x * 0.2, y0: S.y * 0.2, size: S.size * MPM() });
   function compute() {
     save();
     const sel = selM(); MM.setScale(S.scale);
+    if (S.output === 'hand') return computeHand(sel);
     if (S.output === 'cnc') return computeCarve(sel);
     if (S.output !== 'card') return computePrint(sel);
     pm = null; wf = null; rel = null;
@@ -187,6 +196,76 @@
     status(warn + `Ready: ${model.layers.length} layers from ${G.fmt(model.layers[0].L)} m to ${G.fmt(model.layers[model.layers.length - 1].L)} m` + (S.lam > 1 ? `, each ${S.lam} sheets of ${S.board} mm glued together (${model.layers.length * S.lam} pieces of card).` : '.') + many, warn || many ? 'warn' : 'ok');
     $('dlPlan').disabled = $('dlKit').disabled = false;
     draw3D(); drawSheet();
+  }
+
+  // hand-cut grey card: the same contour layers as the laser kit (one per thickness of card), drawn on one A3 template
+  function computeHand(sel) {
+    pm = null; wf = null; rel = null; packed = null; sheetSrc = null;
+    const T = S.card, iv = T * MPM();
+    model = MM.buildModel(DEM, sel, T, { scale: S.scale, hollow: false, rim: 0, base: S.tile ? Math.floor(DEM.lo / iv + 1e-9) * iv : undefined });
+    const Gm = Gcur = model.G;
+    planLabels();
+    $('oArea').textContent = `${Gm.size.toFixed(0)} × ${Gm.size.toFixed(0)} m`;
+    if (!model.layers.length) {
+      ['oLevels', 'oLayers', 'oSheets', 'oHeight', 'oPaper'].forEach(id => $(id).textContent = '—');
+      status(Gm.coverage < 0.01 ? 'This square is outside the survey. Move it onto the site.' : 'This square is too flat for any layers at this card thickness.', 'err');
+      draw3D(); $('handView').innerHTML = ''; return;
+    }
+    const n = model.layers.length;
+    $('oLevels').textContent = `${G.fmt(Gm.lo)} to ${G.fmt(Gm.hi)} m`;
+    $('oLayers').textContent = `${n} × ${S.card} mm`;
+    $('oSheets').textContent = 'A3 portrait';
+    $('oHeight').textContent = `${+(n * T).toFixed(1)} mm + base`;
+    $('oPaper').textContent = planPaper().name;
+    const warn = Gm.coverage < 0.999 ? `About ${Math.round((1 - Gm.coverage) * 100)}% of this square is outside the survey and will be left at base level. ` : '';
+    const many = n > 40 ? ` That is ${n} pieces of card to cut by hand: thicker card, a smaller scale or a smaller square keeps it manageable.` : '';
+    status(warn + `Ready: ${n} layers of ${S.card} mm card, contours every ${mFmt(iv)} m from ${G.fmt(model.layers[0].L)} m to ${G.fmt(model.layers[n - 1].L)} m.` + many, warn || many ? 'warn' : 'ok');
+    $('dlPlan').disabled = $('dlHand').disabled = false;
+    draw3D(); drawHand();
+  }
+  // layer numbers for the hand-cut template, placed on the contour lines (model mm): every contour gets at least one,
+  // long ones up to three, kept apart so they stay readable where the ground is steep
+  function handLabels() {
+    const sz = S.size, placed = [], lab = [];
+    const near = (x, y, d) => placed.some(q => (q[0] - x) ** 2 + (q[1] - y) ** 2 < d * d);
+    model.layers.forEach(ly => {
+      const txt = String(ly.k).padStart(2, '0'), cand = [];
+      let run = 0;                                                       // length along all of this contour's loops
+      ly.outline.forEach(l => {
+        for (let q = 0; q < l.length; q++) {
+          const a = l[q], b2 = l[(q + 1) % l.length], seg = Math.hypot(b2[0] - a[0], b2[1] - a[1]);
+          run += seg; const x = (a[0] + b2[0]) / 2, y = (a[1] + b2[1]) / 2;
+          if (x < 4 || y < 4 || x > sz - 4 || y > sz - 4) continue;     // not along the square's edge
+          cand.push({ x, y, run });
+        }
+      });
+      if (!cand.length) return;
+      const total = cand[cand.length - 1].run, want = Math.max(1, Math.min(3, Math.floor(total / 140) + 1));
+      let got = 0;
+      for (const minD of [14, 9, 6]) {                                    // relax spacing until each contour has a number
+        for (let t = 0; t < want && got < want; t++) {
+          const target = total * (t + 0.5) / want;
+          const pick = cand.filter(c => !near(c.x, c.y, minD)).sort((p1, p2) => Math.abs(p1.run - target) - Math.abs(p2.run - target))[0];
+          if (pick) { placed.push([pick.x, pick.y]); lab.push([pick.x, pick.y, txt]); got++; }
+        }
+        if (got) break;
+      }
+    });
+    return lab;
+  }
+  // template preview: the square with its contours and layer numbers, as on the PDF
+  function drawHand() {
+    if (!model || !model.layers.length) return;
+    const sz = S.size, n = model.layers.length;
+    let out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 ${sz + 16} ${sz + 16}" role="img" aria-label="Contour template preview"><rect x="-8" y="-8" width="${sz + 16}" height="${sz + 16}" fill="#fff"/>`;
+    model.layers.forEach((ly, i) => {
+      const heavy = ly.k % 5 === 0, d = ly.outline.map(l => 'M' + l.map(([x, y]) => `${x.toFixed(1)},${(sz - y).toFixed(1)}`).join('L') + 'Z').join('');
+      out += `<path d="${d}" fill="none" stroke="${heavy ? '#111' : '#555'}" stroke-width="${heavy ? 0.5 : 0.25}"/>`;
+    });
+    handLabels().forEach(([x, y, t]) => { out += `<rect x="${(x - 2.2).toFixed(1)}" y="${(sz - y - 1.5).toFixed(1)}" width="4.4" height="3" fill="#fff"/><text x="${x.toFixed(1)}" y="${(sz - y).toFixed(1)}" font-size="2.4" font-family="Helvetica,Arial,sans-serif" text-anchor="middle" dominant-baseline="central" fill="#c0432a">${t}</text>`; });
+    out += `<rect x="0" y="0" width="${sz}" height="${sz}" fill="none" stroke="#000" stroke-width="0.6"/></svg>`;
+    $('handLbl').textContent = `A3 contour template · 1:${S.scale} · ${n} layers of ${S.card} mm card`;
+    $('handView').innerHTML = out;
   }
 
   function computePrint(sel) {
@@ -393,9 +472,9 @@
     if (!fitted && stage.getBoundingClientRect().height < 10) { requestAnimationFrame(draw3D); return; }
     group.children.slice().forEach(o => { group.remove(o); o.geometry && o.geometry.dispose(); });
     if (S.output === 'cnc') { drawCarve3D(); if (!fitted) fit3D(); return; }
-    if (S.output !== 'card') { drawPrint3D(); if (!fitted) fit3D(); return; }
-    if (S.cardKind === 'waffle') { drawWaffle3D(); if (!fitted) fit3D(); return; }
-    if (S.cardKind === 'relief') { drawRelief3D(); if (!fitted) fit3D(); return; }
+    if (S.output !== 'card' && S.output !== 'hand') { drawPrint3D(); if (!fitted) fit3D(); return; }
+    if (S.output === 'card' && S.cardKind === 'waffle') { drawWaffle3D(); if (!fitted) fit3D(); return; }
+    if (S.output === 'card' && S.cardKind === 'relief') { drawRelief3D(); if (!fitted) fit3D(); return; }
     const sz = S.size, bt = 6;
     const base = new THREE.Mesh(new THREE.BoxGeometry(sz, bt, sz), new THREE.MeshStandardMaterial({ color: 0xa98d6c, roughness: 0.9 }));
     base.position.set(0, -bt / 2, 0); group.add(base);
@@ -488,23 +567,24 @@
   }
 
   // features on a PDF plan: X, Y map metres to page mm; box clips
-  function drawFeatures(doc, X, Y, box, Gm) {
+  function drawFeatures(doc, X, Y, box, Gm, light) {
+    const t0 = light ? 0.7 : 0, col = (...c) => doc.setDrawColor(...(c.length === 1 ? [c[0], c[0], c[0]] : c).map(v => Math.round(v + (255 - v) * t0))), lw = w => doc.setLineWidth(light ? w * 0.6 : w);
     const poly = (pts, close) => { for (let i = 1; i < pts.length + (close ? 1 : 0); i++) { const p = pts[i - 1], q = pts[i % pts.length]; const a = clipSeg(X(p[0]), Y(p[1]), X(q[0]), Y(q[1]), box[0], box[1], box[2], box[3]); if (a) doc.line(a[0], a[1], a[2], a[3]); } };
     (pack.features || []).forEach(f => {
       const pts = f.pts || []; if (!pts.length || f.kind === 'area') return;
       const closed = G.KINDS[f.kind]?.closed || f.closed;
-      if (f.kind === 'water') { doc.setLineDashPattern([3, 1.5], 0); doc.setDrawColor(58, 95, 140); doc.setLineWidth(0.4); }
-      else if (f.kind === 'road') { doc.setLineDashPattern([], 0); doc.setDrawColor(90); doc.setLineWidth(0.6); }
-      else if (f.kind === 'path') { doc.setLineDashPattern([2, 1.2], 0); doc.setDrawColor(120, 100, 70); doc.setLineWidth(0.3); }
-      else if (f.kind === 'boundary') { doc.setLineDashPattern([4, 1, 1, 1], 0); doc.setDrawColor(192, 67, 42); doc.setLineWidth(0.5); }
-      else { doc.setLineDashPattern([1.5, 1], 0); doc.setDrawColor(0); doc.setLineWidth(0.3); }
+      if (f.kind === 'water') { doc.setLineDashPattern([3, 1.5], 0); col(58, 95, 140); lw(0.4); }
+      else if (f.kind === 'road') { doc.setLineDashPattern([], 0); col(90); lw(0.6); }
+      else if (f.kind === 'path') { doc.setLineDashPattern([2, 1.2], 0); col(120, 100, 70); lw(0.3); }
+      else if (f.kind === 'boundary') { doc.setLineDashPattern([4, 1, 1, 1], 0); col(192, 67, 42); lw(0.5); }
+      else { doc.setLineDashPattern([1.5, 1], 0); col(0); lw(0.3); }
       if (f.kind === 'point') { const [x, y] = pts[0], px = X(x), py = Y(y); if (px > box[0] && px < box[2] && py > box[1] && py < box[3]) { doc.setLineDashPattern([], 0); doc.circle(px, py, 0.8, 'F'); } }
       else poly(pts, closed);
       doc.setLineDashPattern([], 0);
       if (f.name && f.kind === 'building') {
         let cx = 0, cy = 0, ymax = -1e9; pts.forEach(p => { cx += p[0]; cy += p[1]; ymax = Math.max(ymax, p[1]); }); cx /= pts.length;
         const px = X(cx), py = Y(ymax) - 2;
-        if (px > box[0] + 10 && px < box[2] - 10 && py > box[1] + 4 && py < box[3]) { doc.setFontSize(8); doc.setTextColor(0); doc.text(f.name + ' (approx.)', px, py, { align: 'center' }); }
+        if (px > box[0] + 10 && px < box[2] - 10 && py > box[1] + 4 && py < box[3]) { doc.setFontSize(light ? 6.5 : 8); doc.setTextColor(light ? 150 : 0); doc.text(f.name + ' (approx.)', px, py, { align: 'center' }); doc.setTextColor(0); }
       }
     });
   }
@@ -631,6 +711,111 @@
     });
     return doc.output('blob');
   }
+
+  // ---------- hand-cut template: A3 portrait, the square at true model scale, one contour per layer of card,
+  // title block along the bottom with the student's name and the scale. Printed at 100% it is the cutting pattern.
+  async function makeHandPDF() {
+    const { jsPDF } = window.jspdf, doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a3' });
+    const PW = 297, PH = 420, m = 10, Gm = model.G, sz = S.size, K = 1000 / S.scale, n = model.layers.length, iv = S.card * MPM();
+    const ox = (PW - sz) / 2, oy = 30;                                   // square: top-left on the page
+    const px = x => ox + x, py = y => oy + sz - y;                       // model mm → page mm (north up)
+    const X = x => ox + (x - Gm.x0) * K, Y = y => oy + sz - (y - Gm.y0) * K;   // site metres → page mm
+    doc.setLineWidth(0.5); doc.rect(m, m, PW - 2 * m, PH - 2 * m);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(90);
+    doc.text('CONTOUR TEMPLATE · HAND-CUT GREY CARD MODEL', m + 4, m + 6); doc.text('Print at actual size (100%), not fit to page', m + 4, m + 10);
+    // 100 mm print check bar, top right
+    const bx = PW - m - 4 - 100, by = m + 8;
+    doc.setDrawColor(0); doc.setLineWidth(0.4); doc.line(bx, by, bx + 100, by); doc.line(bx, by - 2, bx, by + 2); doc.line(bx + 100, by - 2, bx + 100, by + 2);
+    doc.setLineWidth(0.2); for (let t = 10; t < 100; t += 10) doc.line(bx + t, by - (t === 50 ? 1.6 : 1), bx + t, by);
+    doc.setFontSize(6.5); doc.setTextColor(0); doc.text('PRINT CHECK: THIS LINE = 100 mm', bx + 50, by - 2.5, { align: 'center' }); doc.setTextColor(90);
+    // site features, light, under the contours
+    drawFeatures(doc, X, Y, [ox, oy, ox + sz, oy + sz], Gm, true);
+    // contours: the edge of each layer of card
+    const clip = (a, b) => clipSeg(px(a[0]), py(a[1]), px(b[0]), py(b[1]), ox, oy, ox + sz, oy + sz);
+    model.layers.forEach(ly => {
+      const heavy = ly.k % 5 === 0;
+      doc.setDrawColor(heavy ? 0 : 40); doc.setLineWidth(heavy ? 0.45 : 0.22);
+      ly.outline.forEach(l => { for (let q = 0; q < l.length; q++) { const a = clip(l[q], l[(q + 1) % l.length]); if (a) doc.line(a[0], a[1], a[2], a[3]); } });
+    });
+    // layer numbers on the contour lines, on a white patch: every contour gets at least one, long ones several
+    const lab = handLabels();
+    doc.setFontSize(6.5);
+    lab.forEach(([x, y, txt]) => { const w = doc.getTextWidth(txt) + 1.2; doc.setFillColor(255, 255, 255); doc.rect(px(x) - w / 2, py(y) - 1.5, w, 3, 'F'); });
+    doc.setTextColor(192, 67, 42); lab.forEach(([x, y, txt]) => doc.text(txt, px(x), py(y), { align: 'center', baseline: 'middle' }));
+    doc.setTextColor(0);
+    // frame, corner marks and metre ticks
+    doc.setDrawColor(0); doc.setLineWidth(0.5); doc.rect(ox, oy, sz, sz);
+    doc.setLineWidth(0.2); [[ox, oy], [ox + sz, oy], [ox, oy + sz], [ox + sz, oy + sz]].forEach(([cx, cy]) => { doc.line(cx - 4, cy, cx + 4, cy); doc.line(cx, cy - 4, cx, cy + 4); });
+    const grid = [5, 10, 20, 25, 50, 100, 200].find(g => g * K >= 18) || 200;
+    doc.setFontSize(6.5); doc.setTextColor(80);
+    for (let t = 0; t <= Gm.size + 1e-6; t += grid) {
+      doc.line(ox + t * K, oy + sz, ox + t * K, oy + sz + 2.5); doc.text(String(t), ox + t * K, oy + sz + 5.5, { align: 'center' });
+      doc.line(ox - 2.5, oy + sz - t * K, ox, oy + sz - t * K); doc.text(String(t), ox - 3.5, oy + sz - t * K + 0.8, { align: 'right' });
+    }
+    doc.text('metres from the south-west corner of your square', ox + sz, oy + sz + 9, { align: 'right' });
+    doc.setTextColor(0);
+    // how to use it, between the drawing and the title block
+    const TB = 64, tby = PH - m - TB;                                    // title block height and top
+    let ny = oy + sz + 15;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text('How to cut your model', (PW - Math.max(sz, 180)) / 2, ny); doc.setFont('helvetica', 'normal'); ny += 5;
+    const steps = [
+      `1  Check the print: the line at the top right must measure exactly 100 mm. If not, reprint at actual size (100%).`,
+      `2  Cut a base board ${sz} × ${sz} mm. Layer 01 sits on it.`,
+      `3  Each contour is the edge of one layer of ${S.card} mm grey card, numbered from the bottom up (red numbers). Layer 01 is everything inside contour 01, layer 02 everything inside contour 02, and so on.`,
+      `4  Prick through the template along the contour onto the card (or use carbon paper), with the square's corners. Number each piece.`,
+      `5  Cut with a sharp scalpel on a mat. Where a contour meets the edge of the square, cut along the edge.`,
+      `6  Glue 01 to the base, square to the edges, then 02 on 01 and so on. Prick the next contour onto each layer before you glue it, so you can line the next piece up.`];
+    doc.setFontSize(7.5);
+    const sw = Math.max(sz, 180);
+    const nx0 = (PW - sw) / 2;
+    steps.forEach(t => doc.splitTextToSize(t, sw).forEach(line => { if (ny < tby - 3) doc.text(line, nx0, ny); ny += 3.6; }));
+    // layer table: number and level of every contour
+    ny += 3;
+    const rowsAvail = Math.floor((tby - 4 - ny - 5) / 3.4), cols = Math.max(Math.ceil(n / Math.max(1, rowsAvail)), Math.min(7, Math.ceil(n / 5))), colW = sw / Math.max(cols, 6);
+    if (rowsAvail >= 3 && colW >= 18) {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text('Layers', nx0, ny); doc.setFont('helvetica', 'normal'); ny += 4.5;
+      const rows = Math.ceil(n / cols); doc.setFontSize(7);
+      model.layers.forEach((ly, i) => { const cx = nx0 + Math.floor(i / rows) * colW, cy = ny + (i % rows) * 3.4; doc.setTextColor(192, 67, 42); doc.text(String(ly.k).padStart(2, '0'), cx, cy); doc.setTextColor(0); doc.text(`${G.fmt(ly.L)} m`, cx + 5, cy); });
+    }
+
+    // ---- title block along the bottom
+    doc.setDrawColor(0); doc.setLineWidth(0.5); doc.rect(m, tby, PW - 2 * m, TB);
+    const c1 = m + 92, c2 = c1 + 92, c3 = PW - m;                        // three columns: site | details | north, scale bar, key plan
+    doc.setLineWidth(0.25); doc.line(c1, tby, c1, tby + TB); doc.line(c2, tby, c2, tby + TB);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.text(doc.splitTextToSize(pack.name, 84)[0], m + 4, tby + 9);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(60);
+    doc.text(doc.splitTextToSize([pack.place, pack.notes ? pack.notes.split(/\n|\. /)[0] : ''].filter(Boolean).join(' · '), 84).slice(0, 2), m + 4, tby + 15);
+    doc.setTextColor(0); doc.setFontSize(10); doc.text('Contour template', m + 4, tby + 27); doc.setFontSize(8); doc.setTextColor(60); doc.text('hand-cut grey card site model', m + 4, tby + 31.5);
+    doc.setFontSize(6); doc.setTextColor(110); doc.text('NAME', m + 4, tby + 40);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(0); doc.text(doc.splitTextToSize(S.name || ' ', 84)[0], m + 4, tby + 48);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(90); doc.text('ATU Sligo · Department of Architecture', m + 4, tby + TB - 4);
+    const rows = [['SCALE', `1:${S.scale} at A3`], ['CARD', `${S.card} mm grey card · contours every ${mFmt(iv)} m`], ['LAYERS', `${n} layers · ${G.fmt(model.layers[0].L)} to ${G.fmt(model.layers[n - 1].L)} m`],
+      ['MODEL', `${sz} × ${sz} mm · ${mFmt(Gm.size)} × ${mFmt(Gm.size)} m${S.tile ? ' · class tile ' + tileId() : ''}`], ['DATE', today()]];
+    let ry = tby; rows.forEach(([k, v], i) => { if (i) { doc.setDrawColor(170); doc.line(c1, ry, c2, ry); } doc.setFontSize(6); doc.setTextColor(110); doc.text(k, c1 + 3, ry + 4); doc.setFontSize(k === 'SCALE' ? 11 : 8.5); doc.setTextColor(0); doc.setFont('helvetica', k === 'SCALE' ? 'bold' : 'normal'); doc.text(doc.splitTextToSize(v, 86)[0], c1 + 3, ry + 10); doc.setFont('helvetica', 'normal'); ry += TB / rows.length; });
+    // north arrow and scale bar
+    const nx = c2 + 12, nyy = tby + 16;
+    doc.setDrawColor(0); doc.setLineWidth(0.3); doc.circle(nx, nyy, 6.5); doc.setFillColor(0); doc.triangle(nx, nyy - 9, nx - 2.5, nyy + 1.5, nx + 2.5, nyy + 1.5, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text('N', nx, nyy - 10.5, { align: 'center' }); doc.setFont('helvetica', 'normal');
+    const sbm = [2, 5, 10, 20, 25, 50, 100].find(v => v * K * 4 >= 40 && v * K * 4 <= 60) || [2, 5, 10, 20, 25, 50, 100].find(v => v * K * 4 >= 40) || 100;
+    const sbx = c2 + 24, sby = tby + 17, seg = sbm * K;
+    for (let i = 0; i < 4; i++) if (i % 2 === 0) doc.rect(sbx + i * seg, sby, seg, 2, 'F');
+    doc.rect(sbx, sby, seg * 4, 2); doc.setFontSize(6.5); for (let i = 0; i <= 4; i++) doc.text(String(i * sbm), sbx + i * seg, sby - 1.5, { align: 'center' }); doc.text('m', sbx + seg * 4 + 2.5, sby + 1.8);
+    // key plan: where the square sits on the site
+    try {
+      const img = await hillshadeURL(), kw = c3 - c2 - 8, kh = Math.min(TB - 30, kw * H / W), kw2 = kh * W / H, kx = c2 + 4, ky = tby + 26;
+      doc.addImage(img, 'JPEG', kx, ky, kw2, kh);
+      doc.setDrawColor(192, 67, 42); doc.setLineWidth(0.5);
+      const cx = v => Math.max(kx, Math.min(kx + kw2, v)), cy = v => Math.max(ky, Math.min(ky + kh, v));
+      const x1 = cx(kx + S.x / W * kw2), x2 = cx(kx + (S.x + Q()) / W * kw2), y1 = cy(ky + (H - S.y - Q()) / H * kh), y2 = cy(ky + (H - S.y) / H * kh); doc.rect(x1, y1, x2 - x1, y2 - y1);
+      doc.setFontSize(6); doc.setTextColor(90); doc.text('Key plan: your square on the site', kx, ky + kh + 3.5); doc.setTextColor(0);
+    } catch (e) { }
+    return doc.output('blob');
+  }
+  $('dlHand').onclick = async () => {
+    const b = $('dlHand'); b.disabled = true; const t = b.textContent; b.textContent = 'Making PDF…';
+    try { download(await makeHandPDF(), `${slug()}_${SITE}_contour-template_1-${S.scale}_A3.pdf`); } catch (e) { status('Could not make the PDF: ' + e.message, 'err'); }
+    b.textContent = t; b.disabled = false;
+  };
 
   $('dlPlan').onclick = async () => {
     const b = $('dlPlan'); b.disabled = true; const t = b.textContent; b.textContent = 'Making PDF…';

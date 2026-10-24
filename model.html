@@ -29,7 +29,7 @@
     <div>
       <div class="eyebrow">Task C and Stage 2 · your working area</div>
       <h1>Your own piece of <em>Gleniff</em>.</h1>
-      <p class="lede">Drag the square over the part of the site you want to work in, then choose how to make it: a <span class="js-ms">1:200</span> contour model cut from board on the laser cutter, a 3D print for the Bambu Lab P1S (the model itself, or a mould for casting it in plaster), or a carving on the CNC router. Either way you also get a <span class="js-ps">1:100</span> contour plan of the same area to draw on.</p>
+      <p class="lede">Drag the square over the part of the site you want to work in, then choose how to make it: a <span class="js-ms">1:200</span> contour model cut from board on the laser cutter, a 3D print for the Bambu Lab P1S (the model itself, or a mould for casting it in plaster), a carving on the CNC router, or a grey card model you cut by hand from a printed A3 contour template. Whichever you choose, you also get a <span class="js-ps">1:100</span> contour plan of the same area to draw on.</p>
       <p class="onpage"><a href="#pick">Choose your square</a> · <a href="#preview">Preview</a> · <a href="#make">Making it</a></p>
     </div>
     <dl class="spec">
@@ -61,6 +61,7 @@
                 <button type="button" id="oCard" aria-pressed="true"><b>Laser cutter</b><small>layers · waffle · relief</small></button>
                 <button type="button" id="oPrint" aria-pressed="false"><b>3D print</b><small>model or plaster mould · Bambu Lab P1S · 3MF</small></button>
                 <button type="button" id="oCnc" aria-pressed="false"><b>CNC carving</b><small>up to 1200 mm · VCarve Pro · STL</small></button>
+                <button type="button" id="oHand" aria-pressed="false"><b>Hand-cut card</b><small>grey card · A3 contour template · PDF</small></button>
               </div>
             </div>
             <div class="cfield only-print"><span class="lbl" id="kindLbl">Print as</span>
@@ -88,11 +89,13 @@
             <div class="cfield"><label class="lbl" for="mName">Your name (for the title block)</label><input type="text" id="mName" maxlength="40" placeholder="e.g. Aoife Gallagher" autocomplete="name"></div>
             <div class="mrow">
               <div class="cfield hide-cnc"><label class="lbl" for="mSize">Model size</label>
-                <select id="mSize"><option value="200">200 × 200 mm</option><option value="210" hidden>210 × 210 mm</option><option value="230" hidden>230 × 230 mm</option><option value="250">250 × 250 mm</option><option value="300" selected>300 × 300 mm</option></select></div>
+                <select id="mSize"><option value="150" hidden>150 × 150 mm</option><option value="200">200 × 200 mm</option><option value="210" hidden>210 × 210 mm</option><option value="230" hidden>230 × 230 mm</option><option value="250">250 × 250 mm</option><option value="300" selected>300 × 300 mm</option></select></div>
               <div class="cfield only-card not-relief"><label class="lbl" for="mBoard">Board</label>
                 <select id="mBoard"><option value="1">1 mm (0.2 m layers)</option><option value="2">2 mm (0.4 m layers)</option><option value="3">3 mm (0.6 m layers)</option><option value="5" selected>5 mm (1 m layers)</option></select></div>
               <div class="cfield only-card only-layers"><label class="lbl" for="mLam" title="Glue several thin sheets into one thicker layer, for a bigger contour step">Sheets glued per layer</label>
                 <select id="mLam"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+              <div class="cfield only-hand"><label class="lbl" for="mCard">Grey card</label>
+                <select id="mCard"><option value="1">1 mm</option><option value="1.5">1.5 mm</option><option value="2" selected>2 mm</option><option value="2.5">2.5 mm</option><option value="3">3 mm</option></select></div>
               <div class="cfield only-model"><label class="lbl" for="mBase">Base slab</label>
                 <select id="mBase"><option value="2">2 mm</option><option value="3" selected>3 mm</option><option value="5">5 mm</option></select></div>
               <div class="cfield only-mould"><label class="lbl" for="mCast" title="Plaster under the lowest ground">Plaster base</label>
@@ -142,12 +145,14 @@
               <button type="button" class="primary only-print" id="dlPrint" disabled>Download 3D print (3MF)</button>
               <button type="button" class="only-print" id="dlStl" disabled>Download STL instead</button>
               <button type="button" class="primary only-cnc" id="dlCnc" disabled>Download CNC model (ZIP)</button>
+              <button type="button" class="primary only-hand" id="dlHand" disabled>Download A3 contour template (PDF)</button>
             </div>
             <p class="small only-card only-layers">The kit holds every laser sheet as SVG, DXF and PDF, plus an assembly guide. Red lines cut, blue lines engrave.</p>
             <p class="small only-card only-waffle">The kit holds every section piece on laser sheets as SVG, DXF and PDF, plus an assembly guide. Red lines cut, blue lines engrave the piece labels.</p>
             <p class="small only-card only-relief">A greyscale image for the laser's 3D or greyscale engraving mode: black engraves deepest (the lowest ground), white is left untouched. It carries its own resolution, so it imports at the right size.</p>
             <button type="button" class="only-tile" id="dlTiles">Download class tile map (PDF)</button>
             <p class="small only-model">Open the 3MF in Bambu Studio: it lands on the plate at the right size, ready to slice. Use the STL only if another slicer asks for one.</p>
+            <p class="small only-hand">One A3 sheet with your square at true scale: every contour is the edge of one layer of card, numbered from the bottom up, with your name and the scale in the title block. Print it at actual size (100%).</p>
             <p class="small only-cnc">The ZIP holds the model as an STL to import into VCarve Pro, and a setup sheet for the technician. VCarve makes the toolpaths and G-code.</p>
             <p class="small only-mould">The mould is your square upside down and mirrored, so the plaster cast comes out the right way round. Fill it to the brim: the rim is the pour line.</p>
           </div>
@@ -161,11 +166,12 @@
       <div class="sec-head">
         <div class="eyebrow">02 · Preview</div>
         <div>
-          <h2><span class="only-card">Your model, and how it cuts</span><span class="only-model">Your model, and how it prints</span><span class="only-mould">Your mould, and how it prints</span><span class="only-cnc">Your carving, and the block it comes from</span></h2>
+          <h2><span class="only-card">Your model, and how it cuts</span><span class="only-model">Your model, and how it prints</span><span class="only-mould">Your mould, and how it prints</span><span class="only-cnc">Your carving, and the block it comes from</span><span class="only-hand">Your model, and the template you cut it from</span></h2>
           <p class="only-card not-relief">The 3D view shows the finished model at true scale on its base. The sheet view shows exactly what goes to the laser cutter.</p>
           <p class="only-card only-relief">The 3D view suggests the engraved plaque (an engraving is only a few millimetres deep, so its heights are not to scale). The image is exactly what goes to the laser.</p>
           <p class="only-model">The 3D view shows the print as it will come off the plate. The bed view shows where it sits on the 256 × 256 mm P1S build plate.</p>
           <p class="only-cnc">The 3D view shows the carving inside the block of material it is cut from. The section shows how deep the cutter goes, and how much material stays uncut under the lowest ground.</p>
+          <p class="only-hand">The 3D view shows the finished model, one layer of card per contour. The template is the A3 sheet you print: the contour lines are what you cut.</p>
           <p class="only-mould">The 3D view shows the mould as it will come off the plate: your site upside down and mirrored, inside tapered walls. The bed view shows where it sits on the 256 × 256 mm P1S build plate.</p>
         </div>
       </div>
@@ -183,6 +189,8 @@
           <div class="psheet pbed only-print" id="bedView"></div>
           <div class="phead only-cnc"><span class="lbl">Section through the block · Mantech Falcon router</span></div>
           <div class="psheet pcnc only-cnc" id="cncView"></div>
+          <div class="phead only-hand"><span class="lbl" id="handLbl">A3 contour template</span></div>
+          <div class="psheet only-hand" id="handView"></div>
         </div>
       </div>
     </div>
@@ -199,6 +207,7 @@
           <p class="only-card only-relief">A shallow relief engraved into a single sheet: quick, cheap and good to handle, though its heights are not to scale.</p>
           <p class="only-model">One print, no assembly. Book the printer: a 230 mm site at 0.2 mm layers is an overnight job.</p>
           <p class="only-mould">Print the mould, then cast as many plaster models as you like from it.</p>
+          <p class="only-hand">No machines: a printed template, grey card, a sharp blade and a cutting mat.</p>
           <p class="only-cnc">You bring the file and the material; the technician sets up the toolpaths in VCarve Pro and runs the router.</p>
         </div>
       </div>
@@ -207,6 +216,13 @@
         <li><div class="n">Cut</div><div><p>Run the blue engrave lines first as a light score, then the red cut lines. Test your settings on an offcut. Each piece is engraved with its layer number and level, e.g. <code>07 15</code> (layer 07, level 15 m).</p></div></li>
         <li><div class="n">Stack</div><div><p>Glue layer 01 to the base, square to the edges. Each next layer sits on the blue line engraved on the one below. With hollow layers, glue only on the strip the next layer covers.</p></div></li>
         <li><div class="n">Draw</div><div><p>Print the <span class="js-ps">1:100</span> plan at 100% on the sheet size it names. Use it as the base for your site analysis overlays and your Stage 2 design.</p></div></li>
+      </ol>
+      <ol class="steps only-hand">
+        <li><div class="n">Print</div><div><p>Print the template on A3 at <b>actual size</b> (100%, not "fit to page"). Check the 100 mm bar with a ruler before you cut anything: if it is off, the model is not at <span class="js-ms">1:200</span>.</p></div></li>
+        <li><div class="n">Base</div><div><p>Cut a base exactly your model size from thick grey board or foamboard. This is the ground below layer 01.</p></div></li>
+        <li><div class="n">Trace</div><div><p>Each contour is the edge of one layer, numbered from the bottom up: layer 01 is everything inside contour 01. Lay the template over a sheet of card and prick through along the contour with a pin every few millimetres (or use carbon paper), with the square's corners pricked too. Write the layer number on the card.</p></div></li>
+        <li><div class="n">Cut</div><div><p>Cut along the line with a sharp scalpel on a cutting mat, keeping the blade upright; change blades often. Where a contour meets the edge of the square, cut along the square's edge.</p></div></li>
+        <li><div class="n">Stack</div><div><p>Glue layer 01 to the base, square to the edges, then 02 on 01 and so on, lining each piece up with the square's edges and the line of the next contour pricked on the layer below. PVA or spray mount, used sparingly.</p></div></li>
       </ol>
       <ol class="steps only-model">
         <li><div class="n">Open</div><div><p>Open the <code>.3mf</code> in Bambu Studio and choose the Bambu Lab P1S with a 0.4 mm nozzle. The model is already 230 × 230 mm and placed clear of the plate's front-left corner, which the P1S can't print on. Don't scale it, or it is no longer <span class="js-ms">1:200</span>. If you move it, press Arrange (A) to put it back in a safe spot.</p></div></li>

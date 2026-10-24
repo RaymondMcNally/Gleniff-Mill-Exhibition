@@ -28,12 +28,13 @@ button.primary:hover{opacity:.9}
 main[data-out="card"] :is(.only-print,.only-model,.only-mould), main:not([data-out="card"]) .only-card,
 main[data-out="print"] .only-mould, main[data-out="mould"] .only-model{display:none!important}
 main[data-out="cnc"] :is(.only-print,.only-model,.only-mould,.hide-cnc), main:not([data-out="cnc"]) .only-cnc{display:none!important}
+main[data-out="hand"] :is(.only-print,.only-model,.only-mould,.hide-hand), main:not([data-out="hand"]) .only-hand{display:none!important}
 /* laser cutter kinds, and class tile mode */
 main:not([data-kind="layers"]) .only-layers, main:not([data-kind="waffle"]) .only-waffle, main:not([data-kind="relief"]) .only-relief, main[data-kind="relief"] .not-relief, main:not([data-tile="on"]) .only-tile{display:none!important}
 .psheet.prelief img{width:100%;max-width:420px;height:auto;image-rendering:auto;border:1px solid var(--rule);background:#000}
 .seg3 button{font-size:.74rem;padding:7px 4px}
 .outsel{display:flex;flex-direction:column;gap:6px}
-.outbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.outbtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 @media (max-width:520px){.outbtns{grid-template-columns:1fr}}
 .outbtns button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:10px;border-radius:3px;min-width:0}
 .outbtns button b{font:700 .98rem var(--display);letter-spacing:-.01em}
