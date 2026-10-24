@@ -102,3 +102,21 @@ tr.here td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
 .slicer .ctrl{grid-template-columns:auto 1fr auto auto}
 .slicer .ctrl .val{min-width:0}
 @media (max-width:560px){.slicer .ctrl{grid-template-columns:auto 1fr auto}.slicer .ctrl button{grid-column:1/-1}}
+
+/* "Test yourself" links to the Plan to section game */
+.play-hero{display:inline-flex;align-items:center;gap:10px;margin-top:6px;padding:10px 16px 10px 10px;background:var(--cut);color:#fff;border-radius:3px;text-decoration:none;font-weight:600;transition:transform .15s,box-shadow .15s}
+.play-hero span{font:500 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:4px 7px;border-radius:2px}
+.play-hero:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.playcard{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;align-items:center;margin-top:30px;padding:22px 26px;background:var(--ink);color:var(--paper);text-decoration:none;border-radius:4px;transition:transform .15s,box-shadow .15s}
+.playcard:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.22)}
+.playcard:hover .play-btn{background:#fff;color:var(--cut)}
+.play-art{width:100%;height:auto;display:block}
+.play-sec{animation:playdrop 2.8s ease-in-out infinite}
+@keyframes playdrop{0%,15%{transform:translate(70px,-8px) rotate(-4deg);opacity:.0}35%{opacity:1}60%,100%{transform:none;opacity:1}}
+.play-text{display:flex;flex-direction:column;gap:8px;min-width:0}
+.play-eyebrow{font:500 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--paper) 70%,var(--cut))}
+.play-text strong{font-size:clamp(1.6rem,3.2vw,2.3rem);line-height:1;letter-spacing:-.03em;font-weight:800}
+.play-text>span:not([class]){max-width:58ch;opacity:.85}
+.play-btn{align-self:flex-start;margin-top:4px;padding:10px 16px;background:var(--cut);color:#fff;border-radius:3px;font-weight:600;transition:background .15s,color .15s}
+@media (max-width:640px){.playcard{grid-template-columns:minmax(0,1fr);padding:18px}.play-art{max-width:260px}}
+@media (prefers-reduced-motion:reduce){.play-sec{animation:none}.playcard,.play-hero{transition:none}}
