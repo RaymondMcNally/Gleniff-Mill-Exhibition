@@ -158,7 +158,7 @@
   // ---------- compute
   let model = null, packed = null, pm = null, Gcur = null, sheetIx = 0, timer = 0, wf = null, wpk = null, rel = null, r3d = null, sheetSrc = null;
   const datum = () => S.tile ? DEM.lo : undefined;                       // class tiles: one base level for the whole site
-  const outBtns = ['dlPlan', 'dlKit', 'dlPrint', 'dlStl', 'dlCnc', 'dlWaffle', 'dlRelief', 'dlHand'];
+  const outBtns = ['dlPlan', 'dlPlot', 'dlKit', 'dlPrint', 'dlStl', 'dlCnc', 'dlWaffle', 'dlRelief', 'dlHand'];
   function queue() { clearTimeout(timer); status('Working out your model…'); outBtns.forEach(id => $(id).disabled = true); timer = setTimeout(compute, 180); }
   const selM = () => ({ x0: S.x * 0.2, y0: S.y * 0.2, size: S.size * MPM() });
   function compute() {
@@ -194,7 +194,7 @@
     const warn = Gm.coverage < 0.999 ? `About ${Math.round((1 - Gm.coverage) * 100)}% of this square is outside the survey and will be left at base level. ` : '';
     const many = model.layers.length * S.lam > 120 ? ` That is ${model.layers.length * S.lam} sheets of card to cut and stack: a bigger contour interval (more sheets glued per contour) or a smaller scale keeps it manageable.` : '';
     status(warn + `Ready: ${model.layers.length} layers from ${G.fmt(model.layers[0].L)} m to ${G.fmt(model.layers[model.layers.length - 1].L)} m` + (S.lam > 1 ? `, each ${S.lam} sheets of ${S.board} mm glued together (${model.layers.length * S.lam} pieces of card).` : '.') + many, warn || many ? 'warn' : 'ok');
-    $('dlPlan').disabled = $('dlKit').disabled = false;
+    $('dlPlan').disabled = $('dlPlot').disabled = $('dlKit').disabled = false;
     draw3D(); drawSheet();
   }
 
@@ -220,7 +220,7 @@
     const warn = Gm.coverage < 0.999 ? `About ${Math.round((1 - Gm.coverage) * 100)}% of this square is outside the survey and will be left at base level. ` : '';
     const many = n > 40 ? ` That is ${n} pieces of card to cut by hand: thicker card, a smaller scale or a smaller square keeps it manageable.` : '';
     status(warn + `Ready: ${n} layers of ${S.card} mm card, contours every ${mFmt(iv)} m from ${G.fmt(model.layers[0].L)} m to ${G.fmt(model.layers[n - 1].L)} m.` + many, warn || many ? 'warn' : 'ok');
-    $('dlPlan').disabled = $('dlHand').disabled = false;
+    $('dlPlan').disabled = $('dlPlot').disabled = $('dlHand').disabled = false;
     draw3D(); drawHand();
   }
   // layer numbers for the hand-cut template, placed on the contour lines (model mm): every contour gets at least one,
@@ -286,7 +286,7 @@
     $('oSheets').textContent = mould ? `${pm.cast} × ${pm.cast} mm` : `${pm.size} × ${pm.size} mm`;
     $('oHeight').textContent = mould ? `${pm.volume.toFixed(1)} litres` : S.vex === 1 ? `1:${S.scale} true` : `1:${+(S.scale / S.vex).toFixed(1)} (${S.vex}×)`;
     $('oPaper').textContent = planPaper().name;
-    $('dlPlan').disabled = false;
+    $('dlPlan').disabled = $('dlPlot').disabled = false;
     if (pm.height > MAXH) {
       status(`At ${pm.height.toFixed(0)} mm this print is taller than the P1S can build (${MAXH} mm). Choose true-scale heights or move the square.`, 'err');
     } else {
@@ -315,7 +315,7 @@
     $('oSheets').textContent = `${blk} × ${blk} × ${S.stock}`;
     $('oHeight').textContent = pm.vex === 1 ? `1:${S.scale} true` : `1:${Math.round(S.scale / pm.vex)} (fitted)`;
     $('oPaper').textContent = planPaper().name;
-    $('dlPlan').disabled = false;
+    $('dlPlan').disabled = $('dlPlot').disabled = false;
     if (pm.height > S.stock + 0.01) {
       status(`At true scale this square is ${pm.height.toFixed(0)} mm tall, more than your ${S.stock} mm material. Choose thicker material (laminate sheets, or a foam block), a smaller square, or Heights: Fit to the material.`, 'err');
     } else {
@@ -415,7 +415,7 @@
     $('oPaper').textContent = planPaper().name;
     const warn = Gm.coverage < 0.999 ? `About ${Math.round((1 - Gm.coverage) * 100)}% of this square is outside the survey and will be cut at base level. ` : '';
     status(warn + `Ready: ${n * 2} pieces, a section every ${wf.spacing.toFixed(1)} mm (${(wf.spacing * MPM()).toFixed(1)} m), on ${wpk.count} sheet${wpk.count > 1 ? 's' : ''}.`, warn ? 'warn' : 'ok');
-    $('dlPlan').disabled = $('dlWaffle').disabled = false;
+    $('dlPlan').disabled = $('dlPlot').disabled = $('dlWaffle').disabled = false;
     draw3D(); drawSheet();
   }
 
@@ -446,7 +446,7 @@
     r3d = MM.buildCarve(DEM, sel, { scale: S.scale, base: 4, stock: 16, fit: 'stock', maxCells: 150, datum: datum(), span: S.tile ? DEM.hi - DEM.lo : undefined });
     const warn = Gm.coverage < 0.999 ? `About ${Math.round((1 - Gm.coverage) * 100)}% of this square is outside the survey and will engrave as the lowest ground. ` : '';
     status(warn + `Ready: a ${px} × ${px} pixel image for ${S.size} × ${S.size} mm. Black is ${G.fmt(rel.lo)} m, white ${G.fmt(rel.hi)} m.`, warn ? 'warn' : 'ok');
-    $('dlPlan').disabled = $('dlRelief').disabled = false;
+    $('dlPlan').disabled = $('dlPlot').disabled = $('dlRelief').disabled = false;
     draw3D();
   }
 
@@ -549,7 +549,7 @@
   function planScale() { const ps = [10, 5, 2, 1, 0.5].find(f => Gcur.size * f <= 800) || 0.5; return { ps, ratio: 1000 / ps }; }
   // plan contour interval: 0.5 m at 1:100 and 1:200, 1 m at 1:500, 2 m beyond
   function planStep() { if (!Gcur) return 0.5; const ps = planScale().ps; return ps >= 5 ? 0.5 : ps >= 2 ? 1 : 2; }
-  function planLabels() { const r = planScale().ratio; $('dlPlan').textContent = `Download 1:${r} plan (PDF)`; $('specPlan').textContent = `1:${r}`; document.querySelectorAll('.js-ps').forEach(e => e.textContent = `1:${r}`); $('specCont').textContent = `every ${planStep()} m`; }
+  function planLabels() { const r = planScale().ratio; $('dlPlan').textContent = `Download 1:${r} plan (PDF)`; $('dlPlot').textContent = `Download 1:${plotScale().ratio} plotter SVG (NextDraw, A1)`; $('specPlan').textContent = `1:${r}`; document.querySelectorAll('.js-ps').forEach(e => e.textContent = `1:${r}`); $('specCont').textContent = `every ${planStep()} m`; }
   function planPaper() { const D = Gcur.size * planScale().ps; return D <= 545 ? { name: 'A1 landscape', w: 841, h: 594 } : { name: 'A0 landscape', w: 1189, h: 841 }; }
   function clipSeg(x1, y1, x2, y2, xmin, ymin, xmax, ymax) {      // Liang–Barsky
     let t0 = 0, t1 = 1; const dx = x2 - x1, dy = y2 - y1;
@@ -811,6 +811,203 @@
     } catch (e) { }
     return doc.output('blob');
   }
+  // ---------- pen-plotter plan: the contour plan as an Inkscape SVG for the Bantam Tools NextDraw 2234 (A1, 864 × 594 mm travel).
+  // Every mark is a single stroke (no fills, no fonts, no dashes left to the software), in mm, joined into long paths,
+  // on numbered Inkscape layers, one per pen. Layer names use NextDraw layer codes: "!" pauses for a pen change, "%" is never plotted.
+  function plotScale() { const ps = [10, 5, 2, 1, 0.5].find(f => Gcur.size * f <= 545) || 0.5; return { ps, ratio: 1000 / ps }; }
+  const HX = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[·•]/g, '-').replace(/×/g, 'x').replace(/[–—]/g, '-').replace(/[′’‘]/g, "'").replace(/[“”]/g, '"').replace(/°/g, ' deg').replace(/[^\x20-\x7e]/g, '');
+  function hWidth(s, h) { const k = h / 21; let w = 0; for (const ch of HX(s)) { const g = window.HERSHEY[ch] || window.HERSHEY[' ']; w += (g[1] - g[0]) * k; } return w; }
+  // single-stroke text: h = cap height (mm); align left|center|right; base 'alpha' (baseline) or 'middle'; ang in degrees, y down
+  function hText(s, x, y, h, o = {}) {
+    const k = h / 21, w = hWidth(s, h), out = [];
+    let cx = o.align === 'center' ? -w / 2 : o.align === 'right' ? -w : 0; const dy = o.base === 'middle' ? -10.5 * k : -9 * k;
+    const a = (o.ang || 0) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
+    for (const ch of HX(s)) {
+      const g = window.HERSHEY[ch] || window.HERSHEY[' '];
+      g[2].forEach(st => { const pl = []; for (let i = 0; i < st.length; i += 2) { const px = cx + (st[i] - g[0]) * k, py = st[i + 1] * k + dy; pl.push([x + px * ca - py * sa, y + px * sa + py * ca]); } out.push(pl); });
+      cx += (g[1] - g[0]) * k;
+    }
+    return out;
+  }
+  function hWrap(s, h, w) { const words = HX(s).split(' '), lines = []; let cur = ''; words.forEach(wd => { const t = cur ? cur + ' ' + wd : wd; if (hWidth(t, h) > w && cur) { lines.push(cur); cur = wd; } else cur = t; }); if (cur) lines.push(cur); return lines; }
+  // join loose 2-point segments that share end points into long polylines (pen stays down)
+  function chain(segs) {
+    const key = (x, y) => Math.round(x * 1000) + ',' + Math.round(y * 1000), ends = new Map(), used = new Uint8Array(segs.length), out = [];
+    const add = (k, i) => { const l = ends.get(k); l ? l.push(i) : ends.set(k, [i]); };
+    segs.forEach((s, i) => { add(key(s[0], s[1]), i); add(key(s[2], s[3]), i); });
+    const next = (x, y) => { const l = ends.get(key(x, y)); if (!l) return -1; for (const i of l) if (!used[i]) return i; return -1; };
+    for (let i = 0; i < segs.length; i++) {
+      if (used[i]) continue; used[i] = 1; const s = segs[i], pl = [[s[0], s[1]], [s[2], s[3]]];
+      for (const fwd of [true, false]) for (;;) {
+        const p = fwd ? pl[pl.length - 1] : pl[0], j = next(p[0], p[1]); if (j < 0) break; used[j] = 1;
+        const t = segs[j], q = key(t[0], t[1]) === key(p[0], p[1]) ? [t[2], t[3]] : [t[0], t[1]];
+        fwd ? pl.push(q) : pl.unshift(q);
+      }
+      out.push(pl);
+    }
+    return out;
+  }
+  function rdp(pl, eps) {
+    if (pl.length < 3) return pl; const keep = new Uint8Array(pl.length); keep[0] = keep[pl.length - 1] = 1; const st = [[0, pl.length - 1]];
+    while (st.length) { const [a, b] = st.pop(), [ax, ay] = pl[a], [bx, by] = pl[b], dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1e-9; let md = 0, mi = -1;
+      for (let i = a + 1; i < b; i++) { const d = Math.abs((pl[i][0] - ax) * dy - (pl[i][1] - ay) * dx) / L; if (d > md) { md = d; mi = i; } }
+      if (md > eps) { keep[mi] = 1; st.push([a, mi], [mi, b]); } }
+    return pl.filter((_, i) => keep[i]);
+  }
+  // break a polyline into real dashes (pattern in mm: on, off, on, off…)
+  function dashed(pl, pat) {
+    const out = []; let k = 0, left = pat[0], cur = [pl[0]];
+    for (let i = 1; i < pl.length; i++) {
+      let [x0, y0] = pl[i - 1]; const [x1, y1] = pl[i]; let seg = Math.hypot(x1 - x0, y1 - y0);
+      while (seg > 1e-9) {
+        const t = Math.min(left, seg), f = t / seg, nx = x0 + (x1 - x0) * f, ny = y0 + (y1 - y0) * f;
+        if (k % 2 === 0) cur.push([nx, ny]);
+        seg -= t; left -= t; x0 = nx; y0 = ny;
+        if (left <= 1e-9) { if (k % 2 === 0 && cur.length > 1) out.push(cur); k = (k + 1) % pat.length; left = pat[k]; cur = [[x0, y0]]; }
+      }
+    }
+    if (k % 2 === 0 && cur.length > 1) out.push(cur);
+    return out;
+  }
+  const circ = (cx, cy, r, n = 36) => Array.from({ length: n + 1 }, (_, i) => [cx + r * Math.cos(i / n * 2 * Math.PI), cy + r * Math.sin(i / n * 2 * Math.PI)]);
+  const rectPl = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]];
+  // fill a rectangle with back-and-forth strokes (one pen-down) spaced to the pen
+  const hatchRect = (x, y, w, h, gap) => { const pl = []; let up = true; for (let yy = y; yy <= y + h + 1e-6; yy += gap) { pl.push(up ? [x, yy] : [x + w, yy], up ? [x + w, yy] : [x, yy]); up = !up; } return pl; };
+
+  async function makePlotterSVG() {
+    const Gm = Gcur, PW = 841, PH = 594;
+    MM.setScale(S.scale);
+    const { ps, ratio } = plotScale(), D = Gm.size * ps, m = 12, dx0 = 24, dy0 = (PH - D) / 2, box = [dx0, dy0, dx0 + D, dy0 + D];
+    const cstep = ps >= 5 ? 0.5 : ps >= 2 ? 1 : 2, lab = cstep < 1 ? 1 : 5, idx = cstep < 1 ? 5 : cstep < 2 ? 5 : 10, grid = ps >= 5 ? 10 : ps >= 2 ? 20 : ps >= 1 ? 50 : 100, f = Math.max(1, 5 / ps);
+    const X = x => dx0 + (x - Gm.x0) * ps, Y = y => dy0 + D - (y - Gm.y0) * ps;
+    // pens: id → [layer name, colour, nominal pen width mm]. Order = plot order.
+    const L = { fine: [], text: [], heavy: [], water: [], bound: [] };
+    const NAMES = {
+      fine: ['1 Fine black pen - minor contours', '#555', 0.1],
+      text: ['2 Fine black pen - figures, spot heights, roads, buildings, title', '#000', 0.1],
+      heavy: ['!3 Medium black pen - index contours, frame, north, scale bar', '#000', 0.35],
+      water: ['!4 Blue pen - watercourses', '#3a5f8c', 0.3],
+      bound: ['!5 Red pen - site boundary', '#c0432a', 0.3] };
+    const clipPl = pl => { const out = []; let cur = null; for (let i = 1; i < pl.length; i++) { const a = clipSeg(pl[i - 1][0], pl[i - 1][1], pl[i][0], pl[i][1], ...box); if (!a) { cur = null; continue; }
+      if (cur && Math.abs(cur[cur.length - 1][0] - a[0]) < 1e-6 && Math.abs(cur[cur.length - 1][1] - a[1]) < 1e-6) cur.push([a[2], a[3]]); else { cur = [[a[0], a[1]], [a[2], a[3]]]; out.push(cur); } } return out; };
+
+    // contours: clip, chain, simplify
+    const lv = MM.planSegments(Gm, cstep);
+    lv.forEach(({ L: lev, segs }) => {
+      const five = Math.abs(lev / idx - Math.round(lev / idx)) < 1e-6, cl = [];
+      for (let k = 0; k < segs.length; k += 4) { const a = clipSeg(X(segs[k]), Y(segs[k + 1]), X(segs[k + 2]), Y(segs[k + 3]), ...box); if (a && (a[0] !== a[2] || a[1] !== a[3])) cl.push(a); }
+      chain(cl).forEach(pl => (five ? L.heavy : L.fine).push(rdp(pl, 0.04)));
+    });
+    // contour figures, sitting in a gap cut in their contour
+    const placed = [], gaps = [];
+    lv.filter(o => Math.abs(o.L / lab - Math.round(o.L / lab)) < 1e-6).forEach(({ L: lev, segs }) => {
+      for (let ax = 8 * f; ax < Gm.size; ax += 17 * f) for (let ay = 8 * f; ay < Gm.size; ay += 17 * f) {
+        let best = -1, bd = 36 * f * f;
+        for (let k = 0; k < segs.length; k += 4) { const mx = (segs[k] + segs[k + 2]) / 2 - Gm.x0, my = (segs[k + 1] + segs[k + 3]) / 2 - Gm.y0, d = (mx - ax) ** 2 + (my - ay) ** 2; if (d < bd) { bd = d; best = k; } }
+        if (best < 0) continue;
+        const mx = (segs[best] + segs[best + 2]) / 2, my = (segs[best + 1] + segs[best + 3]) / 2;
+        if (placed.some(p => (p[0] - mx) ** 2 + (p[1] - my) ** 2 < 100 * f * f)) continue;
+        if (mx - Gm.x0 < 2 * f || my - Gm.y0 < 2 * f || mx - Gm.x0 > Gm.size - 2 * f || my - Gm.y0 > Gm.size - 2 * f) continue;
+        placed.push([mx, my]);
+        let ang = -Math.atan2(segs[best + 3] - segs[best + 1], segs[best + 2] - segs[best]) * 180 / Math.PI;   // page y is down
+        if (ang > 90) ang -= 180; if (ang < -90) ang += 180;
+        const txt = String(Math.round(lev)), h = 1.6, px = X(mx), py = Y(my);
+        L.text.push(...hText(txt, px, py, h, { align: 'center', base: 'middle', ang }));
+        gaps.push([px, py, hWidth(txt, h) / 2 + 0.8]);
+      }
+    });
+    // cut the contours under each figure so the number reads
+    const inGap = (x, y) => gaps.some(([gx, gy, r]) => (x - gx) ** 2 + (y - gy) ** 2 < r * r);
+    ['fine', 'heavy'].forEach(p => { if (!gaps.length) return; const out = []; L[p].forEach(pl => { let cur = []; pl.forEach(([x, y], i) => {
+      if (i) { const [x0, y0] = pl[i - 1], n = Math.max(1, Math.ceil(Math.hypot(x - x0, y - y0) / 0.3)); for (let s = 1; s <= n; s++) { const qx = x0 + (x - x0) * s / n, qy = y0 + (y - y0) * s / n; if (inGap(qx, qy)) { if (cur.length > 1) out.push(rdp(cur, 0.04)); cur = []; } else cur.push([qx, qy]); } }
+      else if (!inGap(x, y)) cur.push([x, y]); }); if (cur.length > 1) out.push(rdp(cur, 0.04)); }); L[p] = out; });
+
+    // spot heights
+    for (let gx = grid; gx < Gm.size; gx += grid) for (let gy = grid; gy < Gm.size; gy += grid) {
+      const h = MM.heightAt(Gm, Gm.x0 + gx, Gm.y0 + gy); if (h !== h) continue; const px = X(Gm.x0 + gx), py = Y(Gm.y0 + gy);
+      L.text.push([[px - 1.2, py], [px + 1.2, py]], [[px, py - 1.2], [px, py + 1.2]], ...hText(h.toFixed(2), px + 1.4, py - 0.8, 1.4));
+    }
+    // site features
+    (pack.features || []).forEach(ft => {
+      const pts = ft.pts || []; if (!pts.length || ft.kind === 'area') return;
+      const closed = G.KINDS[ft.kind]?.closed || ft.closed, pg = pts.map(p => [X(p[0]), Y(p[1])]); if (closed) pg.push(pg[0]);
+      if (ft.kind === 'point') { const [px, py] = pg[0]; if (px > box[0] && px < box[2] && py > box[1] && py < box[3]) L.text.push(circ(px, py, 0.8, 16), circ(px, py, 0.4, 12)); return; }
+      const parts = clipPl(pg), pat = { water: [3, 1.5], path: [2, 1.2], boundary: [4, 1, 1, 1], road: null }[ft.kind], pen = ft.kind === 'water' ? 'water' : ft.kind === 'boundary' ? 'bound' : 'text';
+      parts.forEach(pl => (pat === null ? [pl] : dashed(pl, pat || [1.5, 1])).forEach(d => L[pen].push(d)));
+      if (ft.name && ft.kind === 'building') {
+        let cx = 0, ymax = -1e9; pts.forEach(p => { cx += p[0]; ymax = Math.max(ymax, p[1]); }); cx /= pts.length;
+        const px = X(cx), py = Y(ymax) - 2; if (px > box[0] + 10 && px < box[2] - 10 && py > box[1] + 4 && py < box[3]) L.text.push(...hText(ft.name + ' (approx.)', px, py, 2, { align: 'center' }));
+      }
+    });
+    // frames and grid ticks
+    L.heavy.push(rectPl(m, m, PW - 2 * m, PH - 2 * m), rectPl(dx0, dy0, D, D));
+    for (let t = 0; t <= Gm.size + 1e-6; t += grid) {
+      L.text.push([[X(Gm.x0 + t), dy0 + D], [X(Gm.x0 + t), dy0 + D + 3]], ...hText(`${t}`, X(Gm.x0 + t), dy0 + D + 6.5, 1.8, { align: 'center' }));
+      L.text.push([[dx0 - 3, Y(Gm.y0 + t)], [dx0, Y(Gm.y0 + t)]], ...hText(`${t}`, dx0 - 4, Y(Gm.y0 + t) + 0.9, 1.8, { align: 'right' }));
+    }
+    // title block
+    const tx = dx0 + D + 18, tw = PW - m - tx - 6; let ty = dy0;
+    L.heavy.push(...hText(hWrap(pack.name, 6, tw)[0] || '', tx, ty + 6, 6));
+    L.text.push(...hText('Site plan - your model area', tx, ty + 13, 3.2));
+    const rows = [['PROJECT', (pack.notes || pack.year || '').split(/\n|\. /)[0].slice(0, 60)], ['SITE', [pack.place, pack.year].filter(Boolean).join(' - ')], ['NAME', (S.name || '') + (S.tile ? `   -   class tile ${tileId()}` : '')], ['SCALE', `1:${ratio} @ A1 - pen plot`], ['DATE', today()], ['MODEL', `1:${S.scale} - ${S.size} x ${S.size} mm`], ['AREA', `${mFmt(Gm.size)} x ${mFmt(Gm.size)} m - levels ${G.fmt(Gm.lo)} to ${G.fmt(Gm.hi)} m`]];
+    ty += 20;
+    rows.forEach(([k, v]) => { L.text.push([[tx, ty], [tx + tw, ty]], ...hText(k, tx, ty + 3.5, 1.6), ...hText(hWrap(v, 2.6, tw)[0] || '', tx, ty + 9, 2.6)); ty += 12; });
+    L.text.push([[tx, ty], [tx + tw, ty]]);
+    // north arrow (hatched) and scale bar (hatched blocks)
+    ty += 12; const nx = tx + 12, ny = ty + 12;
+    L.heavy.push(circ(nx, ny, 8, 64), [[nx, ny - 11], [nx - 3, ny + 2], [nx + 3, ny + 2], [nx, ny - 11]]);
+    { const tri = []; let up = true; for (let yy = ny - 10.5; yy <= ny + 2; yy += 0.35) { const half = 3 * (yy - (ny - 11)) / 13; tri.push(up ? [nx - half, yy] : [nx + half, yy], up ? [nx + half, yy] : [nx - half, yy]); up = !up; } L.heavy.push(tri); }
+    L.heavy.push(...hText('N', nx, ny - 13, 3.2, { align: 'center' }));
+    const sbx = tx + 30, sby = ny + 2;
+    for (let i = 0; i < 5; i += 2) L.heavy.push(hatchRect(sbx + i * 20, sby, 20, 2.5, 0.35));
+    L.heavy.push(rectPl(sbx, sby, 100, 2.5), [[sbx + 20, sby], [sbx + 20, sby + 2.5]], [[sbx + 60, sby], [sbx + 60, sby + 2.5]]);
+    [0, 2, 4, 6, 8, 10].forEach(v => L.text.push(...hText(`${v * 10 / ps}`, sbx + v * 10, sby - 1.5, 1.8, { align: 'center' })));
+    L.text.push(...hText('m', sbx + 103, sby + 2.2, 1.8));
+    ty += 32;
+    const notes = [cstep < 1 ? 'Contours every 0.5 m; whole metres figured; medium pen every 5 m.' : `Contours every ${cstep} m; medium pen and figured every ${idx} m.`, `Spot heights on a ${grid} m grid. Grid figures are metres from the SW corner.`,
+      G.relative ? 'Levels in metres relative to the site datum: 0 m is the lowest ground of the survey.' : `Levels in metres as given for the site (lowest ground ${G.lo.toFixed(1)} m).`,
+      pack.survey ? 'Survey: ' + pack.survey + '.' : 'From the site terrain model.', 'Blue dashed: watercourses. Dashed outlines: buildings (approx.). Red: site boundary.', 'Plotted at 100% on A1: the scale bar measures 100 mm.'];
+    notes.forEach(t => hWrap(t, 2, tw).forEach(line => { L.text.push(...hText(line, tx, ty, 2)); ty += 4; }));
+
+    // reference only (layer "%": shown in Inkscape, never plotted): key plan image and outside-survey tint
+    let ref = '';
+    try { const img = await hillshadeURL(), kw = Math.min(tw, 180), kh = kw * H / W;
+      ref += `<image x="${tx}" y="${ty + 4}" width="${kw.toFixed(2)}" height="${kh.toFixed(2)}" href="${img}" xlink:href="${img}" preserveAspectRatio="none"/>`;
+      const cx = v => Math.max(tx, Math.min(tx + kw, v)), cy = v => Math.max(ty + 4, Math.min(ty + 4 + kh, v)), x1 = cx(tx + S.x / W * kw), x2 = cx(tx + (S.x + Q()) / W * kw), y1 = cy(ty + 4 + (H - S.y - Q()) / H * kh), y2 = cy(ty + 4 + (H - S.y) / H * kh);
+      ref += `<rect x="${x1.toFixed(2)}" y="${y1.toFixed(2)}" width="${(x2 - x1).toFixed(2)}" height="${(y2 - y1).toFixed(2)}" fill="none" stroke="#c0432a" stroke-width="0.6"/>`;
+    } catch (e) { }
+
+    // write it out
+    const f2 = v => (Math.round(v * 100) / 100).toString(), d = pl => 'M' + pl.map(p => f2(p[0]) + ' ' + f2(p[1])).join('L');
+    let total = 0, body = '', n = 0;
+    Object.keys(NAMES).forEach(p => {
+      const pls = L[p].filter(pl => pl.length > 1); if (!pls.length) return;
+      const [name, col, w] = NAMES[p]; n++;
+      pls.forEach(pl => { for (let i = 1; i < pl.length; i++) total += Math.hypot(pl[i][0] - pl[i - 1][0], pl[i][1] - pl[i - 1][1]); });
+      // a few hundred paths per element keeps Inkscape quick; one subpath per pen stroke
+      let chunks = ''; for (let i = 0; i < pls.length; i += 400) chunks += `<path d="${pls.slice(i, i + 400).map(d).join('')}"/>`;
+      body += `\n  <g inkscape:groupmode="layer" id="pen${n}" inkscape:label="${name}" style="fill:none;stroke:${col};stroke-width:${w};stroke-linecap:round;stroke-linejoin:round">${chunks}</g>`;
+    });
+    const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- ${HX(pack.name)} - contour plan 1:${ratio} for pen plotter (Bantam Tools NextDraw 2234, A1 landscape 841 x 594 mm). Made ${today()}.
+     Open in Inkscape, then Extensions > Bantam Tools NextDraw. Plot all layers in order: the plotter pauses at each layer marked "!" so you can change pen.
+     Or use the Layers tab to plot one layer number at a time. The "%" layer is reference only and never plots. Total pen-down travel about ${(total / 1000).toFixed(1)} m. -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+  width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}" version="1.1">
+  <title>${HX(pack.name)} - contour plan 1:${ratio} (pen plot)</title>
+  <sodipodi:namedview inkscape:document-units="mm" units="mm" pagecolor="#ffffff" showgrid="false"/>
+  <g inkscape:groupmode="layer" id="ref" inkscape:label="% Reference only - not plotted" style="opacity:0.5">${ref}</g>${body}
+</svg>
+`;
+    return { blob: new Blob([svg], { type: 'image/svg+xml' }), ratio, metres: total / 1000, layers: n };
+  }
+  $('dlPlot').onclick = async () => {
+    const b = $('dlPlot'); b.disabled = true; const t = b.textContent; b.textContent = 'Making SVG…';
+    try { const r = await makePlotterSVG(); download(r.blob, `${slug()}_${SITE}_plan_1-${r.ratio}_A1_nextdraw.svg`); status(`Plotter SVG ready: 1:${r.ratio} on A1, ${r.layers} pen layers, about ${r.metres.toFixed(0)} m of pen-down line. Open it in Inkscape and plot with the NextDraw extension.`, 'ok'); }
+    catch (e) { status('Could not make the plotter SVG: ' + e.message, 'err'); }
+    b.textContent = t; b.disabled = false;
+  };
+
   $('dlHand').onclick = async () => {
     const b = $('dlHand'); b.disabled = true; const t = b.textContent; b.textContent = 'Making PDF…';
     try { download(await makeHandPDF(), `${slug()}_${SITE}_contour-template_1-${S.scale}_A3.pdf`); } catch (e) { status('Could not make the PDF: ' + e.message, 'err'); }

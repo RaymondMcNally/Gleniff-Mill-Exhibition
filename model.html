@@ -139,6 +139,7 @@
             <p class="mstatus" id="mStatus">Loading the survey…</p>
             <div class="mbtns">
               <button type="button" class="primary" id="dlPlan" disabled>Download 1:100 plan (PDF)</button>
+              <button type="button" id="dlPlot" disabled title="Single-line Inkscape SVG for the Bantam Tools NextDraw 2234 pen plotter">Download plotter SVG (NextDraw, A1)</button>
               <button type="button" class="primary only-card only-layers" id="dlKit" disabled>Download cutting kit (ZIP)</button>
               <button type="button" class="primary only-card only-waffle" id="dlWaffle" disabled>Download waffle kit (ZIP)</button>
               <button type="button" class="primary only-card only-relief" id="dlRelief" disabled>Download relief image (PNG)</button>
@@ -147,6 +148,7 @@
               <button type="button" class="primary only-cnc" id="dlCnc" disabled>Download CNC model (ZIP)</button>
               <button type="button" class="primary only-hand" id="dlHand" disabled>Download A3 contour template (PDF)</button>
             </div>
+            <p class="small">The plotter SVG is the same plan drawn in single pen lines on numbered Inkscape layers, sized for the Bantam Tools NextDraw 2234 (A1). Open it in Inkscape and plot with the NextDraw extension: it pauses at each pen change.</p>
             <p class="small only-card only-layers">The kit holds every laser sheet as SVG, DXF and PDF, plus an assembly guide. Red lines cut, blue lines engrave.</p>
             <p class="small only-card only-waffle">The kit holds every section piece on laser sheets as SVG, DXF and PDF, plus an assembly guide. Red lines cut, blue lines engrave the piece labels.</p>
             <p class="small only-card only-relief">A greyscale image for the laser's 3D or greyscale engraving mode: black engraves deepest (the lowest ground), white is left untouched. It carries its own resolution, so it imports at the right size.</p>
@@ -268,6 +270,7 @@
 <script src="vendor/jspdf.umd.min.js"></script>
 <script src="vendor/jszip.min.js"></script>
 <script src="js/sitepack.js"></script>
+<script src="js/hershey.js"></script>
 <script src="js/model-core.js"></script>
 <script src="js/model.js"></script>
 </body>
