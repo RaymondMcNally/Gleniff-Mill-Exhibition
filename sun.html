@@ -28,7 +28,7 @@
     <div>
       <div class="eyebrow">Climate · Light and shade · Orientation</div>
       <h1>Where the <em>sun</em> reaches.</h1>
-      <p class="lede">The brief asks about orientation, sun and shadow, wind, rain and microclimate. This page works out the sun for the Gleniff site on any day of the year and shows where the ground itself casts shade. Then it sets you up to gather the weather data yourself.</p>
+      <p class="lede">The brief asks about orientation, sun and shadow, wind, rain and microclimate. This page works out the sun for the Gleniff site on any day of the year and shows where the ground and the trees cast shade. Then it sets you up to gather the weather data yourself.</p>
       <p class="onpage"><a href="#sun">Sun and shadow</a> · <a href="#draw">Drawing it</a> · <a href="#climate">Wind and rain</a> · <a href="#micro">Microclimate</a></p>
     </div>
     <dl class="spec">
@@ -60,6 +60,7 @@
               <button type="button" data-mode="hours" aria-pressed="false">Hours of sun</button>
               <button type="button" data-mode="aspect" aria-pressed="false">Aspect</button>
             </div>
+            <div class="row"><button type="button" id="treesBtn" aria-pressed="true" title="Include the shade of the trees, measured by the lidar">With trees</button></div>
             <div class="slider">
               <label class="lbl" for="sunDate">Date</label>
               <input type="range" id="sunDate" min="1" max="365" value="280">
@@ -108,8 +109,8 @@
           </figure>
           <div class="prose">
             <h3>What the model can and can't tell you</h3>
-            <p>The shadows come from the bare-earth survey: the banks, gorge and slopes inside the surveyed area.</p>
-            <p><strong>Trees are not in it.</strong> The lidar model had the canopy removed on purpose. On site, most of the shade comes from trees, so stand where you'd build and look.</p>
+            <p>The ground shadows come from the bare-earth survey: the banks, gorge and slopes inside the surveyed area.</p>
+            <p><strong>Trees are added from the lidar.</strong> The tree tops come from the lidar's surface model, the top of everything, minus the bare ground. Leaves don't block all the light, so tree shade is shown lighter than ground shade, and lighter again in winter when the branches are bare. It's an estimate: the canopy was surveyed in October, small gaps between leaves aren't in it, and at the edges of the survey the trees are simple outlines. Switch <strong>With trees</strong> off to see the ground alone, then check on site where you'd build.</p>
             <p><strong>The mountains are not in it either.</strong> Benwiskin, Truskmore and the Gleniff cliffs lie outside the survey. When the sun is low, in winter and early or late in the day, they can hide it altogether. Sketch the skyline on site and note where the sun drops behind it.</p>
             <p>Calculations use the mill's position, 54°23′56″N 8°24′02″W, and Irish clock time, including summer time.</p>
           </div>
@@ -129,7 +130,7 @@
       </div>
       <ol class="steps">
         <li><div class="n">Sun arcs</div><div><p>Draw three arcs around your site: 21 June, the equinox and 21 December. Mark sunrise and sunset bearings and the time on each. Use the <strong>Sun bearing</strong> readout above with the north point on your sheet.</p></div></li>
-        <li><div class="n">Shade</div><div><p>Hatch the ground that's in shade at a few key times, such as 10:00, 13:00 and 16:00 on the day of your visit, and again in midwinter. Take the shadow from this page, then correct it on site for trees and the skyline.</p></div></li>
+        <li><div class="n">Shade</div><div><p>Hatch the ground that's in shade at a few key times, such as 10:00, 13:00 and 16:00 on the day of your visit, and again in midwinter. Take the shadow from this page, with trees on and off, then check it on site against the real trees and the skyline.</p></div></li>
         <li><div class="n">Aspect</div><div><p>Mark the slopes that face south and catch the sun, and the slopes that face north and stay cold and damp. A pavilion for children wants a warm, sheltered spot to gather in.</p></div></li>
         <li><div class="n">Check on site</div><div><p>Photograph the same spot at different times. Note where puddles, moss and frost sit; they show you where the sun doesn't reach.</p></div></li>
       </ol>

@@ -54,9 +54,55 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
   const YEAR = 2026;
   const MAXH = (() => { let m = -1e9; for (const v of G.Hm) if (v === v && v > m) m = v; return m; })();
 
+  // ---------- trees: canopy height above the ground on the same 1 m grid
+  // 1. data/canopy.json: the lidar DSM minus the bare-earth DEM, highest point in each 1 m cell (made by tools/canopy_from_dsm.py).
+  //    255 marks cells outside the DSM footprint.
+  // 2. Where there's no DSM, the woodland groups in exhibition/layers/woodland.geojson (site metres) as flat blocks at canopy_m.
+  const CAN = new Float32Array(GW * GH);             // canopy top above ground, m (0 = open ground)
+  const NODSM = new Uint8Array(GW * GH).fill(1);
+  let WOODS = [], hasTrees = false, MAXT = MAXH, fromDSM = false;
+  try {
+    const cj = await (await fetch('data/canopy.json')).json();
+    if (cj.w === GW && cj.h === GH) {
+      const q = Uint8Array.from(atob(cj.data), c => c.charCodeAt(0));
+      for (let k = 0; k < q.length; k++) if (q[k] !== 255) { NODSM[k] = 0; CAN[k] = q[k] * cj.scale; }
+      fromDSM = true;
+    }
+  } catch (e) { /* no canopy grid: woodland polygons only */ }
+  try {
+    const gj = await (await fetch('exhibition/layers/woodland.geojson')).json();
+    const inRing = (x, y, r) => { let c = false; for (let a = 0, b = r.length - 1; a < r.length; b = a++) { const [xa, ya] = r[a], [xb, yb] = r[b]; if ((ya > y) !== (yb > y) && x < (xb - xa) * (y - ya) / (yb - ya) + xa) c = !c; } return c; };
+    const mpx = ST * 0.2;                               // metres per grid cell (5 mm at 1:200 = 1 m)
+    for (const f of gj.features || []) {
+      const h = +(f.properties && f.properties.canopy_m); if (!(h > 0) || !f.geometry) continue;
+      const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [];
+      for (const rings of polys) {
+        WOODS.push(rings[0]);
+        let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+        for (const [x, y] of rings[0]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+        for (let i = Math.max(0, Math.floor(y0 / mpx)); i <= Math.min(GH - 1, Math.ceil(y1 / mpx)); i++)
+          for (let j = Math.max(0, Math.floor(x0 / mpx)); j <= Math.min(GW - 1, Math.ceil(x1 / mpx)); j++) {
+            const x = j * mpx, y = i * mpx;
+            if (NODSM[i * GW + j] && inRing(x, y, rings[0]) && !rings.slice(1).some(r => inRing(x, y, r))) CAN[i * GW + j] = Math.max(CAN[i * GW + j], h);
+          }
+      }
+    }
+    for (let k = 0; k < CAN.length; k++) if (CAN[k] > 0) { hasTrees = true; const t = G.Hm[k] + CAN[k]; if (t > MAXT) MAXT = t; }
+  } catch (e) { /* no woodland layer: ground-only shadows, as before */ }
+  let trees = hasTrees;
+  // How much light gets through the crowns: Beer–Lambert, k per metre of crown the ray passes through.
+  // Leaf on (May–Oct) ≈ 10 % through 8 m of crown; bare winter branches ≈ 55 %. April and November ramp between.
+  const K_ON = 0.29, K_OFF = 0.075;
+  function leafK(n) {
+    const [, m, d] = dOY(n), f = m + (d - 1) / 30;  // months from 1 Jan, 0..12
+    const on = f < 3 ? 0 : f < 4 ? f - 3 : f < 10 ? 1 : f < 11 ? 11 - f : 0;
+    return K_OFF + (K_ON - K_OFF) * on;
+  }
+  const leafWord = n => { const k = leafK(n); return k > 0.25 ? 'in leaf' : k < 0.1 ? 'bare branches' : 'part leaf'; };
+
   // ---------- state
   const dateIn = $('sunDate'), timeIn = $('sunTime');
-  let mode = 'shadow', hoursCache = {};
+  let mode = 'shadow', hoursCache = {}, kNow = K_ON;
   const dOY = n => { const d = new Date(Date.UTC(YEAR, 0, 1) + (n - 1) * 86400e3); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; };
   const label = n => { const [y, m, d] = dOY(n); return new Date(Date.UTC(y, m, d)).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', timeZone: 'UTC' }); };
   const doy = (m, d) => Math.round((Date.UTC(YEAR, m, d) - Date.UTC(YEAR, 0, 1)) / 86400e3) + 1;
@@ -65,18 +111,23 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
   // ---------- shadow raster (1 m grid)
   const off = document.createElement('canvas'); off.width = GW; off.height = GH;
   const octx = off.getContext('2d'), img = octx.createImageData(GW, GH);
-  function lit(i, j, sx, sy, tanA) {                     // true if cell (i,j) sees the sun
-    const h0 = at(i, j); let x = j, y = i, z = h0 + 0.05;
+  // Light reaching cell (i,j): 1 = full sun, 0..1 = filtered through trees, -1 = blocked by the ground.
+  function light(i, j, sx, sy, tanA) {
+    const h0 = at(i, j); let x = j, y = i, z = h0 + 0.05, T = 1;
+    const top = trees ? MAXT : MAXH, seg = Math.hypot(1, tanA);   // ray length per 1 m step on plan
+    if (trees) { const c = CAN[i * GW + j]; if (c > 0) T *= Math.exp(-kNow * seg); }       // the first metre of its own crown
     for (let k = 1; k < 2000; k++) {
       x += sx; y += sy; z += tanA;
-      if (z > MAXH) return true;
+      if (z > top) return T;
       const jj = Math.round(x), ii = Math.round(y);
-      if (ii < 0 || jj < 0 || ii >= GH || jj >= GW) return true;
-      const h = at(ii, jj); if (h !== h) return true;
-      if (h > z) return false;
+      if (ii < 0 || jj < 0 || ii >= GH || jj >= GW) return T;
+      const h = at(ii, jj); if (h !== h) return T;
+      if (h > z) return -1;
+      if (trees) { const c = CAN[ii * GW + jj]; if (c > 0 && h + c > z) { T *= Math.exp(-kNow * seg); if (T < 0.02) return 0; } }
     }
-    return true;
+    return T;
   }
+  const lit = (i, j, sx, sy, tanA) => light(i, j, sx, sy, tanA) > 0.5;
   function sunVec(alt, az) { const a = rad(az); return { sx: Math.sin(a), sy: Math.cos(a), tanA: Math.tan(rad(alt)) }; }
   function paintShadow(alt, az) {
     const D = img.data; D.fill(0);
@@ -85,25 +136,29 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
     if (alt <= 0) { for (let i = 0; i < GH; i++) for (let j = 0; j < GW; j++) if (at(i, j) === at(i, j)) { const k = ((GH - 1 - i) * GW + j) * 4; D[k] = sh[0]; D[k + 1] = sh[1]; D[k + 2] = sh[2]; D[k + 3] = 170; } }
     else {
       const { sx, sy, tanA } = sunVec(alt, az);
+      const tr = dark ? [10, 40, 22] : [28, 70, 40];   // tree shade: green-grey, deeper where less gets through
       for (let i = 0; i < GH; i++) for (let j = 0; j < GW; j++) {
         if (at(i, j) !== at(i, j)) continue;
-        if (!lit(i, j, sx, sy, tanA)) { const k = ((GH - 1 - i) * GW + j) * 4; D[k] = sh[0]; D[k + 1] = sh[1]; D[k + 2] = sh[2]; D[k + 3] = sh[3]; }
+        const L = light(i, j, sx, sy, tanA), k = ((GH - 1 - i) * GW + j) * 4;
+        if (L < 0) { D[k] = sh[0]; D[k + 1] = sh[1]; D[k + 2] = sh[2]; D[k + 3] = sh[3]; }
+        else if (L < 0.97) { D[k] = tr[0]; D[k + 1] = tr[1]; D[k + 2] = tr[2]; D[k + 3] = Math.round(25 + 125 * (1 - L)); }
       }
     }
     octx.putImageData(img, 0, 0);
   }
   function paintHours(n) {
-    if (!hoursCache[n]) {
+    const key = n + (trees ? 't' : 'g');
+    if (!hoursCache[key]) {
       const [y, m, d] = dOY(n), rs = riseSet(y, m, d), S = 2, step = 0.25;
       const cnt = new Float32Array(GW * GH);
       for (let h = Math.ceil((rs.rise ?? 0) / step) * step; h <= (rs.set ?? 24); h += step) {
         const p = solar(localToUTC(y, m, d, h)); if (p.alt <= 0) continue;
         const { sx, sy, tanA } = sunVec(p.alt, p.az);
-        for (let i = 0; i < GH; i += S) for (let j = 0; j < GW; j += S) if (at(i, j) === at(i, j) && lit(i, j, sx, sy, tanA)) cnt[i * GW + j] += step;
+        for (let i = 0; i < GH; i += S) for (let j = 0; j < GW; j += S) if (at(i, j) === at(i, j)) { const L = light(i, j, sx, sy, tanA); if (L > 0) cnt[i * GW + j] += step * L; }
       }
-      hoursCache[n] = { cnt, max: (rs.set - rs.rise) || 1 };
+      hoursCache[key] = { cnt, max: (rs.set - rs.rise) || 1 };
     }
-    const { cnt, max } = hoursCache[n], D = img.data; D.fill(0);
+    const { cnt, max } = hoursCache[key], D = img.data; D.fill(0);
     const lo = [38, 52, 80], hi = [242, 177, 52];
     for (let i = 0; i < GH; i++) for (let j = 0; j < GW; j++) {
       if (at(i, j) !== at(i, j)) continue;
@@ -208,6 +263,34 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
     const tg = new THREE.BufferGeometry(); tg.setAttribute('position', new THREE.BufferAttribute(pos, 3)); tg.setIndex(idx); tg.computeVertexNormals();
     const terrain = new THREE.Mesh(tg, new THREE.MeshStandardMaterial({ color: 0x8f9a7d, roughness: 0.95 }));
     terrain.castShadow = terrain.receiveShadow = true; scene.add(terrain);
+    // tree tops: the canopy grid draped over the ground, falling to the ground at the edge of each wood
+    let canopy = null;
+    if (hasTrees) {
+      const cpos = new Float32Array(GW * GH * 3), cidx = [];
+      const top = k => pos[k * 3 + 1] + CAN[k];
+      for (let i = 0; i < GH; i++) for (let j = 0; j < GW; j++) {     // crowns smoothed over 3 × 3 m for display only
+        const k = i * GW + j; let y = top(k);
+        if (CAN[k] > 0) { let s = 0, w = 0; for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) { const ii = i + di, jj = j + dj; if (ii < 0 || jj < 0 || ii >= GH || jj >= GW || !ok[ii * GW + jj]) continue; s += top(ii * GW + jj); w++; } if (w) y = s / w; }
+        cpos[k * 3] = pos[k * 3]; cpos[k * 3 + 1] = y; cpos[k * 3 + 2] = pos[k * 3 + 2];
+      }
+      for (let i = 0; i < GH - 1; i++) for (let j = 0; j < GW - 1; j++) {
+        const a = i * GW + j, b = a + 1, c = a + GW, d = c + 1;
+        if (!(ok[a] && ok[b] && ok[c] && ok[d])) continue;
+        if (CAN[a] > 0 || CAN[b] > 0 || CAN[c] > 0 || CAN[d] > 0) cidx.push(a, b, c, b, d, c);
+      }
+      const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.BufferAttribute(cpos, 3)); cg.setIndex(cidx); cg.computeVertexNormals();
+      canopy = new THREE.Mesh(cg, new THREE.MeshStandardMaterial({ color: 0x4f7a45, roughness: 1, transparent: true, opacity: 1, polygonOffset: true, polygonOffsetFactor: -1 }));
+      canopy.castShadow = canopy.receiveShadow = true; scene.add(canopy);
+    }
+    const LEAF = new THREE.Color(0x4f7a45), BARE = new THREE.Color(0x8a7a66);
+    function setTrees() {
+      if (!canopy) return;
+      canopy.visible = trees;
+      const on = (kNow - K_OFF) / (K_ON - K_OFF);          // 1 in leaf, 0 bare
+      canopy.material.color.copy(BARE).lerp(LEAF, on);
+      canopy.material.opacity = 0.55 + 0.45 * on; canopy.material.depthWrite = on > 0.5;
+      canopy.castShadow = on > 0.3;                          // a WebGL shadow is all or nothing: bare winter branches cast none here (the plan shows their light shade)
+    }
     // ground disc + horizon ring + compass
     const disc = new THREE.Mesh(new THREE.CircleGeometry(R, 96), new THREE.MeshStandardMaterial({ color: 0xc9cbbf, roughness: 1 }));
     disc.rotation.x = -Math.PI / 2; disc.position.y = -0.3; disc.receiveShadow = true; scene.add(disc);
@@ -274,7 +357,7 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
     }
     const DAY = new THREE.Color(0xbcd3e6), DUSK = new THREE.Color(0xf0b98a), NIGHT = new THREE.Color(0x1b2433);
     function set(n, t, s) {
-      buildDay(n);
+      buildDay(n); setTrees();
       const alt = s.alt, p = v(s.az, Math.max(alt, -6));
       sunBall.position.copy(p); sunBall.visible = alt > -3;
       beamGeo.setFromPoints([new THREE.Vector3(0, 6.4, 0), p]); beam.computeLineDistances(); beam.visible = alt > 0 && !groundMode;
@@ -306,7 +389,7 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => {
       const n = +dateIn.value, t = +timeIn.value, [y, m, d] = dOY(n);
-      const rs = riseSet(y, m, d), s = solar(localToUTC(y, m, d, t)); cur = s;
+      const rs = riseSet(y, m, d), s = solar(localToUTC(y, m, d, t)); cur = s; kNow = leafK(n);
       $('dTxt').textContent = label(n); $('tTxt').textContent = hhmm(t);
       $('rRise').textContent = hhmm(rs.rise); $('rSet').textContent = hhmm(rs.set);
       $('rLen').textContent = rs.rise != null ? `${Math.floor(rs.set - rs.rise)} h ${Math.round(((rs.set - rs.rise) % 1) * 60)} min` : '—';
@@ -323,9 +406,20 @@ if (typeof module !== 'undefined') module.exports = { solar, riseSet, localToUTC
     });
   }
   function legend() {
-    if (mode === 'shadow') return `<span><i style="background:rgba(20,28,45,.5)"></i>In shadow of the ground</span><span><i style="background:var(--gold)"></i>Sun direction</span>`;
-    if (mode === 'hours') return `<span><i style="background:rgb(38,52,80)"></i>Little direct sun</span><span><i style="background:rgb(242,177,52)"></i>Sun all day</span><span class="small">Hours counted from the ground model only</span>`;
+    const n = +dateIn.value, src = fromDSM ? 'lidar surface model' : 'woodland outlines';
+    const treeNote = trees ? `<span class="small">Trees from the ${src}, ${leafWord(n)} on this date</span>` : `<span class="small">Trees switched off: ground only</span>`;
+    if (mode === 'shadow') return `<span><i style="background:rgba(20,28,45,.5)"></i>In shadow of the ground</span>` + (trees ? `<span><i style="background:rgba(28,70,40,.55)"></i>Under or shaded by trees</span>` : '') + `<span><i style="background:var(--gold)"></i>Sun direction</span>` + treeNote;
+    if (mode === 'hours') return `<span><i style="background:rgb(38,52,80)"></i>Little direct sun</span><span><i style="background:rgb(242,177,52)"></i>Sun all day</span>` + treeNote;
     return `<span><i style="background:rgb(235,170,60)"></i>Faces south</span><span><i style="background:rgb(200,120,90)"></i>West</span><span><i style="background:rgb(140,170,120)"></i>East</span><span><i style="background:rgb(70,110,160)"></i>North</span><span><i style="background:rgb(200,200,195)"></i>Near level (flatter than 1:20)</span>`;
+  }
+  const tb = $('treesBtn');
+  if (tb) {
+    if (!hasTrees) tb.hidden = true;
+    tb.setAttribute('aria-pressed', trees);
+    tb.onclick = () => {
+      trees = !trees; tb.setAttribute('aria-pressed', trees);
+      if (mode === 'hours') { $('legend').innerHTML = '<span>Calculating hours of sun…</span>'; setTimeout(update, 30); } else update();
+    };
   }
   dateIn.addEventListener('input', () => update());
   timeIn.addEventListener('input', () => update());
