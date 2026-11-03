@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Interactive 3D model of the Gleniff heliodon lighting a 250 mm site model for any date and time. ATU Sligo, Department of Architecture.">
+<meta name="description" content="Interactive 3D model of the Gleniff heliodon lighting a site model for any date and time. ATU Sligo, Department of Architecture.">
 <title>Gleniff Heliodon</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,6 +68,7 @@ button[aria-pressed="true"] { background: var(--ink); color: var(--paper); borde
   .stage { height: min(64vh, 520px); min-height: 320px; }
   .panel { overflow: visible; }
 }
+[hidden] { display: none !important; }
 @media (max-width: 600px) { .hint { display: none; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
 </style>
@@ -78,7 +79,7 @@ button[aria-pressed="true"] { background: var(--ink); color: var(--paper); borde
 <div class="app">
   <header>
     <h1>Gleniff Heliodon</h1>
-    <p>A 250 × 250 mm model of the ground around the mill, lit by the bench sun simulator at 54.4° N. <a href="heliodon.html" target="_top" style="color:inherit">About the heliodon →</a></p>
+    <p>A model of the ground at Gleniff, lit by the bench sun simulator at 54.4° N. <a href="heliodon.html" target="_top" style="color:inherit">About the heliodon →</a></p>
   </header>
 
   <div class="stage" id="stage">
@@ -124,9 +125,11 @@ button[aria-pressed="true"] { background: var(--ink); color: var(--paper); borde
     <div class="ctl">
       <span class="lbl">Model</span>
       <div class="seg" role="group" aria-label="Model scale">
-        <button type="button" data-scale="200" aria-pressed="true">1:200 · 50 m</button>
-        <button type="button" data-scale="500" aria-pressed="false">1:500 · 125 m</button>
+        <button type="button" data-scale="200" aria-pressed="true">Mill 1:200</button>
+        <button type="button" data-scale="500" aria-pressed="false">Mill 1:500</button>
+        <button type="button" data-scale="mine" aria-pressed="false" id="mineBtn" hidden>My model</button>
       </div>
+      <p class="note" id="mineNote" hidden></p>
       <div class="seg" role="group" aria-label="Model surface">
         <button type="button" data-surf="layers" aria-pressed="true">Contour layers</button>
         <button type="button" data-surf="smooth" aria-pressed="false">Smooth</button>
@@ -337,16 +340,69 @@ for (const k of Object.keys(DATA.patches)) {
   PATCH[k] = Object.assign({}, p, { ground: new Uint16Array(b64(p.ground).buffer), canopy: b64(p.canopy) });
 }
 let state = { scale: '200', surf: 'layers', trees: false, rays: true, light: 'led', cam: 'over' };
+
+// ---------------------------------------------------------------- the student's own square, from the Your model page (same site, same browser)
+const MINE_KEY = 'gleniff-model';
+let SITE = null, mineSig = '';
+function readMine() {
+  try { const s = JSON.parse(localStorage.getItem(MINE_KEY) || 'null'); if (s && isFinite(s.x) && isFinite(s.y) && +s.size > 0 && +s.scale > 0) return s; } catch (e) { }
+  return null;
+}
+async function siteData() {
+  if (SITE) return SITE;
+  const [sj, cj, wj] = await Promise.all([
+    fetch('data/site.json').then(r => { if (!r.ok) throw new Error('no site data'); return r.json(); }),
+    fetch('data/canopy.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('exhibition/layers/woodland.geojson').then(r => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] }))]);
+  const g = sj.grid, u = new Uint16Array(b64(g.data).buffer), Z = new Float32Array(g.w * g.h);
+  for (let k = 0; k < Z.length; k++) Z[k] = u[k] === 0 ? NaN : (u[k] - 1) * g.scale;
+  SITE = { g, Z, can: cj ? { w: cj.w, h: cj.h, s: cj.scale, q: b64(cj.data) } : null, woods: (wj.features || []).filter(f => f.geometry && f.geometry.type === 'Polygon').map(f => ({ ring: f.geometry.coordinates[0], h: +f.properties.canopy_m || 0 })) };
+  return SITE;
+}
+function inRing(x, y, r) { let c = false; for (let a = 0, b = r.length - 1; a < r.length; b = a++) { const [xa, ya] = r[a], [xb, yb] = r[b]; if ((ya > y) !== (yb > y) && x < (xb - xa) * (y - ya) / (yb - ya) + xa) c = !c; } return c; }
+async function makeMine(s) {
+  const d = await siteData(), n = 126, size_m = s.size * s.scale / 1000, ox = s.x * 0.2, oy = s.y * 0.2;   // plan mm at 1:200 -> site metres
+  const { g, Z } = d, H = new Float32Array(n * n), C = new Uint8Array(n * n);
+  const zAt = (x, y) => {
+    const fx = x / g.step, fy = y / g.step, j = Math.floor(fx), i = Math.floor(fy);
+    if (i < 0 || j < 0 || i >= g.h - 1 || j >= g.w - 1) return NaN;
+    const tx = fx - j, ty = fy - i, a = Z[i * g.w + j], b = Z[i * g.w + j + 1], c = Z[(i + 1) * g.w + j], e = Z[(i + 1) * g.w + j + 1];
+    return (a * (1 - tx) + b * tx) * (1 - ty) + (c * (1 - tx) + e * tx) * ty;
+  };
+  let lo = Infinity;
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const x = ox + j * size_m / (n - 1), y = oy + i * size_m / (n - 1), h = zAt(x, y); H[i * n + j] = h; if (h === h && h < lo) lo = h;
+    let c = 0;
+    if (d.can) { const cj = Math.round(x), ci = Math.round(y); if (ci >= 0 && cj >= 0 && ci < d.can.h && cj < d.can.w) { const q = d.can.q[ci * d.can.w + cj]; c = q === 255 ? -1 : q * d.can.s; } else c = -1; } else c = -1;
+    if (c < 0) { c = 0; for (const w of d.woods) if (inRing(x, y, w.ring)) c = Math.max(c, w.h); }
+    C[i * n + j] = Math.min(255, Math.round(c * 10));
+  }
+  if (!isFinite(lo)) throw new Error('outside the survey');
+  const G16 = new Uint16Array(n * n); for (let k = 0; k < G16.length; k++) G16[k] = Math.round(((H[k] === H[k] ? H[k] : lo) - lo) * 100);   // outside the survey: flat at the lowest level
+  return { scale: +s.scale, size_m: +size_m.toFixed(1), n, origin: [ox, oy], h0: lo, ground: G16, canopy: C, mm: +s.size, mine: true };
+}
+async function refreshMine(select) {
+  const s = readMine(), btn = document.getElementById('mineBtn'), note = document.getElementById('mineNote');
+  if (!s) { btn.hidden = true; note.hidden = true; mineSig = ''; if (state.scale === 'mine') { state.scale = '200'; press('[data-scale]', 'scale', '200'); buildModel(); update(); } return; }
+  const sig = JSON.stringify([s.x, s.y, s.size, s.scale]);
+  if (sig === mineSig && !select) return;
+  try { PATCH.mine = await makeMine(s); } catch (e) { btn.hidden = true; return; }
+  mineSig = sig;
+  btn.hidden = false; btn.textContent = `Mine 1:${s.scale}`;
+  note.innerHTML = `<b>Mine</b> is the square you set on the Your model page in this browser: ${s.size} mm at 1:${s.scale}, ${PATCH.mine.size_m} m across. Change it there and it updates here.`;
+  if (select || state.scale === 'mine') { state.scale = 'mine'; press('[data-scale]', 'scale', 'mine'); buildModel(); update(); }
+  note.hidden = state.scale !== 'mine';
+}
 let model = null;
 
 function buildModel() {
   if (model) { modelGroup.remove(model.group); model.group.traverse(o => { o.geometry && o.geometry.dispose(); }); }
-  const p = PATCH[state.scale], n = p.n, mmPerM = 1000 / p.scale, half = G.model / 2;
+  const p = PATCH[state.scale], n = p.n, mmPerM = 1000 / p.scale, MM = p.mm || G.model, half = MM / 2;
   const layer = mmPerM;                                        // 1 m contours: 5 mm card at 1:200, 2 mm at 1:500
   const grd = (i, j) => p.ground[i * n + j] / 100;              // m above the lowest point
   const can = (i, j) => p.canopy[i * n + j] / 10;
   const sample = (x, z, f) => {                                 // model mm (x east, z south) -> bilinear value
-    const fj = (x + half) / G.model * (n - 1), fi = (half - z) / G.model * (n - 1);
+    const fj = (x + half) / MM * (n - 1), fi = (half - z) / MM * (n - 1);
     const j = Math.max(0, Math.min(n - 2, Math.floor(fj))), i = Math.max(0, Math.min(n - 2, Math.floor(fi))), tx = fj - j, ty = fi - i;
     return (f(i, j) * (1 - tx) + f(i, j + 1) * tx) * (1 - ty) + (f(i + 1, j) * (1 - tx) + f(i + 1, j + 1) * tx) * ty;
   };
@@ -356,7 +412,7 @@ function buildModel() {
   // top surface on a 1 mm grid
   const N = 251, pos = new Float32Array(N * N * 3), idx = [];
   for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
-    const x = -half + c * G.model / (N - 1), z = -half + r * G.model / (N - 1), k = (r * N + c) * 3;
+    const x = -half + c * MM / (N - 1), z = -half + r * MM / (N - 1), k = (r * N + c) * 3;
     pos[k] = x; pos[k + 1] = hAt(x, z); pos[k + 2] = z;
   }
   for (let r = 0; r < N - 1; r++) for (let c = 0; c < N - 1; c++) { const a = r * N + c, b = a + 1, c2 = a + N, d = c2 + 1; idx.push(a, c2, b, b, c2, d); }
@@ -366,7 +422,7 @@ function buildModel() {
   // sides and bottom
   const wall = [], wi = [];
   const edge = (pick) => { const s = wall.length / 3; for (let k = 0; k < N; k++) { const [x, z] = pick(k); const y = hAt(x, z); wall.push(x, y, z, x, 0, z); } for (let k = 0; k < N - 1; k++) { const a = s + k * 2; wi.push(a, a + 1, a + 2, a + 2, a + 1, a + 3); } };
-  const t = k => -half + k * G.model / (N - 1);
+  const t = k => -half + k * MM / (N - 1);
   edge(k => [t(k), -half]); edge(k => [t(k), half]); edge(k => [-half, t(k)]); edge(k => [half, t(k)]);
   const wg = new THREE.BufferGeometry(); wg.setAttribute('position', new THREE.Float32BufferAttribute(wall, 3)); wg.setIndex(wi); wg.computeVertexNormals();
   add(wg, M(0xe4e1d8, { side: THREE.DoubleSide, roughness: 0.95 }), 0, 0, 0, group);
@@ -375,7 +431,7 @@ function buildModel() {
     const cp = new Float32Array(n * n * 3), ci = [];
     const C = (i, j) => (can(i, j) > 1.5 ? can(i, j) : 0);
     for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
-      const x = -half + j * G.model / (n - 1), z = half - i * G.model / (n - 1), k = (i * n + j) * 3;
+      const x = -half + j * MM / (n - 1), z = half - i * MM / (n - 1), k = (i * n + j) * 3;
       let c = C(i, j);
       if (c > 0) { let s = 0, w = 0; for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) { const ii = i + di, jj = j + dj; if (ii < 0 || jj < 0 || ii >= n || jj >= n) continue; s += C(ii, jj); w++; } c = s / w; }
       cp[k] = x; cp[k + 1] = hAt(x, z) + c * mmPerM; cp[k + 2] = z;
@@ -408,7 +464,9 @@ function buildModel() {
   add(new THREE.CylinderGeometry(0.7, 0.7, ph, 12), M(0xc0432a), 0, py + ph / 2, 0, group);
   modelGroup.add(group);
   model = { group, postTop: new THREE.Vector3(0, py + ph, 0), corners: [[-half, -half], [half, -half], [half, half], [-half, half]].map(([x, z]) => new THREE.Vector3(x, hAt(x, z), z)), p };
-  document.getElementById('cap').textContent = `Model 250 × 250 mm · 1:${p.scale} · ${p.size_m} × ${p.size_m} m around the mill · ${state.surf === 'layers' ? `${layer} mm card per 1 m contour` : 'smooth surface'}`;
+  const ext = Math.max(230, half * 1.6); Object.assign(sun.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext }); sun.shadow.camera.updateProjectionMatrix();
+  const overRing = half * Math.SQRT2 > G.ring / 2 - 50;           // corners over the bearing numbers
+  document.getElementById('cap').textContent = `Model ${MM} × ${MM} mm · 1:${p.scale} · ${p.size_m} × ${p.size_m} m ${p.mine ? 'from Your model' : 'around the mill'} · ${state.surf === 'layers' ? `${+layer.toFixed(2)} mm card per 1 m contour` : 'smooth surface'}${overRing ? ' · corners cover part of the scale ring' : ''}`;
 }
 
 // ---------------------------------------------------------------- rays
@@ -490,7 +548,10 @@ const press = (sel, key, val) => document.querySelectorAll(sel).forEach(b => b.s
 dateIn.addEventListener('input', update); timeIn.addEventListener('input', update);
 document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { const [m, d] = b.dataset.day.split('-').map(Number); dateIn.value = doy(m - 1, d); update(); });
 document.querySelectorAll('[data-light]').forEach(b => b.onclick = () => { state.light = b.dataset.light; press('[data-light]', 'light', state.light); });
-document.querySelectorAll('[data-scale]').forEach(b => b.onclick = () => { state.scale = b.dataset.scale; press('[data-scale]', 'scale', state.scale); buildModel(); update(); });
+document.querySelectorAll('[data-scale]').forEach(b => b.onclick = () => { state.scale = b.dataset.scale; press('[data-scale]', 'scale', state.scale); $('mineNote').hidden = state.scale !== 'mine'; buildModel(); update(); });
+window.addEventListener('storage', e => { if (e.key === MINE_KEY) refreshMine(false); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshMine(false); });
+window.addEventListener('focus', () => refreshMine(false));
 document.querySelectorAll('[data-surf]').forEach(b => b.onclick = () => { state.surf = b.dataset.surf; press('[data-surf]', 'surf', state.surf); buildModel(); });
 $('trees').onclick = e => { state.trees = !state.trees; e.currentTarget.setAttribute('aria-pressed', state.trees); buildModel(); };
 $('rays').onclick = e => { state.rays = !state.rays; e.currentTarget.setAttribute('aria-pressed', state.rays); };
@@ -506,6 +567,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setSceneCo
 new MutationObserver(setSceneColour).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
 buildModel(); update(); fit(); setCam('over'); frame();
+refreshMine(true);
 </script>
 
 </body>
