@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gleniff Heliodon</title>
+<meta name="description" content="A bench sun simulator for site models at 54.4° N: a 3D view, the assembly manual, the build guide with the setting table, and the laser-cut files. ATU Sligo, Department of Architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/pages.css">
+<style>
+.nav-current{color:var(--ink)!important;background:var(--paper)}
+.viewer{border:1px solid var(--rule);background:var(--paper)}
+.viewer iframe{display:block;width:100%;height:min(78vh,760px);min-height:520px;border:0}
+.viewer-bar{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--rule);font:500 .78rem var(--mono);color:var(--muted)}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.dl .pagecard{padding:18px 18px 16px}
+.dl .pagecard strong{font-size:1.15rem}
+.dl .pagecard .need{font:500 .72rem var(--mono);color:var(--muted);margin-top:auto;padding-top:6px;border-top:1px dashed var(--rule)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{border:1px solid var(--rule);background:var(--paper);padding:14px 16px;counter-increment:s}
+.steps li::before{content:counter(s);display:block;font:800 1.6rem var(--display);margin-bottom:4px}
+.steps li p{margin:0;color:var(--muted);font-size:.92rem}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vcol{border:1px solid var(--rule);background:var(--paper);padding:16px 18px}
+.vcol h3{margin:0 0 8px}
+@media (max-width:860px){.vs{grid-template-columns:1fr}}
+@media (max-width:700px){.viewer iframe{height:72vh;min-height:460px}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Advanced · Heliodon</span></a>
+    <nav aria-label="Pages">
+      <a href="index.html">Start here</a><a href="contours.html">Contours</a><a href="sun.html">Sun &amp; climate</a><a href="kit.html">Model kit</a><a href="model.html">Your model</a><a href="advanced.html" class="nav-current">Advanced</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Sun on a physical model</div>
+      <h1>The heliodon.</h1>
+      <p class="lede">A bench sun simulator for site models at Gleniff's latitude, 54.4° N. Put your model on the turntable, turn it to the sun's bearing and slide the light to the sun's height: the shadows on the model are the shadows on the site, for any date and time. It is laser-cut from 6 mm plywood and lit by one LED.</p>
+    </div>
+  </div>
+
+  <section id="view">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">01 · See it in 3D</div>
+        <div>
+          <h2>Try it before you build it</h2>
+          <p>A 250 mm model of the ground around the mill, cut from the lidar survey, on the heliodon. Pick a date and time and the turntable and light move to match. Switch between the LED and true sunlight to see how close the bench gets, add the trees, and change the model's scale.</p>
+        </div>
+      </div>
+      <div class="viewer">
+        <iframe src="heliodon-3d.html" title="3D view of the heliodon with a site model" loading="lazy"></iframe>
+        <div class="viewer-bar"><span>Drag to orbit · scroll to zoom</span><a href="heliodon-3d.html">Open full screen →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="use">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">02 · Using it</div>
+        <div>
+          <h2>Three settings</h2>
+          <p>Read the sun's height and bearing for your date and time off the setting table in the build guide, or from <b>Sun height now</b> and <b>Sun bearing</b> on the <a href="sun.html">Sun &amp; climate</a> page.</p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><p>Put the model on the turntable with its north over the <b>N</b> on the scale ring.</p></li>
+        <li><p>Turn the turntable until the sun's <b>bearing</b> is at the red index on the tab facing the arc.</p></li>
+        <li><p>Slide the LED along the arc to the sun's <b>height</b> and tighten the wing nuts. Dim the room.</p></li>
+      </ol>
+      <p class="small" style="margin-top:14px">At 1:200 a 5 mm pin is a 1 m post. Check its shadow against <b>Shadow of a 1 m post</b> on the Sun &amp; climate page.</p>
+    </div>
+  </section>
+
+  <section id="build">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">03 · Build it</div>
+        <div>
+          <h2>Files to make it</h2>
+          <p>47 parts on nine 600 × 400 mm sheets of 6 mm plywood, plus dowels, a few bolts, a lazy-susan bearing and a 20–30 W COB LED. Two people, and one night for the glue.</p>
+        </div>
+      </div>
+      <div class="dl">
+        <a class="pagecard" href="downloads/heliodon/Gleniff_heliodon_assembly_manual.pdf"><span class="st live">PDF · A4 · 13 pages</span><strong>Assembly manual</strong><span>Step-by-step pictures in 18 steps: tools, hardware, every part by its code, and the order to put them together.</span><span class="need">For: students building it</span></a>
+        <a class="pagecard" href="downloads/heliodon/Gleniff_heliodon_build_guide.pdf"><span class="st live">PDF · A3 · 3 sheets</span><strong>Build guide and setting table</strong><span>Elevation and plan, parts list, assembly notes, and the sun's height and bearing at Gleniff for every hour on the 21st of each month.</span><span class="need">For: setting out, and the table to keep beside the rig</span></a>
+        <a class="pagecard" href="downloads/heliodon/Gleniff_heliodon_laser_files.zip"><span class="st live">ZIP · DXF and SVG</span><strong>Laser files</strong><span>Nine 600 × 400 mm sheets with cut, score and engrave layers, plus the Python scripts that draw them. Change the board thickness or slot size at the top of the script.</span><span class="need">For: the laser cutter; cut one arc piece first to check the fit</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="limits">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">04 · What it gets right</div>
+        <div>
+          <h2>And what it doesn't</h2>
+          <p>The heliodon shows the shadows of whatever is on the model, at the right angle, for any day of the year. Know its limits before you trust it.</p>
+        </div>
+      </div>
+      <div class="vs">
+        <div class="vcol">
+          <h3>Good for</h3>
+          <ul class="ticks">
+            <li>Shadow of the ground, walls and your pavilion on a 250 mm model at 1:200 or 1:500.</li>
+            <li>Comparing times of day and seasons quickly, with the model in your hands.</li>
+            <li>Photographing a sequence of shadows for your site analysis.</li>
+          </ul>
+        </div>
+        <div class="vcol">
+          <h3>Watch out for</h3>
+          <ul class="ticks">
+            <li>The LED is 1.1 m away, so its light spreads: shadows at the model's edges point about 6° off (9° at the corners). The centre is exact.</li>
+            <li>The arc reaches 64° and the carriage can't go below about 1°. The highest sun at Gleniff is 59°.</li>
+            <li>Trees and the mountains aren't on the model unless you add them. A bigger model than 250 mm needs the <a href="project.html">projector</a> instead.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>ATU Sligo · Department of Architecture · ARCT06004</span><span class="credit">Created by R McNally</span><a href="advanced.html">Advanced →</a></div>
+</footer>
+</body>
+</html>
