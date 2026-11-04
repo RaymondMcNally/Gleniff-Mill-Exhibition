@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Student access · Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<style>
+  main{padding:28px 0 80px}
+  h1{font-size:clamp(28px,4vw,40px);line-height:1.1;margin:.3em 0 .2em;letter-spacing:-.01em}
+  h2{font-size:1.15rem;margin:0 0 4px}
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start;margin-top:24px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:18px 18px 12px;margin-bottom:20px}
+  .panel>.small{margin-bottom:12px}
+  .row{display:grid;grid-template-columns:auto minmax(0,1fr) 150px;gap:10px 14px;align-items:center;padding:9px 0;border-top:1px solid var(--rule)}
+  .row:first-of-type{border-top:0}
+  .row.child{padding-left:26px}
+  .row.child .name::before{content:'└ ';color:var(--muted);font-family:var(--mono)}
+  .row.inherit .name{color:var(--muted)}
+  .row .name{font-weight:600}
+  .row .state{font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-left:8px}
+  .state.open{color:#2f7d4f} .state.shut{color:var(--accent)} .state.dated{color:var(--engrave)}
+  .row .extra{grid-column:2/4;display:none;gap:8px;flex-wrap:wrap;align-items:center}
+  .row.show-extra .extra{display:flex}
+  .row input[type=date]{font:500 .78rem var(--mono);padding:5px 6px;border:1px solid var(--rule);border-radius:3px;background:var(--bg);color:var(--ink)}
+  .row input.note{flex:1;min-width:180px}
+  input[type=text],input[type=password],textarea{font:400 .85rem var(--mono);width:100%;padding:7px 8px;border:1px solid var(--rule);border-radius:3px;background:var(--bg);color:var(--ink)}
+  label.lbl{display:block;font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
+  .sw{position:relative;width:42px;height:24px;flex:none}
+  .sw input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+  .sw span{position:absolute;inset:0;border-radius:12px;background:var(--rule);transition:background .15s}
+  .sw span::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:var(--paper);transition:transform .15s;box-shadow:0 1px 2px #0003}
+  .sw input:checked+span{background:#2f7d4f}
+  .sw input:checked+span::after{transform:translateX(18px)}
+  .sw input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+  .more{justify-self:end;font-size:.7rem}
+  .stg{display:flex;gap:6px;align-items:center;padding:7px 0;border-top:1px solid var(--rule)}
+  .stg:first-of-type{border-top:0}
+  .stg b{flex:1;font-size:.92rem}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  button.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  button.primary:disabled{opacity:.45;cursor:default}
+  .status{font:500 .78rem/1.4 var(--mono);margin-top:10px;min-height:1.4em}
+  .status.ok{color:#2f7d4f} .status.err{color:var(--accent)}
+  .dirty{display:none;font:500 .72rem var(--mono);color:var(--accent);margin-left:8px}
+  .is-dirty .dirty{display:inline}
+  .sticky{position:sticky;top:70px}
+  details summary{cursor:pointer;font-weight:600;margin:4px 0}
+  .warn{border-left:3px solid var(--accent);padding:2px 0 2px 12px;margin:14px 0 0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">Gleniff Mill <span>Admin</span></a>
+    <nav aria-label="Admin links"><a href="index.html?staff">Site (staff view)</a> <a href="index.html?student">Site as a student</a> <a id="sibling" href="#" hidden></a></nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="eyebrow" id="siteName">Student access</div>
+    <h1>What students can see</h1>
+    <p class="lede">Switch parts of the site on as the project moves on. A switch that's off hides that page from the menu and shows a "not open yet" notice instead; a format that's off disappears from <a href="model.html?staff">Your model</a>. Give an item an opening date and it switches itself on that morning. Changes reach students when you publish.</p>
+    <p class="small warn">This paces what students see; it isn't a password. Anyone who knows a page's address, or looks in the GitHub repository, can still open the files. The exhibition kiosk and the windows it drives always stay open.</p>
+
+    <div class="grid" id="grid">
+      <div id="lists"><p class="small">Loading the current settings…</p></div>
+
+      <aside>
+        <div class="panel">
+          <h2>Publish <span class="dirty">· unsaved changes</span></h2>
+          <p class="small">Saves <code>access.json</code> to the GitHub repository. Students see it within a minute or two.</p>
+          <div class="btns"><button type="button" class="primary" id="publish">Publish to GitHub</button><button type="button" id="download">Download access.json</button></div>
+          <div class="status" id="status"></div>
+          <details id="ghBox">
+            <summary>GitHub connection</summary>
+            <label class="lbl" for="token">Access token</label>
+            <input type="password" id="token" autocomplete="off" placeholder="github_pat_…">
+            <p class="small" style="margin-top:6px">A fine-grained token with <b>Contents: read and write</b> on Gleniff-Mill-Site and gleniff-mill-exhibition. It is kept only in this browser, and works for both sites' admin pages.</p>
+            <label class="lbl" for="repo">Repository</label>
+            <input type="text" id="repo" placeholder="owner/repo">
+            <label class="lbl" for="branch">Branch</label>
+            <input type="text" id="branch" value="main">
+            <div class="btns"><button type="button" id="saveGh">Save connection</button><button type="button" id="forget">Forget token</button></div>
+          </details>
+        </div>
+
+        <div class="panel">
+          <h2>Stages</h2>
+          <p class="small">One click sets every switch to match a stage. Then publish.</p>
+          <div id="stages"></div>
+          <div class="btns"><button type="button" id="addStage">Save switches as a stage</button></div>
+        </div>
+
+        <div class="panel">
+          <h2>This browser</h2>
+          <label style="display:flex;gap:10px;align-items:center;margin:6px 0"><span class="sw"><input type="checkbox" id="staffView"><span></span></span> Staff view on the site</label>
+          <p class="small">Shows you everything, with locked parts outlined in red. Turn it off, or use "Site as a student", to check what students see.</p>
+          <label class="lbl" for="message">Notice on locked pages</label>
+          <input type="text" id="message">
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const LS = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) { } } };
+  let cfg = null, sha = null, dirty = false;
+
+  // Which repository? Default from the address: <owner>.github.io/<repo>/admin.html
+  const guessRepo = () => {
+    const m = location.hostname.match(/^([^.]+)\.github\.io$/i), seg = location.pathname.split('/').filter(Boolean);
+    return m && seg.length > 1 ? m[1] + '/' + seg[0] : '';
+  };
+  const repoKey = 'gleniff-access-repo:' + location.pathname.replace(/admin\.html$/, '');
+  const repo = () => ($('repo').value || '').trim().replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '');
+  $('repo').value = LS.get(repoKey) || guessRepo();
+  $('branch').value = LS.get(repoKey + ':branch') || 'main';
+  $('token').value = LS.get('gleniff-gh-token') || '';
+  if (!$('token').value) $('ghBox').open = true;
+  $('staffView').checked = LS.get('gleniff-access-staff') === '1';
+  $('staffView').onchange = e => LS.set('gleniff-access-staff', e.target.checked ? '1' : null);
+
+  const status = (t, k) => { $('status').textContent = t; $('status').className = 'status ' + (k || ''); };
+  const setDirty = v => { dirty = v; document.body.classList.toggle('is-dirty', v); };
+  window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  const today = (() => { const t = new Date(); return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); })();
+  const fmt = s => new Date(s + 'T12:00:00').toLocaleDateString('en-IE', { weekday: 'short', day: 'numeric', month: 'short' });
+  const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ---------- load: from GitHub when a token is saved (always current), otherwise from the site
+  const b64d = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, '')), c => c.charCodeAt(0)));
+  const b64e = s => { const b = new TextEncoder().encode(s); let r = ''; for (let i = 0; i < b.length; i += 0x8000) r += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(r); };
+  const api = (path, opt = {}) => fetch('https://api.github.com/repos/' + repo() + path, Object.assign({}, opt, { headers: Object.assign({ Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + $('token').value.trim(), 'X-GitHub-Api-Version': '2022-11-28' }, opt.headers || {}) }));
+
+  async function load() {
+    if ($('token').value && repo()) {
+      try {
+        const r = await api('/contents/access.json?ref=' + encodeURIComponent($('branch').value || 'main'));
+        if (r.ok) { const j = await r.json(); sha = j.sha; cfg = JSON.parse(b64d(j.content)); render(); status('Loaded from GitHub.', 'ok'); return; }
+        status('GitHub said ' + r.status + (r.status === 401 ? ' (token not accepted)' : r.status === 404 ? ' (no access to this repository, or access.json missing)' : '') + '. Showing the published copy.', 'err');
+      } catch (e) { status('Couldn’t reach GitHub. Showing the published copy.', 'err'); }
+    }
+    try {
+      const r = await fetch('access.json?t=' + Date.now(), { cache: 'no-store' });
+      cfg = await r.json(); render();
+    } catch (e) { $('lists').innerHTML = '<p class="status err">Couldn’t read access.json. Open this page from the website (not straight from a folder).</p>'; }
+  }
+
+  // ---------- switches
+  const byId = () => Object.fromEntries(cfg.items.map(i => [i.id, i]));
+  const selfOpen = it => it.on || (it.from && today >= it.from);
+  function render() {
+    $('message').value = cfg.message || '';
+    if (cfg.sibling && cfg.sibling.url) { $('sibling').hidden = false; $('sibling').href = cfg.sibling.url; $('sibling').textContent = (cfg.sibling.label || 'Other site') + ' admin'; }
+    const groups = [];
+    cfg.items.forEach(it => { let g = groups.find(g => g.name === it.group); if (!g) groups.push(g = { name: it.group, items: [] }); g.items.push(it); });
+    const B = byId();
+    $('lists').innerHTML = groups.map(g => '<section class="panel"><h2>' + esc(g.name) + '</h2>' +
+      (g.name === 'Pages' ? '<p class="small">Start here is always open. A page under Advanced is hidden while Advanced is off.</p>' : g.name.includes('format') ? '<p class="small">If a student had a locked format chosen, Your model moves them to the first open one.</p>' : '<p class="small">Scales offered on Your model.</p>') +
+      g.items.map(it => {
+        const par = it.parent && B[it.parent], parShut = par && !selfOpen(par);
+        const st = parShut ? ['shut', 'Hidden with ' + par.label] : it.on ? ['open', 'Open'] : it.from ? (today >= it.from ? ['open', 'Opened ' + fmt(it.from)] : ['dated', 'Opens ' + fmt(it.from)]) : ['shut', 'Locked'];
+        return '<div class="row' + (par ? ' child' : '') + (parShut ? ' inherit' : '') + (it.from || it.note ? ' show-extra' : '') + '" data-id="' + it.id + '">' +
+          '<span class="sw"><input type="checkbox" aria-label="' + esc(it.label) + ' open"' + (it.on ? ' checked' : '') + '><span></span></span>' +
+          '<div><span class="name">' + esc(it.label) + '</span><span class="state ' + st[0] + '">' + esc(st[1]) + '</span></div>' +
+          '<button type="button" class="more">Date / note</button>' +
+          '<div class="extra"><label class="small">Opens on <input type="date" value="' + esc(it.from) + '"></label>' + (it.pages ? '<input type="text" class="note" placeholder="Note on the locked page, e.g. Opens at Stage 2" value="' + esc(it.note) + '">' : '') + '</div></div>';
+      }).join('') + '</section>').join('');
+    renderStages();
+  }
+  $('lists').addEventListener('click', e => { const b = e.target.closest('.more'); if (b) b.closest('.row').classList.toggle('show-extra'); });
+  $('lists').addEventListener('change', e => {
+    const row = e.target.closest('.row'); if (!row) return;
+    const it = cfg.items.find(i => i.id === row.dataset.id);
+    if (e.target.type === 'checkbox') it.on = e.target.checked;
+    else if (e.target.type === 'date') { it.from = e.target.value; if (it.from) it.on = false; }
+    else if (e.target.classList.contains('note')) it.note = e.target.value;
+    setDirty(true); render();
+  });
+  $('message').oninput = e => { cfg.message = e.target.value; setDirty(true); };
+
+  // ---------- stages
+  function renderStages() {
+    $('stages').innerHTML = (cfg.stages || []).map((s, i) => '<div class="stg" data-i="' + i + '"><b>' + esc(s.name) + '</b><button type="button" data-a="apply">Apply</button><button type="button" data-a="rename" title="Rename">✎</button><button type="button" data-a="del" title="Delete">✕</button></div>').join('') || '<p class="small">No stages saved.</p>';
+  }
+  $('stages').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const i = +b.closest('.stg').dataset.i, s = cfg.stages[i];
+    if (b.dataset.a === 'apply') { cfg.items.forEach(it => { it.on = s.open.includes(it.id); it.from = ''; }); setDirty(true); render(); status('Switches set to “' + s.name + '”. Publish to send it to students.'); }
+    if (b.dataset.a === 'rename') { const n = prompt('Stage name', s.name); if (n) { s.name = n; setDirty(true); renderStages(); } }
+    if (b.dataset.a === 'del' && confirm('Delete the stage “' + s.name + '”?')) { cfg.stages.splice(i, 1); setDirty(true); renderStages(); }
+  };
+  $('addStage').onclick = () => {
+    const n = prompt('Name for this stage', 'Stage ' + ((cfg.stages || []).length + 1)); if (!n) return;
+    (cfg.stages = cfg.stages || []).push({ name: n, open: cfg.items.filter(it => it.on).map(it => it.id) });
+    setDirty(true); renderStages();
+  };
+
+  // ---------- save
+  const text = () => { cfg.updated = new Date().toISOString(); return JSON.stringify(cfg, null, 1) + '\n'; };
+  $('download').onclick = () => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text()], { type: 'application/json' })); a.download = 'access.json'; a.click();
+    status('Downloaded. Commit it to the site’s root folder with GitHub Desktop.', 'ok'); setDirty(false);
+  };
+  $('publish').onclick = async () => {
+    if (!$('token').value.trim() || !repo()) { $('ghBox').open = true; status('Add a token and repository under GitHub connection first, or use Download.', 'err'); return; }
+    $('publish').disabled = true; status('Publishing…');
+    try {
+      const br = $('branch').value || 'main';
+      if (!sha) { const r = await api('/contents/access.json?ref=' + encodeURIComponent(br)); if (r.ok) sha = (await r.json()).sha; }
+      const r = await api('/contents/access.json', { method: 'PUT', body: JSON.stringify({ message: 'Update student access', content: b64e(text()), sha: sha || undefined, branch: br }) });
+      const j = await r.json();
+      if (r.ok) { sha = j.content.sha; setDirty(false); status('Published ' + new Date().toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' }) + '. Students see it within a minute or two.', 'ok'); }
+      else if (r.status === 409) { sha = null; status('Someone changed access.json on GitHub since this page loaded. Reload the page and try again.', 'err'); }
+      else status('GitHub refused (' + r.status + '): ' + (j.message || '') + (r.status === 401 ? '. Check the token.' : r.status === 403 || r.status === 404 ? '. The token needs Contents: read and write on ' + repo() + '.' : ''), 'err');
+    } catch (e) { status('Couldn’t reach GitHub: ' + e.message, 'err'); }
+    $('publish').disabled = false;
+  };
+  $('saveGh').onclick = () => { LS.set('gleniff-gh-token', $('token').value.trim() || null); LS.set(repoKey, repo() || null); LS.set(repoKey + ':branch', $('branch').value.trim() || null); status('Connection saved in this browser.', 'ok'); sha = null; if (!dirty) load(); };
+  $('forget').onclick = () => { LS.set('gleniff-gh-token', null); $('token').value = ''; status('Token removed from this browser.', 'ok'); };
+
+  load();
+})();
+</script>
+</body>
+</html>

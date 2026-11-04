@@ -1,0 +1,330 @@
+{
+ "version": 1,
+ "updated": "",
+ "message": "It opens later in the project.",
+ "sibling": {
+  "label": "Student site",
+  "url": "https://raymondmcnally.github.io/Gleniff-Mill-Site/admin.html"
+ },
+ "items": [
+  {
+   "id": "contours",
+   "group": "Pages",
+   "label": "Contours",
+   "pages": [
+    "contours.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "contour-game",
+   "group": "Pages",
+   "label": "Plan to section (game)",
+   "pages": [
+    "contour-game.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "sun",
+   "group": "Pages",
+   "label": "Sun & climate",
+   "pages": [
+    "sun.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "kit",
+   "group": "Pages",
+   "label": "Model kit",
+   "pages": [
+    "kit.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "model",
+   "group": "Pages",
+   "label": "Your model",
+   "pages": [
+    "model.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "advanced",
+   "group": "Pages",
+   "label": "Advanced (menu page)",
+   "pages": [
+    "advanced.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "lidar",
+   "group": "Pages",
+   "label": "Lidar survey",
+   "pages": [
+    "lidar.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "advanced"
+  },
+  {
+   "id": "splat",
+   "group": "Pages",
+   "label": "Gaussian splat",
+   "pages": [
+    "splat.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "advanced"
+  },
+  {
+   "id": "sections",
+   "group": "Pages",
+   "label": "Sections",
+   "pages": [
+    "sections.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "advanced"
+  },
+  {
+   "id": "heliodon",
+   "group": "Pages",
+   "label": "Heliodon",
+   "pages": [
+    "heliodon.html",
+    "heliodon-3d.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "advanced"
+  },
+  {
+   "id": "project",
+   "group": "Pages",
+   "label": "Projection",
+   "pages": [
+    "project.html"
+   ],
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "advanced"
+  },
+  {
+   "id": "fmt-card",
+   "group": "Your model: formats",
+   "label": "Laser cutter",
+   "sel": "#oCard",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "fmt-card-layers",
+   "group": "Your model: formats",
+   "label": "Contour layers",
+   "sel": "#kLayers",
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "fmt-card"
+  },
+  {
+   "id": "fmt-card-waffle",
+   "group": "Your model: formats",
+   "label": "Waffle sections",
+   "sel": "#kWaffle",
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "fmt-card"
+  },
+  {
+   "id": "fmt-card-relief",
+   "group": "Your model: formats",
+   "label": "Engraved relief",
+   "sel": "#kRelief",
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "fmt-card"
+  },
+  {
+   "id": "fmt-print",
+   "group": "Your model: formats",
+   "label": "3D print",
+   "sel": "#oPrint",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "fmt-print-model",
+   "group": "Your model: formats",
+   "label": "Model (230 mm)",
+   "sel": "#kModel",
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "fmt-print"
+  },
+  {
+   "id": "fmt-print-mould",
+   "group": "Your model: formats",
+   "label": "Plaster mould",
+   "sel": "#kMould",
+   "on": true,
+   "from": "",
+   "note": "",
+   "parent": "fmt-print"
+  },
+  {
+   "id": "fmt-cnc",
+   "group": "Your model: formats",
+   "label": "CNC carving",
+   "sel": "#oCnc",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "fmt-hand",
+   "group": "Your model: formats",
+   "label": "Hand-cut card",
+   "sel": "#oHand",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "scale-100",
+   "group": "Your model: scales",
+   "label": "1:100",
+   "sel": "[data-scale=\"100\"]",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "scale-200",
+   "group": "Your model: scales",
+   "label": "1:200",
+   "sel": "[data-scale=\"200\"]",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "scale-500",
+   "group": "Your model: scales",
+   "label": "1:500",
+   "sel": "[data-scale=\"500\"]",
+   "on": true,
+   "from": "",
+   "note": ""
+  },
+  {
+   "id": "scale-1000",
+   "group": "Your model: scales",
+   "label": "1:1000",
+   "sel": "[data-scale=\"1000\"]",
+   "on": true,
+   "from": "",
+   "note": ""
+  }
+ ],
+ "stages": [
+  {
+   "name": "Stage 1 · Site analysis (example)",
+   "open": [
+    "contours",
+    "contour-game",
+    "sun",
+    "kit",
+    "model",
+    "fmt-card",
+    "fmt-card-layers",
+    "fmt-hand",
+    "scale-200"
+   ]
+  },
+  {
+   "name": "Stage 2 · Going further (example)",
+   "open": [
+    "contours",
+    "contour-game",
+    "sun",
+    "kit",
+    "model",
+    "fmt-card",
+    "fmt-card-layers",
+    "fmt-hand",
+    "scale-200",
+    "advanced",
+    "lidar",
+    "splat",
+    "sections",
+    "fmt-card-waffle",
+    "fmt-card-relief",
+    "fmt-print",
+    "fmt-print-model",
+    "scale-100",
+    "scale-500",
+    "heliodon"
+   ]
+  },
+  {
+   "name": "Everything open",
+   "open": [
+    "contours",
+    "contour-game",
+    "sun",
+    "kit",
+    "model",
+    "advanced",
+    "lidar",
+    "splat",
+    "sections",
+    "heliodon",
+    "project",
+    "fmt-card",
+    "fmt-card-layers",
+    "fmt-card-waffle",
+    "fmt-card-relief",
+    "fmt-print",
+    "fmt-print-model",
+    "fmt-print-mould",
+    "fmt-cnc",
+    "fmt-hand",
+    "scale-100",
+    "scale-200",
+    "scale-500",
+    "scale-1000"
+   ]
+  }
+ ]
+}
