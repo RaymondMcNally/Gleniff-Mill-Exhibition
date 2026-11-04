@@ -51,6 +51,33 @@
       </div>
     </div>
   </section>
+  <section id="reuse">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">For staff · Reuse</div>
+        <div>
+          <h2>Making a kit for next year's site</h2>
+          <p>For staff. The kit on the <a href="kit.html">Model kit</a> page is worked out in the browser from <code>data/site.json</code>, at any of the four scales. The ready-made 1:200 files were generated from the STL with the Python scripts below; use them if you want a kit prepared in advance.</p>
+        </div>
+      </div>
+      <div class="two">
+        <div>
+          <h3>1 · Generate sheets</h3>
+          <p class="small">Slices at 1 m (5 mm at 1:200), tiles to A1, hollows the layers and nests the pieces. Edit the constants at the top for another scale, interval, board or sheet size.</p>
+<pre>pip install trimesh shapely ezdxf scipy pillow matplotlib
+python tools/contours.py new_site.stl out/sheets</pre>
+          <h3>2 · Guide and contour plan</h3>
+<pre>python tools/docs.py out out/docs</pre>
+        </div>
+        <div>
+          <h3>3 · Update this site</h3>
+          <p class="small">Replace the files in <code>downloads/</code>, rebuild <code>data/model.json</code> with <code>tools/build_site_data.py</code>, swap the Cesium story link, and edit the figures in <code>index.html</code>.</p>
+          <p class="small">Download tools: <a href="tools/contours.py" download>contours.py</a> · <a href="tools/docs.py" download>docs.py</a> · <a href="tools/build_site_data.py" download>build_site_data.py</a></p>
+          <div class="callout">Levels are measured from the lowest ground of the mesh, not from the flat base QGIS adds under the terrain: contours.py finds it from the upward-facing surface. Check against a known spot height before cutting.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
