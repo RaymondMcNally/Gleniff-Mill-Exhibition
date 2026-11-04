@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "",
+ "updated": "2026-11-04T09:42:06.727Z",
  "message": "It opens later in the project.",
  "sibling": {
   "label": "Student site",
@@ -69,7 +69,7 @@
    "pages": [
     "advanced.html"
    ],
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   },
@@ -139,7 +139,7 @@
    "group": "Your model: formats",
    "label": "Laser cutter",
    "sel": "#oCard",
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   },
@@ -178,7 +178,7 @@
    "group": "Your model: formats",
    "label": "3D print",
    "sel": "#oPrint",
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   },
@@ -207,7 +207,7 @@
    "group": "Your model: formats",
    "label": "CNC carving",
    "sel": "#oCnc",
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   },
@@ -225,7 +225,7 @@
    "group": "Your model: scales",
    "label": "1:100",
    "sel": "[data-scale=\"100\"]",
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   },
@@ -243,7 +243,7 @@
    "group": "Your model: scales",
    "label": "1:500",
    "sel": "[data-scale=\"500\"]",
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   },
@@ -252,7 +252,7 @@
    "group": "Your model: scales",
    "label": "1:1000",
    "sel": "[data-scale=\"1000\"]",
-   "on": true,
+   "on": false,
    "from": "",
    "note": ""
   }
