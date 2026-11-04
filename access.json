@@ -63,6 +63,26 @@
    "note": ""
   },
   {
+   "id": "concept",
+   "group": "Pages",
+   "label": "Stage 2: Concept and parti",
+   "pages": [
+    "concept.html"
+   ],
+   "on": false,
+   "from": "",
+   "note": "Opens at the start of Stage 2.",
+   "menu": {
+    "label": "Stage 2",
+    "after": "model.html"
+   },
+   "promo": {
+    "page": "index.html",
+    "eyebrow": "Stage 2 is open",
+    "text": "Concept and site strategy: find the idea, draw the parti"
+   }
+  },
+  {
    "id": "advanced",
    "group": "Pages",
    "label": "Advanced (menu page)",
@@ -294,7 +314,8 @@
     "fmt-print-model",
     "scale-100",
     "scale-500",
-    "heliodon"
+    "heliodon",
+    "concept"
    ]
   },
   {
@@ -323,7 +344,8 @@
     "scale-100",
     "scale-200",
     "scale-500",
-    "scale-1000"
+    "scale-1000",
+    "concept"
    ]
   }
  ]

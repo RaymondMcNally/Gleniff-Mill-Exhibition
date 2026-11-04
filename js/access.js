@@ -32,7 +32,12 @@
     '.acc-lock p{color:var(--muted,#5d6562);font-size:18px}' +
     '.acc-lock a.btn{display:inline-block;margin-top:12px;padding:10px 16px;border:1px solid var(--ink,#1d2120);text-decoration:none;font-weight:600}' +
     '.acc-banner{position:fixed;left:12px;bottom:12px;z-index:9999;background:var(--ink,#1d2120);color:var(--bg,#eee);font:500 12px/1.3 var(--mono,monospace);padding:8px 10px;border-radius:4px;max-width:280px}' +
-    '.acc-banner a{color:inherit}';
+    '.acc-banner a{color:inherit}' +
+    '.acc-promo{margin-bottom:28px}' +
+    '.acc-promo a{display:flex;align-items:center;gap:16px;border:1px solid var(--ink,#1d2120);background:var(--paper,#f7f8f5);padding:14px 18px;text-decoration:none;color:var(--ink,#1d2120)}' +
+    '.acc-promo a:hover{background:var(--ink,#1d2120);color:var(--paper,#f7f8f5)}' +
+    '.acc-promo span{font:500 .7rem var(--mono,monospace);letter-spacing:.08em;text-transform:uppercase;color:var(--accent,#c0432a)}' +
+    '.acc-promo b{font-size:1.1rem;flex:1}.acc-promo i{font-style:normal;font-size:1.3rem}';
   d.appendChild(css);
   d.classList.add('acc-wait');
   var released = false, release = function () { if (!released) { released = true; d.classList.remove('acc-wait'); } };
@@ -78,6 +83,27 @@
       document.title = me.label + ' · not open yet';
       document.querySelectorAll('iframe,video,audio').forEach(function (x) { x.remove(); });
     }
+
+    // add-on pages listed only in access.json (e.g. Stage 2): a menu link, and a pointer on Start here.
+    // Delete the item from access.json (and its files) and both disappear.
+    items.forEach(function (it) {
+      if (!it.pages || !it.pages[0]) return;
+      var href = it.pages[0], open = isOpen(it, byId);
+      if (!open && !staff) return;
+      if (it.menu) document.querySelectorAll('header nav').forEach(function (nav) {
+        if (nav.querySelector('a[href="' + href + '"]')) return;
+        var a = document.createElement('a'); a.href = href; a.textContent = it.menu.label || it.label;
+        var after = it.menu.after && nav.querySelector('a[href="' + it.menu.after + '"]');
+        if (after) after.after(a); else nav.appendChild(a);
+      });
+      if (it.promo && page === (it.promo.page || 'index.html') && !document.getElementById('acc-promo-' + it.id)) {
+        var hero = document.querySelector('main .hero');
+        if (!hero) return;
+        var p = document.createElement('div'); p.className = 'wrap acc-promo' + (open ? '' : ' acc-locked'); p.id = 'acc-promo-' + it.id;
+        p.innerHTML = '<a href="' + href + '"><span>' + esc(it.promo.eyebrow || 'Now open') + '</span><b>' + esc(it.promo.text || it.label) + '</b><i>→</i></a>';
+        hero.after(p);
+      }
+    });
 
     // links to locked pages
     document.querySelectorAll('a[href]').forEach(function (a) {

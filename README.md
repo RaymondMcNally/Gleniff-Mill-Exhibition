@@ -99,3 +99,13 @@ Settings (scale, interval, sheet size, overlap) are constants at the top of `too
 Levels are relative: 0 m is the lowest ground of the mesh. `contours.py` finds it from the up-facing surface (so the flat base QGIS adds under the terrain is ignored) and starts the first layer 1 m above it; set `Z0` (STL mm) to override. For Gleniff the lowest ground is STL z 519.3 mm, about 3.9 m above the base, so `docs.py` and `build_site_data.py` use a datum of 103.86 m (= 519.3 × 0.2). Check against a known spot height.
 For a new site, the separate Site Model Kit website does all of this in the browser.
 GitHub warns on files over 50 MB and rejects files over 100 MB; the STL is 23 MB.
+
+## Student access (admin.html)
+`admin.html` (not in the menu) switches pages, model formats and scales on and off for students, with opening dates and stage presets. The switches live in `access.json`; `js/access.js` on every page applies them. It paces what students see; it isn't a password. The kiosk and the windows it drives are never locked, and staff view (set on the admin page) shows everything with locked parts outlined.
+
+## Stage 2 add-on: Concept and parti
+`concept.html` is the Stage 2 page (concept and site strategy): what a concept is, precedents, the "is it a concept?" test, the ten themes, the brief's headings tied to site tools, the A2 parti sheet maker and A3 underlay, the A4 intent helper, concept models, story and place, and the reading list. Set the issue and review dates in the `window.STAGE2` block near the top of the file.
+
+It is listed only in `access.json` (item `concept`): access.js adds the "Stage 2" menu link and the pointer on Start here when the switch is on. It starts locked.
+
+**To remove it completely:** delete `concept.html`, `css/concept.css` and `js/concept.js`, and delete the `concept` item from `access.json` (also from the `open` lists of any stages). Nothing else on the site refers to it.
