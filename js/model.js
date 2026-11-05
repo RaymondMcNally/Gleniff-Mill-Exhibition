@@ -55,6 +55,7 @@
   P.draw = () => {
     const c = P.ctx;
     P.base({ contourAlpha: 0.75 }); P.features({ alpha: 0.8, tags: 'focus' });
+    window.SiteOverlays && window.SiteOverlays.drawPlan(P);   // map layers from data/overlays.json (js/overlays.js)
     if (S.tile) {
       const [nc, nr] = tileCount(); c.save(); c.strokeStyle = css('--muted'); c.globalAlpha = .5; c.lineWidth = 1; c.setLineDash([4, 4]);
       const q = Q();
@@ -72,6 +73,7 @@
     c.fillStyle = css('--accent'); c.fillRect(x, y - 18, tw, 18); c.fillStyle = '#fff'; c.fillText(t, x + 5, y - 4);
     P.north(); P.scalebar();
   };
+  window.addEventListener('overlays-change', () => P.draw());
   const cv = $('pickPlan');
   let drag = null;
   const evPos = e => { const r = cv.getBoundingClientRect(); return P.inv(e.clientX - r.left, e.clientY - r.top); };
@@ -633,6 +635,7 @@
     }
     // site features (approximate)
     drawFeatures(doc, X, Y, [dx0, dy0, dx0 + D, dy0 + D], Gm);
+    window.SiteOverlays && window.SiteOverlays.drawPDF(doc, X, Y, [dx0, dy0, dx0 + D, dy0 + D]);
     // drawing frame + grid ticks
     doc.setDrawColor(0); doc.setLineWidth(0.35); doc.rect(dx0, dy0, D, D);
     doc.setFontSize(7); doc.setLineWidth(0.2);

@@ -116,3 +116,8 @@ It is listed only in `access.json` (item `concept`): access.js adds the "Stage 2
 It is listed only in `access.json`: item `design` (the page, with its "Stage 3" menu link and Start here pointer) and items `design-developed` and `design-portfolio`, which hide the Developed design and Portfolio sections until they open (give them opening dates on the admin page). It starts locked. It reuses `js/sitepack.js` and `js/model-core.js` without changing them, and works with or without Stage 2.
 
 **To remove it completely:** delete `design.html`, `css/design.css` and `js/design.js`, and delete the `design`, `design-developed` and `design-portfolio` items from `access.json` (also from the `open` lists of any stages). Nothing else on the site refers to it.
+
+## Map layers on Your model (red line boundary, buildings)
+`data/overlays.json` holds map layers drawn over the Your model plan: the **red line boundary** and the **building and wall outlines** from the Stage 2 brief map (01_STAGE_02_BRIEF_MAP, 1:1250). They were taken from the PDF's vector lines and fitted to the survey by matching the PDF's photo to the survey aerial along the road, to within about 0.5 m. Students switch each layer on and off under the plan (remembered in the browser); layers that are on also print on the 1:100 contour plan PDF. `js/overlays.js` draws them; `model.js` calls it if it is loaded.
+
+To add a layer, add an entry to `data/overlays.json` (polygons in metres from the survey's south-west corner). To remove the layers, delete `js/overlays.js` and `data/overlays.json` and the `overlays.js` script line in `model.html`.
