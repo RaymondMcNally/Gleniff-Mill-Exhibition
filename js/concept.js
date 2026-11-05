@@ -3,6 +3,7 @@
    Everything a student types stays in this browser (localStorage 'gleniff-concept'). */
 (function () {
   'use strict';
+  if (!document.getElementById('tIdea')) return;   // page locked for students: nothing to run
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const KEY = 'gleniff-concept';

@@ -83,6 +83,29 @@
    }
   },
   {
+   "id": "design",
+   "group": "Pages",
+   "label": "Stage 3: Pavilion design",
+   "pages": [
+    "design.html"
+   ],
+   "on": false,
+   "from": "",
+   "note": "Opens at the start of Stage 3.",
+   "menu": {
+    "label": "Stage 3",
+    "after": [
+     "concept.html",
+     "model.html"
+    ]
+   },
+   "promo": {
+    "page": "index.html",
+    "eyebrow": "Stage 3 is open",
+    "text": "Initial and developed design: place your pavilion, draw it at 1:200 and 1:50"
+   }
+  },
+  {
    "id": "advanced",
    "group": "Pages",
    "label": "Advanced (menu page)",
@@ -275,6 +298,27 @@
    "on": false,
    "from": "",
    "note": ""
+  },
+  {
+   "id": "design-developed",
+   "group": "Stage 3 sections",
+   "label": "Developed design (nine questions, final checklist)",
+   "sel": "#developed",
+   "parent": "design",
+   "on": false,
+   "from": "",
+   "note": "",
+   "groupNote": "Parts of the Stage 3 page that open later. They stay hidden while the Stage 3 page is off. Give each an opening date (e.g. the interim and final review days) and they open themselves."
+  },
+  {
+   "id": "design-portfolio",
+   "group": "Stage 3 sections",
+   "label": "Portfolio",
+   "sel": "#portfolio",
+   "parent": "design",
+   "on": false,
+   "from": "",
+   "note": ""
   }
  ],
  "stages": [
@@ -345,7 +389,10 @@
     "scale-200",
     "scale-500",
     "scale-1000",
-    "concept"
+    "concept",
+    "design",
+    "design-developed",
+    "design-portfolio"
    ]
   }
  ]

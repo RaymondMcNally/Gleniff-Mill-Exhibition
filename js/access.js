@@ -84,8 +84,10 @@
       document.querySelectorAll('iframe,video,audio').forEach(function (x) { x.remove(); });
     }
 
-    // add-on pages listed only in access.json (e.g. Stage 2): a menu link, and a pointer on Start here.
-    // Delete the item from access.json (and its files) and both disappear.
+    // add-on pages listed only in access.json (e.g. Stage 2, Stage 3): a menu link, and a pointer on Start here.
+    // Delete the item from access.json (and its files) and both disappear. menu.after can be a list: the first
+    // link found is used, so a later stage still sits in the right place if an earlier one is removed.
+    var promos = [];
     items.forEach(function (it) {
       if (!it.pages || !it.pages[0]) return;
       var href = it.pages[0], open = isOpen(it, byId);
@@ -93,17 +95,20 @@
       if (it.menu) document.querySelectorAll('header nav').forEach(function (nav) {
         if (nav.querySelector('a[href="' + href + '"]')) return;
         var a = document.createElement('a'); a.href = href; a.textContent = it.menu.label || it.label;
-        var after = it.menu.after && nav.querySelector('a[href="' + it.menu.after + '"]');
+        var list = [].concat(it.menu.after || []), after = null;
+        for (var i = 0; i < list.length && !after; i++) after = nav.querySelector('a[href="' + list[i] + '"]');
         if (after) after.after(a); else nav.appendChild(a);
       });
-      if (it.promo && page === (it.promo.page || 'index.html') && !document.getElementById('acc-promo-' + it.id)) {
-        var hero = document.querySelector('main .hero');
-        if (!hero) return;
-        var p = document.createElement('div'); p.className = 'wrap acc-promo' + (open ? '' : ' acc-locked'); p.id = 'acc-promo-' + it.id;
-        p.innerHTML = '<a href="' + href + '"><span>' + esc(it.promo.eyebrow || 'Now open') + '</span><b>' + esc(it.promo.text || it.label) + '</b><i>→</i></a>';
-        hero.after(p);
-      }
+      if (it.promo && page === (it.promo.page || 'index.html')) promos.push({ it: it, open: open, href: href });
     });
+    // one pointer only: the latest open stage (staff with nothing open see the latest, outlined as locked)
+    var pr = promos.filter(function (x) { return x.open; }).pop() || (staff ? promos[promos.length - 1] : null);
+    var hero = document.querySelector('main .hero');
+    if (pr && hero && !document.getElementById('acc-promo-' + pr.it.id)) {
+      var p = document.createElement('div'); p.className = 'wrap acc-promo' + (pr.open ? '' : ' acc-locked'); p.id = 'acc-promo-' + pr.it.id;
+      p.innerHTML = '<a href="' + pr.href + '"><span>' + esc(pr.it.promo.eyebrow || 'Now open') + '</span><b>' + esc(pr.it.promo.text || pr.it.label) + '</b><i>\u2192</i></a>';
+      hero.after(p);
+    }
 
     // links to locked pages
     document.querySelectorAll('a[href]').forEach(function (a) {

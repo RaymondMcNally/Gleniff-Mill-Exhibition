@@ -109,3 +109,10 @@ GitHub warns on files over 50 MB and rejects files over 100 MB; the STL is 23 MB
 It is listed only in `access.json` (item `concept`): access.js adds the "Stage 2" menu link and the pointer on Start here when the switch is on. It starts locked.
 
 **To remove it completely:** delete `concept.html`, `css/concept.css` and `js/concept.js`, and delete the `concept` item from `access.json` (also from the `open` lists of any stages). Nothing else on the site refers to it.
+
+## Stage 3 add-on: Pavilion design
+`design.html` is the Stage 3 page (initial and developed design): phases timeline, the task and the seven activities, diagram types and a relationship (bubble) diagram tool, the interim and final checklists, **Place your pavilion** (footprints with a live area against 70 m², floor levels, a section A–B, winter/summer shadows, six approach viewpoints), A2 drawing bases (1:200 site plan, 1:200 site section, 1:50 ground plan, approach views sheet with key plan), scale figures and cut-outs, the nine questions (with the student's Stage 2 intent if they wrote one), a 1:50 laser landscape base, precedents, portfolio guidance, learning outcomes and reading. Set the dates in the `window.STAGE3` block near the top of the file.
+
+It is listed only in `access.json`: item `design` (the page, with its "Stage 3" menu link and Start here pointer) and items `design-developed` and `design-portfolio`, which hide the Developed design and Portfolio sections until they open (give them opening dates on the admin page). It starts locked. It reuses `js/sitepack.js` and `js/model-core.js` without changing them, and works with or without Stage 2.
+
+**To remove it completely:** delete `design.html`, `css/design.css` and `js/design.js`, and delete the `design`, `design-developed` and `design-portfolio` items from `access.json` (also from the `open` lists of any stages). Nothing else on the site refers to it.

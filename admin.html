@@ -167,7 +167,7 @@
     cfg.items.forEach(it => { let g = groups.find(g => g.name === it.group); if (!g) groups.push(g = { name: it.group, items: [] }); g.items.push(it); });
     const B = byId();
     $('lists').innerHTML = groups.map(g => '<section class="panel"><h2>' + esc(g.name) + '</h2>' +
-      (g.name === 'Pages' ? '<p class="small">Start here is always open. A page under Advanced is hidden while Advanced is off.</p>' : g.name.includes('format') ? '<p class="small">If a student had a locked format chosen, Your model moves them to the first open one.</p>' : '<p class="small">Scales offered on Your model.</p>') +
+      (g.items[0].groupNote ? '<p class="small">' + esc(g.items[0].groupNote) + '</p>' : g.name === 'Pages' ? '<p class="small">Start here is always open. A page under Advanced is hidden while Advanced is off.</p>' : g.name.includes('format') ? '<p class="small">If a student had a locked format chosen, Your model moves them to the first open one.</p>' : '<p class="small">Scales offered on Your model.</p>') +
       g.items.map(it => {
         const par = it.parent && B[it.parent], parShut = par && !selfOpen(par);
         const st = parShut ? ['shut', 'Hidden with ' + par.label] : it.on ? ['open', 'Open'] : it.from ? (today >= it.from ? ['open', 'Opened ' + fmt(it.from)] : ['dated', 'Opens ' + fmt(it.from)]) : ['shut', 'Locked'];
