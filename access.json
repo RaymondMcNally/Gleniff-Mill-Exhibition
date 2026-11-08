@@ -65,44 +65,39 @@
   {
    "id": "concept",
    "group": "Pages",
-   "label": "Stage 2: Concept and parti",
+   "label": "Stage 2: Concept and site strategy",
    "pages": [
     "concept.html"
    ],
    "on": true,
-   "from": "",
-   "note": "Opens at the start of Stage 2.",
+   "from": "2026-11-09",
+   "note": "Opens with the Stage 2 brief.",
    "menu": {
-    "label": "Stage 2",
+    "label": "Concept",
     "after": "model.html"
    },
    "promo": {
     "page": "index.html",
     "eyebrow": "Stage 2 is open",
-    "text": "Concept and site strategy: find the idea, draw the parti"
+    "text": "Initial and developed design: start with your concept and site strategy"
    }
   },
   {
    "id": "design",
    "group": "Pages",
-   "label": "Stage 3: Pavilion design",
+   "label": "Stage 2: Initial and developed design",
    "pages": [
     "design.html"
    ],
    "on": false,
-   "from": "",
-   "note": "Opens at the start of Stage 3.",
+   "from": "2026-11-09",
+   "note": "Opens with the Stage 2 brief.",
    "menu": {
-    "label": "Stage 3",
+    "label": "Design",
     "after": [
      "concept.html",
      "model.html"
     ]
-   },
-   "promo": {
-    "page": "index.html",
-    "eyebrow": "Stage 3 is open",
-    "text": "Initial and developed design: place your pavilion, draw it at 1:200 and 1:50"
    }
   },
   {
@@ -301,18 +296,18 @@
   },
   {
    "id": "design-developed",
-   "group": "Stage 3 sections",
-   "label": "Developed design (nine questions, final checklist)",
+   "group": "Stage 2 design sections",
+   "label": "Developed design (nine questions, final review checklist)",
    "sel": "#developed",
    "parent": "design",
    "on": false,
    "from": "",
    "note": "",
-   "groupNote": "Parts of the Stage 3 page that open later. They stay hidden while the Stage 3 page is off. Give each an opening date (e.g. the interim and final review days) and they open themselves."
+   "groupNote": "Parts of the Stage 2 design page that open later. They stay hidden while the design page is off. Give each an opening date (e.g. the interim and final review days) and they open themselves."
   },
   {
    "id": "design-portfolio",
-   "group": "Stage 3 sections",
+   "group": "Stage 2 design sections",
    "label": "Portfolio",
    "sel": "#portfolio",
    "parent": "design",
@@ -359,7 +354,8 @@
     "scale-100",
     "scale-500",
     "heliodon",
-    "concept"
+    "concept",
+    "design"
    ]
   },
   {

@@ -126,3 +126,8 @@ button.primary:disabled,.btns button:disabled{opacity:.45;cursor:default}
   .c2-trio,.c2-prec,.c2-heads,.c2-story{grid-template-columns:1fr}
   .c2-themes{grid-template-columns:1fr}
 }
+/* heading groups (Organisational, Experiential, Formal) */
+.c2-group{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:14px;border-bottom:1px solid var(--ink);padding-bottom:4px}
+.c2-group:first-child{margin-top:0}
+.c2-group h3{margin:0;font-size:1.05rem}
+.c2-group p{margin:0}

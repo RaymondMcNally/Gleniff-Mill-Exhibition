@@ -1,4 +1,4 @@
-/* Stage 3 · Initial and developed design (design.html). Part of the removable Stage 3 add-on:
+/* Stage 2 · Initial and developed design (design.html). Part of the removable Stage 2 design add-on:
    design.html, css/design.css, js/design.js. Uses js/sitepack.js (survey), js/model-core.js (1:50 laser base),
    vendor/jspdf and vendor/jszip. Everything a student does stays in this browser (localStorage 'gleniff-design').
    Coordinates: metres from the survey's south-west corner, x east, y north. */
@@ -26,7 +26,7 @@
 
   // ---------- timeline
   (function () {
-    const D = window.STAGE3 || {}, keys = ['issue', 'intro', 'interim', 'final', 'portfolio'];
+    const D = window.STAGE3 || {}, keys = ['issue', 'interim', 'final', 'portfolio'];
     const today = new Date(); today.setHours(0, 0, 0, 0);
     let nextSet = false;
     $('timeline').innerHTML = keys.map(k => {
@@ -40,13 +40,12 @@
 
   // ---------- activities
   const ACTS = [
-    ['Play', 'Free play nobody organises.', 'Where on this slope or by this water would a child start playing without being told?'],
+    ['Play', 'Free play nobody organises.', 'Where on this slope or by this water would someone start playing without being told?'],
     ['Challenge', 'Climbing, balancing, a little risk.', 'What is just hard enough here: a bank, a log, stepping stones across the stream?'],
-    ['Rest', 'Pausing, warming up, watching.', 'Where can a tired child sit out of the wind and still watch the others?'],
-    ['Repeat', 'Coming back and doing it again.', 'What is different each visit: the water level, the leaves, the light?'],
-    ['Construct / make', 'Building, shaping, making things.', 'What could be built, dammed, woven or carved here, and where is it kept?'],
+    ['Rest', 'Pausing, warming up, watching.', 'Where can a tired visitor sit out of the wind and still watch the others?'],
+    ['Explore', 'Finding things out by going to look.', 'What is waiting to be found: the old workings, the waterfall, the view of the mountains, the life in the stream?'],
     ['Fantasy', 'Stories, hiding, imagining.', 'The ruined mill, the old workings, the dark wood: where does the story start?'],
-    ['Stewardship', 'Learning to look after a place.', 'What could children learn to care for here: the river, the trees, the ruin?']
+    ['Stewardship', 'Learning the ethics of looking after a place.', 'What could visitors learn to care for here: the river, the trees, the ruin?']
   ];
   $('acts').innerHTML = ACTS.map(a => '<article><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span><em>' + esc(a[2]) + '</em></article>').join('');
 
@@ -54,11 +53,16 @@
   const L = (t, h, x) => ({ t, h, x });
   const LISTS = {
     interim: [
-      ['Space adjacency analysis', 'Relationship diagrams, showing context', [L('Relationship diagram', '#adjTool')]],
-      ['Sketch design plans', '1:200 and/or 1:50 · as much context and approach as you can', [L('1:200 site plan base', '#place'), L('1:50 ground plan base', '#place')]],
-      ['Sketch design sections', '1:200 and/or 1:50 · showing context', [L('Section through your pavilion', '#place')]],
-      ['Sketch design elevations', '1:200 and/or 1:50 · showing context', [L('Scale figures', '#scale')]],
-      ['Working models', 'A series, conceptual and massing', [L('Models', '#models'), L('Your model', 'model.html')]]
+      ['Spatial analysis', 'Relationship diagrams showing context: the river and the mountains', [L('Relationship diagram', '#adjTool')]],
+      ['Context plans', '1:500 · mechanical pencil, on A2', [L('1:500 context plan base', '#place')]],
+      ['Context sections', '1:500 · mechanical pencil, on A2', [L('1:500 context section', '#place'), L('Sections tool', 'sections.html')]],
+      ['Sketch design plans', '1:200 · capturing as much context and approach as you can', [L('1:200 site plan base', '#place')]],
+      ['Sketch design sections', '1:200 · showing context', [L('1:200 site section', '#place')]],
+      ['Sketch design elevations', '1:200 · showing context', [L('Scale figures', '#scale')]],
+      ['Sketch design model', '1:500 or 1:200', [L('Your model', 'model.html')]],
+      ['Working models', 'A series, both conceptual and massing', [L('Models', '#models'), L('Concept models', 'concept.html#models', 'concept.html')]],
+      ['Concept and site strategy', 'Intent, parti diagrams and conceptual models', [L('Concept page', 'concept.html', 'concept.html')]],
+      ['Iteration process work', 'On A3 clean-cut sketch roll', []]
     ],
     final: [
       ['Experiential representation', 'Medium of your choice', [L('Splat model of the site', 'splat.html')]],
@@ -66,12 +70,12 @@
       ['Sequence of views on approach', '6 views, from the distant view to the threshold, with a key plan on the same sheet', [L('Views sheet with key plan', '#place')]],
       ['Detailed site plan with roof plan', '1:200 · mechanical pencil', [L('1:200 site plan base', '#place')]],
       ['Detailed site sections × 2', '1:200 · mechanical pencil', [L('1:200 site section', '#place'), L('Sections tool', 'sections.html')]],
-      ['Detailed pavilion sections × 2', '1:50 · mechanical pencil', [L('Scale figures', '#scale')]],
-      ['Detailed pavilion elevations × 4', '1:50 · mechanical pencil', []],
-      ['Detailed plan', '1:50 · mechanical pencil', [L('1:50 ground plan base', '#place')]],
+      ['Detailed pavilion plans', '1:100 · mechanical pencil', [L('1:100 ground plan base', '#place')]],
+      ['Detailed pavilion sections × 2', '1:100 · mechanical pencil', [L('Scale figures', '#scale')]],
+      ['Detailed pavilion elevations × 4', '1:100 · mechanical pencil', []],
       ['Materials and structural strategy', 'Various metric scales · mechanical pencil', [L('Precedents', '#precedents')]],
-      ['Written design intent', 'One A4 page · completed in Stage 2', [L('Intent helper', 'concept.html#intent', 'concept.html')]],
-      ['Conceptual model', 'Completed in Stage 2', []],
+      ['Written design intent', 'One A4 page · completed with your concept and site strategy', [L('Intent helper', 'concept.html#intent', 'concept.html')]],
+      ['Conceptual model', 'Completed with your concept and site strategy', [L('Concept page', 'concept.html#models', 'concept.html')]],
       ['Series of working massing models', 'Various scales · from the interim review', []],
       ['Final detailed presentation model', '1:50 · on its contextual landscape · labelled, with a north point', [L('1:50 laser base', '#models')]],
       ['Process work', 'A5/A4 sketchbook · trace roll at a consistent A3, bound with bull clips', []]
@@ -118,7 +122,7 @@
   $('nineQs').innerHTML = QS.map(([q, t], i) => '<li><label for="q' + i + '">' + esc(q) + '</label><p class="tip">' + esc(t) + '</p><textarea id="q' + i + '" rows="3"></textarea></li>').join('');
   QS.forEach((_, i) => { const el = $('q' + i); el.value = S.qs[i] || ''; el.oninput = () => { S.qs[i] = el.value; save(); }; });
   $('qTxt').onclick = () => {
-    const t = 'Project 1 Stage 3 · Nine questions' + (S.name ? ' · ' + S.name : '') + '\n\n' + QS.map(([q], i) => (i + 1) + '. ' + q + '\n' + (S.qs[i] || '').trim() + '\n').join('\n');
+    const t = 'Project 1 Stage 2 · Developed design · Nine questions' + (S.name ? ' · ' + S.name : '') + '\n\n' + QS.map(([q], i) => (i + 1) + '. ' + q + '\n' + (S.qs[i] || '').trim() + '\n').join('\n');
     dlBlob(new Blob([t], { type: 'text/plain' }), fileName('nine_questions', 'txt'));
   };
   // intent carried over from Stage 2 (if a student used it)
@@ -186,20 +190,22 @@
   }
 
   // ================= RELATIONSHIP DIAGRAM =================
+  // c: 1 marks context (river, mountains, the mill): not a space, no area, not counted in the 70 m²
   const ADJ0 = () => ({
     b: [
-      { n: 'Arrival', a: 25, o: 1, x: 110, y: 120 }, { n: 'Threshold', a: 8, o: 0, x: 270, y: 170 },
-      { n: 'Collective space', a: 30, o: 0, x: 450, y: 250 }, { n: 'Intimate space', a: 6, o: 0, x: 640, y: 130 },
-      { n: 'Make', a: 15, o: 0, x: 440, y: 430 }, { n: 'Rest', a: 8, o: 0, x: 630, y: 330 }, { n: 'Store', a: 4, o: 0, x: 300, y: 420 },
-      { n: 'Play and challenge', a: 40, o: 1, x: 770, y: 450 }, { n: 'Landscape of learning', a: 80, o: 1, x: 170, y: 380 }
+      { n: 'Arrival', a: 25, o: 1, x: 100, y: 110 }, { n: 'Threshold', a: 8, o: 0, x: 250, y: 170 },
+      { n: 'Collective space', a: 30, o: 0, x: 440, y: 230 }, { n: 'Intimate space', a: 6, o: 0, x: 640, y: 170 },
+      { n: 'Explore', a: 20, o: 1, x: 330, y: 450 }, { n: 'Rest', a: 8, o: 0, x: 600, y: 320 }, { n: 'Store', a: 4, o: 0, x: 340, y: 320 },
+      { n: 'Play and challenge', a: 40, o: 1, x: 790, y: 420 }, { n: 'Landscape of learning', a: 80, o: 1, x: 130, y: 360 },
+      { n: 'River', c: 1, x: 570, y: 455 }, { n: 'Mountains', c: 1, x: 810, y: 70 }
     ],
-    l: [[0, 1, 1], [1, 2, 1], [2, 3, 2], [2, 4, 1], [2, 5, 2], [4, 6, 1], [5, 7, 2], [2, 8, 3], [3, 8, 3]]
+    l: [[0, 1, 1], [1, 2, 1], [2, 3, 2], [2, 4, 2], [2, 5, 2], [2, 6, 1], [5, 7, 2], [2, 8, 3], [4, 8, 1], [3, 9, 3], [8, 9, 2], [3, 10, 3], [2, 10, 3], [0, 10, 3]]
   });
   if (!S.adj || !S.adj.b) S.adj = ADJ0();
   const A = () => S.adj;
   let aSel = -1;
   const nameLines = (n, r) => { if (n.length * 7.6 <= 2 * r - 10 || !n.includes(' ')) return [n]; const w = n.split(' '); let best = [n], bd = 1e9; for (let i = 1; i < w.length; i++) { const a = w.slice(0, i).join(' '), b = w.slice(i).join(' '), d = Math.max(a.length, b.length); if (d < bd) { bd = d; best = [a, b]; } } return best; };
-  const rOf = b => Math.max(28, 8.6 * Math.sqrt(Math.max(1, +b.a || 1)));
+  const rOf = b => b.c ? 44 : Math.max(28, 8.6 * Math.sqrt(Math.max(1, +b.a || 1)));
   function adjSVG(print) {
     const ink = print ? '#1d2120' : css('--ink'), mut = print ? '#6b706d' : css('--muted'), acc = print ? '#c0432a' : css('--accent'), pap = print ? '#ffffff' : css('--paper'), bg = print ? '#ffffff' : 'transparent';
     const a = A(), o = [];
@@ -212,6 +218,13 @@
     });
     a.b.forEach((b, i) => {
       const r = rOf(b), sel = i === aSel && !print;
+      if (b.c) {   // context: a soft tinted shape, labelled, no area
+        const wet = /river|stream|water|lake|pool|falls?/i.test(b.n), fill = wet ? '#cfe0f5' : print ? '#e4e6e1' : css('--rule');
+        o.push('<g class="bub ctx' + (sel ? ' sel' : '') + '" data-b="' + i + '"><rect x="' + (b.x - r * 1.35) + '" y="' + (b.y - r * 0.72) + '" width="' + (r * 2.7) + '" height="' + (r * 1.44) + '" rx="' + (r * 0.72) + '" fill="' + fill + '" stroke="' + (sel ? acc : mut) + '" stroke-width="' + (sel ? 3.5 : 1.2) + '"/>' +
+          nameLines(b.n, r * 1.3).map((t, k, all) => '<text x="' + b.x + '" y="' + (b.y + 1 - (all.length - 1 - k) * 16) + '" fill="' + ink + '" font-family="Archivo, Helvetica, sans-serif" font-weight="600" font-size="14" text-anchor="middle">' + esc(t) + '</text>').join('') +
+          '<text class="a" x="' + b.x + '" y="' + (b.y + 17) + '" fill="' + mut + '" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">context</text></g>');
+        return;
+      }
       o.push('<g class="bub' + (b.o ? ' out' : '') + (sel ? ' sel' : '') + '" data-b="' + i + '"><circle cx="' + b.x + '" cy="' + b.y + '" r="' + r + '" fill="' + pap + '" stroke="' + (sel ? acc : ink) + '" stroke-width="' + (sel ? 3.5 : 2) + '"' + (b.o ? ' stroke-dasharray="7 5"' : '') + '/>' +
         nameLines(b.n, r).map((t, k, all) => '<text x="' + b.x + '" y="' + (b.y + 1 - (all.length - 1 - k) * 16) + '" fill="' + ink + '" font-family="Archivo, Helvetica, sans-serif" font-weight="600" font-size="14" text-anchor="middle">' + esc(t) + '</text>').join('') +
         '<text class="a" x="' + b.x + '" y="' + (b.y + 17) + '" fill="' + mut + '" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">' + (+b.a || 0) + ' m²' + (b.o ? ' · outside' : '') + '</text></g>');
@@ -219,17 +232,18 @@
     o.push('<g class="key" font-family="IBM Plex Mono, monospace" font-size="11" fill="' + mut + '"><line x1="16" y1="530" x2="56" y2="530" stroke="' + ink + '" stroke-width="6"/><text x="62" y="534">must be next to</text>' +
       '<line x1="190" y1="530" x2="230" y2="530" stroke="' + ink + '" stroke-width="2.5"/><text x="236" y="534">close</text>' +
       '<line x1="300" y1="530" x2="340" y2="530" stroke="' + ink + '" stroke-width="2" stroke-dasharray="4 7"/><text x="346" y="534">seen from</text>' +
-      '<circle cx="452" cy="530" r="9" fill="none" stroke="' + ink + '" stroke-dasharray="4 3"/><text x="468" y="534">outside</text></g>');
+      '<circle cx="452" cy="530" r="9" fill="none" stroke="' + ink + '" stroke-dasharray="4 3"/><text x="468" y="534">outside</text>' +
+      '<rect x="540" y="522" width="30" height="16" rx="8" fill="' + (print ? '#e4e6e1' : css('--rule')) + '" stroke="' + mut + '"/><text x="578" y="534">context</text></g>');
     if (print) o.push('<text x="884" y="534" text-anchor="end" font-family="Archivo, Helvetica, sans-serif" font-size="12" fill="' + mut + '">' + esc((S.name ? S.name + ' · ' : '') + 'Relationship diagram · Gleniff pavilion') + '</text>');
     return o.join('');
   }
   function adjRender() {
     $('adjSvgEl').innerHTML = adjSVG(false);
-    const a = A(), inArea = a.b.filter(b => !b.o).reduce((s, b) => s + (+b.a || 0), 0);
+    const a = A(), inArea = a.b.filter(b => !b.o && !b.c).reduce((s, b) => s + (+b.a || 0), 0);
     $('adjSum').textContent = 'Inside: ' + inArea + ' m² of about 70 m²' + (inArea > 85 ? '. That is well over the brief.' : inArea < 55 ? '. There is room for more.' : '.');
   }
   function adjList() {
-    $('adjList').innerHTML = A().b.map((b, i) => '<div class="c3-adj-row" data-i="' + i + '"><input type="text" value="' + esc(b.n) + '" maxlength="28" aria-label="Name"><input type="number" min="1" max="400" value="' + (+b.a || 0) + '" aria-label="Area in square metres"><button type="button" aria-pressed="' + !!b.o + '" title="Outside or inside">' + (b.o ? 'Out' : 'In') + '</button><button type="button" title="Remove" aria-label="Remove ' + esc(b.n) + '">✕</button></div>').join('');
+    $('adjList').innerHTML = A().b.map((b, i) => b.c ? '<div class="c3-adj-row ctx" data-i="' + i + '"><input type="text" value="' + esc(b.n) + '" maxlength="28" aria-label="Name"><span class="c3-ctx">Context</span><button type="button" title="Remove" aria-label="Remove ' + esc(b.n) + '">✕</button></div>' : '<div class="c3-adj-row" data-i="' + i + '"><input type="text" value="' + esc(b.n) + '" maxlength="28" aria-label="Name"><input type="number" min="1" max="400" value="' + (+b.a || 0) + '" aria-label="Area in square metres"><button type="button" aria-pressed="' + !!b.o + '" title="Outside or inside">' + (b.o ? 'Out' : 'In') + '</button><button type="button" title="Remove" aria-label="Remove ' + esc(b.n) + '">✕</button></div>').join('');
   }
   $('adjList').addEventListener('input', e => {
     const row = e.target.closest('.c3-adj-row'); if (!row) return; const b = A().b[+row.dataset.i];
@@ -243,6 +257,7 @@
     save(); adjList(); adjRender();
   });
   $('adjAdd').onclick = () => { A().b.push({ n: 'New space', a: 10, o: 0, x: 450 + (Math.random() - .5) * 200, y: 280 + (Math.random() - .5) * 120 }); save(); adjList(); adjRender(); };
+  $('adjCtx').onclick = () => { A().b.push({ n: 'Context', c: 1, x: 450 + (Math.random() - .5) * 240, y: 90 + Math.random() * 60 }); save(); adjList(); adjRender(); };
   $('adjReset').onclick = () => { if (confirm('Start the diagram again? Your spaces and links will be replaced.')) { S.adj = ADJ0(); aSel = -1; save(); adjList(); adjRender(); } };
   (function () {
     const svg = $('adjSvgEl'); let drag = null;
@@ -328,7 +343,7 @@
       doc.setDrawColor(120); doc.setLineWidth(0.2); doc.line(15, gy, 195, gy);
       y += sc === 200 ? 40 : sc === 100 ? 55 : 90;
     });
-    doc.setFontSize(7.5); doc.setTextColor(140); doc.text('Gleniff pavilion · Project 1 Stage 3 · ARCT06004 ATU Sligo', 15, 287);
+    doc.setFontSize(7.5); doc.setTextColor(140); doc.text('Gleniff pavilion · Project 1 Stage 2 · ARCT06004 ATU Sligo', 15, 287);
     doc.save(fileName('scale_figures'));
   };
   $('figCut').onclick = () => {
@@ -350,7 +365,7 @@
       });
     };
     row(50, 82, 2); row(50, 140, 2); row(100, 180, 3); row(100, 212, 3); row(100, 244, 3);
-    doc.setFontSize(7.5); doc.setTextColor(140); doc.text('Gleniff pavilion · Project 1 Stage 3 · ARCT06004 ATU Sligo', 15, 287);
+    doc.setFontSize(7.5); doc.setTextColor(140); doc.text('Gleniff pavilion · Project 1 Stage 2 · ARCT06004 ATU Sligo', 15, 287);
     doc.save(fileName('cutout_figures'));
   };
 
@@ -671,7 +686,7 @@
     doc.setDrawColor(40); doc.setLineWidth(0.35); doc.rect(M, ty, tw, TB); doc.line(M + tw * 0.62, ty, M + tw * 0.62, ty + TB); doc.line(M + tw * 0.84, ty, M + tw * 0.84, ty + TB);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(29, 33, 32); doc.text(title.toUpperCase(), M + 5, ty + 8.5);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(90);
-    doc.text((S.name ? S.name + '  ·  ' : '') + 'Project 1, Stage 3: Initial and developed design  ·  The Waters and the Wild', M + 5, ty + 15);
+    doc.text((S.name ? S.name + '  ·  ' : '') + 'Project 1, Stage 2: Initial and developed design  ·  The Waters and the Wild', M + 5, ty + 15);
     doc.text(['Gleniff Barytes Mill, Ballintrillick, Co. Sligo', 'ARCT06004 · ATU Sligo · Department of Architecture'], M + tw * 0.62 + 4, ty + 8);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(29, 33, 32); doc.text(sub, M + tw * 0.84 + 4, ty + 8.5);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(110); doc.text('Survey: ATU drone lidar, 2025', M + tw * 0.84 + 4, ty + 14.5);
@@ -740,6 +755,27 @@
       titleBlock(doc, 'Site plan · base', '1:200 at A2');
       doc.save(fileName('site_plan_1-200_A2')); status('Downloaded the 1:200 site plan. Print at 100% (actual size) on A2.');
     },
+    async plan500() {
+      if (!await needSurvey()) return;
+      const doc = newA2(), fr = fr0(), k = 1000 / 500, wM = fr.w / k, hM = fr.h / k, d = designC();
+      // centred on the pavilion, kept over the survey as far as it will go so the sheet holds as much context as possible
+      const cl = (v, lo, hi) => lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v));
+      const c = [cl(d[0], wM / 2, G.widthM - wM / 2), cl(d[1], hM / 2, G.depthM - hM / 2)];
+      planInto(doc, fr, c, 500, { iv: 1, idx: 5, step: 0.8, spot: 25, fp: true, cut: true });
+      northPt(doc, fr.x + fr.w - 12, fr.y + 14, 5); scaleBar(doc, fr.x + 8, fr.y + fr.h - 8, 500, 50);
+      doc.setFontSize(7); doc.setTextColor(110); doc.text(levelNote() + '. Contours every 1 m, index every 5 m. Spot levels every 25 m. The mountains are beyond the survey: add them from the OS map and your Stage 1 work.', fr.x + 8, fr.y + fr.h - 13);
+      titleBlock(doc, 'Context plan · base', '1:500 at A2');
+      doc.save(fileName('context_plan_1-500_A2')); status('Downloaded the 1:500 context plan. Print at 100% (actual size) on A2.');
+    },
+    async plan100() {
+      if (!await needSurvey()) return;
+      const doc = newA2(), fr = fr0(), c = designC();
+      planInto(doc, fr, c, 100, { iv: 0.25, idx: 1, step: 0.2, spot: 4, fp: true, cut: true });
+      northPt(doc, fr.x + fr.w - 12, fr.y + 14, 5); scaleBar(doc, fr.x + 8, fr.y + fr.h - 8, 100, 10);
+      doc.setFontSize(7); doc.setTextColor(110); doc.text(levelNote() + '. Contours every 0.25 m, index every 1 m. Spot levels every 4 m, smoothed from a 0.4 m survey grid.', fr.x + 8, fr.y + fr.h - 13);
+      titleBlock(doc, 'Ground plan · base', '1:100 at A2');
+      doc.save(fileName('ground_plan_1-100_A2')); status('Downloaded the 1:100 ground plan. Print at 100% (actual size) on A2.');
+    },
     async plan50() {
       if (!await needSurvey()) return;
       const doc = newA2(), fr = fr0(), c = designC();
@@ -749,12 +785,14 @@
       titleBlock(doc, 'Ground plan · base', '1:50 at A2');
       doc.save(fileName('ground_plan_1-50_A2')); status('Downloaded the 1:50 ground plan. Print at 100% (actual size) on A2.');
     },
-    async sec200() {
+    sec200() { return this.secAt(200); },
+    sec500() { return this.secAt(500); },
+    async secAt(want) {
       if (!await needSurvey()) return;
       if (!S.cut) defaultCut();
       const P = profile(S.cut, 0.2), ok = P.pts.filter(p => p[1] === p[1]);
       if (ok.length < 2) { status('The section line is outside the survey.', true); return; }
-      const fr = fr0(), avail = fr.w - 30, scale = P.len * 5 <= avail ? 200 : P.len * 2 <= avail ? 500 : 1000, k = 1000 / scale;
+      const fr = fr0(), avail = fr.w - 30, scale = [200, 500, 1000, 2500].filter(s => s >= want).find(s => P.len * 1000 / s <= avail) || 2500, k = 1000 / scale;
       const doc = newA2(), lo = Math.min(...ok.map(p => p[1])) - 3, hi = Math.max(...ok.map(p => p[1]), ...P.boxes.map(b => b.z1)) + 3;
       const ox = fr.x + 24 + (avail - P.len * k) / 2, base = fr.y + fr.h / 2 + (hi - lo) * k / 2, SX = s => ox + s * k, SZ = z => base - (z - lo) * k;
       doc.setDrawColor(40); doc.setLineWidth(0.35); doc.rect(fr.x, fr.y, fr.w, fr.h);
@@ -769,16 +807,16 @@
       const fx = P.boxes.length ? Math.max(1, P.boxes[0].s0 - 3) : P.len / 2, fz = G.sample(S.cut.a[0] + (S.cut.b[0] - S.cut.a[0]) * fx / P.len, S.cut.a[1] + (S.cut.b[1] - S.cut.a[1]) * fx / P.len);
       if (fz === fz) [PEOPLE[0], PEOPLE[3]].forEach((pp, i) => pdfFigure(doc, pp, SX(fx + i * 0.8), SZ(fz), scale, 'fill'));
       doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(29, 33, 32); doc.text('A', SX(0), SZ(hi) - 2, { align: 'center' }); doc.text('B', SX(P.len), SZ(hi) - 2, { align: 'center' }); doc.setFont('helvetica', 'normal');
-      scaleBar(doc, fr.x + 8, fr.y + fr.h - 8, scale, scale === 200 ? 20 : 50);
+      scaleBar(doc, fr.x + 8, fr.y + fr.h - 8, scale, scale === 200 ? 20 : scale === 500 ? 50 : 100);
       doc.setFontSize(7); doc.setTextColor(110); doc.text(levelNote() + '. Ground from the survey along A–B, ' + P.len.toFixed(0) + ' m. True scale, no vertical exaggeration.' + (P.boxes.length ? ' Your pavilion is dashed: draw your own section over it.' : ''), fr.x + 8, fr.y + fr.h - 13);
       // small key plan
       const kf = { x: fr.x + fr.w - 92, y: fr.y + 6, w: 86, h: 62 }, mid = [(S.cut.a[0] + S.cut.b[0]) / 2, (S.cut.a[1] + S.cut.b[1]) / 2], ks = [1000, 1250, 2500].find(s => P.len * 1000 / s < kf.w - 10) || 2500;
       doc.setFillColor(255); doc.rect(kf.x, kf.y, kf.w, kf.h, 'F');
       planInto(doc, kf, mid, ks, { iv: 2, idx: 10, step: 1, fp: true, cut: true });
       doc.setFontSize(6); doc.setTextColor(110); doc.text('Key plan 1:' + ks, kf.x, kf.y + kf.h + 3.5);
-      titleBlock(doc, 'Site section A–B · base', '1:' + scale + ' at A2');
-      doc.save(fileName('site_section_A-B_A2'));
-      status('Downloaded the section at 1:' + scale + (scale !== 200 ? ' (too long for 1:200 on A2; shorten the line for 1:200)' : '') + '. Print at 100% (actual size).');
+      titleBlock(doc, (want === 500 ? 'Context section' : 'Site section') + ' A–B · base', '1:' + scale + ' at A2');
+      doc.save(fileName((want === 500 ? 'context' : 'site') + '_section_A-B_1-' + scale + '_A2'));
+      status('Downloaded the section at 1:' + scale + (scale !== want ? ' (too long for 1:' + want + ' on A2; shorten the line for 1:' + want + ')' : '') + '. Print at 100% (actual size).');
     },
     async views() {
       if (!await needSurvey()) return;
