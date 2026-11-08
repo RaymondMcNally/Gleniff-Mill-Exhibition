@@ -193,3 +193,15 @@ button:disabled{opacity:.45;cursor:default}
 /* relationship diagram: context rows (river, mountains) */
 .c3-adj-row.ctx{grid-template-columns:minmax(0,1fr) 96px 26px}
 .c3-ctx{font:500 .7rem var(--mono);color:var(--muted);text-align:center;letter-spacing:.04em;text-transform:uppercase}
+/* images from the brief */
+.c3-brief-hero{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin-bottom:28px}
+.c3-brief-hero figure{margin:0;min-width:0}
+.c3-brief-hero img{display:block;height:380px;width:auto;max-width:100%;border:1px solid var(--rule);background:#fff}
+.c3-brief-hero p{flex-basis:100%;margin:0;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.c3-brief-img{margin:0 0 22px}
+.c3-brief-img img{display:block;width:100%;max-width:980px;height:auto;background:#fff;border:1px solid var(--rule)}
+.c3-brief-tall img{max-width:640px}
+.c3-brief-img figcaption{font:.72rem/1.4 var(--mono);color:var(--muted);margin-top:6px}
+.c3-prec-img{display:block;width:100%;height:150px;object-fit:cover;object-position:center 40%;background:#fff;border:1px solid var(--rule);margin-bottom:10px}
+@media (max-width:760px){.c3-brief-hero figure{flex:1 1 40%}.c3-brief-hero img{height:auto;width:100%}}
+.c3-ergo table{display:block;max-width:100%;overflow-x:auto}

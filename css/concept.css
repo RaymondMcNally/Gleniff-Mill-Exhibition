@@ -131,3 +131,7 @@ button.primary:disabled,.btns button:disabled{opacity:.45;cursor:default}
 .c2-group:first-child{margin-top:0}
 .c2-group h3{margin:0;font-size:1.05rem}
 .c2-group p{margin:0}
+/* images from the brief */
+.c2-brief-img{margin:0 0 12px}
+.c2-brief-img img{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule)}
+.c2-brief-img figcaption{font:.7rem/1.4 var(--mono);color:var(--muted);margin-top:6px}
