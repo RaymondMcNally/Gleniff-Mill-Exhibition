@@ -109,7 +109,7 @@
 
   // ---------- nine questions
   const QS = [
-    ['To what extent is your design meeting your stated design intentions? Have you changed or developed them?', 'Compare it with your Stage 2 intent. Changing it is fine; say why.'],
+    ['To what extent is your design meeting your stated design intentions? Have you changed or developed them?', 'Compare it with the intent you wrote for your concept and site strategy. Changing it is fine; say why.'],
     ['Are you engaging with learning through play in the landscape? How is it experienced by young and old, and why did you choose this?', 'Walk through it as a five-year-old, then as their grandparent.'],
     ['Is the overall concept clear and coherent?', 'Could a classmate say your idea back to you after one look at your drawings?'],
     ['What are your design references? How have your precedents influenced you?', 'Name two precedents and the one thing you took from each.'],
