@@ -1,0 +1,25 @@
+/* Trees on the site (kit.html #trees) */
+.tb-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:18px;align-items:start}
+.tb-grid .canvas-wrap{position:relative;min-width:0;border:1px solid var(--rule);background:var(--paper)}
+.tb-grid canvas{display:block;width:100%;cursor:crosshair;touch-action:manipulation}
+.tb-panel{display:flex;flex-direction:column;gap:14px}
+.tb-bands{display:flex;flex-direction:column;gap:6px}
+.tb-bands button{display:flex;align-items:center;gap:8px;text-align:left}
+.tb-bands button[aria-pressed=false]{opacity:.5}
+.tb-bands button[aria-pressed=true]{background:var(--paper);color:var(--ink);border-color:var(--ink)}
+.tb-sw{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--flat);border:1px solid var(--ink);flex:none}
+.tb-n{margin-left:auto;color:var(--muted)}
+.tb-info{border:1px solid var(--rule);background:var(--paper);padding:12px 14px;min-height:150px}
+.tb-id{font:800 1.1rem var(--display);margin-bottom:6px}
+.tb-dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:.86rem}
+.tb-dl dt{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding-top:2px}
+.tb-dl dd{margin:0}
+.tb-chk{border-left:3px solid var(--gold);padding-left:8px;margin-top:8px}
+.tb-dls{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tb-dls a{font:500 .78rem var(--mono);border:1px solid var(--ink);border-radius:3px;padding:7px 11px;color:var(--ink);text-decoration:none;background:var(--paper)}
+.tb-dls a.primary{background:var(--ink);color:var(--paper)}
+.tb-dls a:hover{border-color:var(--accent)}
+.tb-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px;padding:0;list-style:none;counter-reset:tb}
+.tb-steps li{border-top:2px solid var(--ink);padding-top:8px;font-size:.9rem;counter-increment:tb}
+.tb-steps li::before{content:counter(tb);display:block;font:800 1.3rem var(--display);margin-bottom:4px}
+@media (max-width:860px){.tb-grid{grid-template-columns:1fr}.tb-steps{grid-template-columns:1fr 1fr}}

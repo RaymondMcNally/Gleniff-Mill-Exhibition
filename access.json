@@ -173,6 +173,17 @@
    "parent": "advanced"
   },
   {
+   "id": "trees",
+   "group": "Site layers",
+   "label": "Trees on the site (Model kit page: tree plan, 1:500 template and downloads)",
+   "sel": "#trees, .trees-link",
+   "parent": "kit",
+   "on": true,
+   "from": "",
+   "note": "",
+   "groupNote": "Extra layers of site information. Switch one off to hide it from students; it stays hidden while its page is off."
+  },
+  {
    "id": "fmt-card",
    "group": "Your model: formats",
    "label": "Laser cutter",

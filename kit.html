@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/model.css">
 <link rel="stylesheet" href="css/kit.css">
+<link rel="stylesheet" href="css/trees.css">
 <script src="js/access.js"></script>
 </head>
 <body>
@@ -33,7 +34,7 @@
       <h1>Gleniff Mill,<br>layer by <em>layer</em>.</h1>
       <p class="lede">A <span data-kscale>1:200</span> contour model of the whole Gleniff Mill site, one board layer per contour. Choose the scale, make the laser files, then follow the build sequence and the 3D guide that shows where every piece goes. New to contours? Start with <a href="contours.html">Reading contours</a>.</p>
       <p class="lede" style="margin-top:10px;font-size:.95rem">Want a model of just your own area? <a href="model.html">Make your own square</a>.</p>
-      <p class="onpage"><a href="#site">Site</a> · <a href="#kit">Kit</a> · <a href="#build">Instructions</a> · <a href="#assemble">Assembly</a></p>
+      <p class="onpage"><a href="#site">Site</a> · <a href="#kit">Kit</a> · <a href="#build">Instructions</a> · <a href="#assemble">Assembly</a><span class="trees-link"> · <a href="#trees">Trees</a></span></p>
     </div>
     <dl class="spec">
       <div><dt>Scale</dt><dd data-kscale>1:200</dd></div>
@@ -171,6 +172,41 @@
       </div>
     </div>
   </section>
+
+  <!-- TREES ADD-ON: switched on and off from the admin page (item "trees"). Files: js/trees.js, css/trees.css, data/trees.json, downloads/trees/. -->
+  <section id="trees">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">05 · Trees on the site</div>
+        <div>
+          <h2>Where the trees stand, and how big they are</h2>
+          <p>Half the site is under trees, and they shape everything: shade, shelter, sound, the views in and out. The drone lidar found <b id="treeCount">512</b> trees of 3 m and over. Each one is drawn here as a circle the size of its crown seen from above, shaded by height. Tap a tree to read its height and crown, and what that is on a 1:500 model.</p>
+        </div>
+      </div>
+      <div class="tb-grid">
+        <div class="canvas-wrap"><canvas id="treePlan" aria-label="Plan of the site with every tree of 3 m and over drawn as a circle the size of its crown"></canvas></div>
+        <div class="tb-panel">
+          <div><div class="lbl">Show</div><div class="tb-bands" id="treeBands"></div></div>
+          <div><button type="button" id="treeNums" aria-pressed="false">Tree numbers</button></div>
+          <div class="tb-info" id="treeInfo" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="tb-dls">
+        <a class="primary" href="downloads/trees/Gleniff_Trees_1-500_A1.pdf" download>Template · 1:500 on A1 (PDF)</a>
+        <a href="downloads/trees/Gleniff_Trees_1-500_A3_tiles.pdf" download>Template · 1:500 on 4 × A3 (PDF)</a>
+        <a href="downloads/trees/Gleniff_Tree_Schedule_A4.pdf" download>Tree schedule (PDF)</a>
+        <a href="downloads/trees/Gleniff_Trees.csv" download>Tree list (CSV)</a>
+        <a href="downloads/trees/Gleniff_Trees_1-500.dxf" download>Tree positions · 1:500 (DXF)</a>
+      </div>
+      <ol class="tb-steps">
+        <li>Print the template at 100% (actual size). The A1 sheet is the whole 1:500 model, 675 × 483 mm; the A3 tiles join on the lettered 50 mm squares.</li>
+        <li>Lay it over the model, north to north, lining up the edges, the river and the mill.</li>
+        <li>Prick through each tree centre with a pin. Or laser-etch the positions onto the base from the DXF (layer TREE_CENTRE).</li>
+        <li>Make each tree to its crown circle and height: at 1:500, 1 m is 2 mm, so a 10 m tree is 20 mm tall. The schedule lists every tree.</li>
+      </ol>
+      <p class="small" style="margin-top:16px">How it was made: tree height is the surface model (the top of everything) minus the bare-ground model, both from the October 2025 survey on the <a href="lidar.html">Lidar</a> page. Heights are good to about ±1 m. Where crowns touch in the woodland, the split between trees is an estimate, and scrub under 3 m isn't shown. Three trees marked ? sit on the mill platform and may be part of the ruin.</p>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -185,5 +221,7 @@
 <script src="js/sitepack.js"></script>
 <script src="js/model-core.js"></script>
 <script src="js/kit.js"></script>
+<script src="js/plan.js"></script>
+<script src="js/trees.js"></script>
 </body>
 </html>
