@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-04T10:28:30.322Z",
+ "updated": "2026-11-10T12:57:16.127Z",
  "message": "It opens later in the project.",
  "sibling": {
   "label": "Student site",
@@ -69,7 +69,7 @@
    "pages": [
     "concept.html"
    ],
-   "on": true,
+   "on": false,
    "from": "2026-11-09",
    "note": "Opens with the Stage 2 brief.",
    "menu": {
