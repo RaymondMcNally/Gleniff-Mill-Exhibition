@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-10T12:57:16.127Z",
+ "updated": "2026-11-12T13:52:12.500Z",
  "message": "It opens later in the project.",
  "sibling": {
   "label": "Student site",
@@ -90,7 +90,7 @@
     "design.html"
    ],
    "on": false,
-   "from": "2026-11-09",
+   "from": "2026-11-16",
    "note": "Opens with the Stage 2 brief.",
    "menu": {
     "label": "Design",
