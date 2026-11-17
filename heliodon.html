@@ -12,6 +12,9 @@
 <link rel="stylesheet" href="css/pages.css">
 <style>
 .nav-current{color:var(--ink)!important;background:var(--paper)}
+:root{--sun:#c8860f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sun:#f0b33a}}
+:root[data-theme="dark"]{--sun:#f0b33a}
 .viewer{border:1px solid var(--rule);background:var(--paper)}
 .viewer iframe{display:block;width:100%;height:min(78vh,760px);min-height:520px;border:0}
 .viewer-bar{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--rule);font:500 .78rem var(--mono);color:var(--muted)}
@@ -26,6 +29,26 @@
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .vcol{border:1px solid var(--rule);background:var(--paper);padding:16px 18px}
 .vcol h3{margin:0 0 8px}
+.how{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.how figure{margin:0;border:1px solid var(--rule);background:var(--paper);padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.how h3{margin:0;font-size:1.1rem}
+.how p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.5}
+.how svg{display:block;width:100%;height:auto;background:var(--bg);border-radius:2px}
+.how svg .ln{stroke:var(--ink);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.how svg .thin{stroke:var(--muted);stroke-width:1.2;fill:none}
+.how svg .dash{stroke:var(--sun);stroke-width:2;fill:none;stroke-dasharray:6 5}
+.how svg .sun{fill:var(--sun)}
+.how svg .sunln{stroke:var(--sun);stroke-width:2.5;fill:none;stroke-linecap:round}
+.how svg .ink{fill:var(--ink)}
+.how svg .card{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}
+.how svg .ply{fill:var(--board)}
+.how svg .plyln{stroke:var(--board);stroke-width:12;fill:none;stroke-linecap:round}
+.how svg .shade{fill:var(--ink);opacity:.75}
+.how svg .t{font:500 11px var(--mono);fill:var(--muted)}
+.how svg .tb{font:600 12px var(--mono);fill:var(--ink)}
+.how-key{margin:14px 0 0;font-size:1rem}
+.how-key b{background:var(--paper);border:1px solid var(--rule);padding:1px 7px;font-family:var(--mono);font-weight:500}
+@media (max-width:760px){.how{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:860px){.vs{grid-template-columns:1fr}}
 @media (max-width:700px){.viewer iframe{height:72vh;min-height:460px}}
 </style>
@@ -51,10 +74,99 @@
     </div>
   </div>
 
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">01 · How it works</div>
+        <div>
+          <h2>A sun you can hold</h2>
+          <p>A shadow depends on only two things: how high the sun is, and which direction it's coming from. Set those two numbers on the heliodon and the shadows on your model are the shadows on the site.</p>
+        </div>
+      </div>
+      <div class="how">
+        <figure>
+          <svg viewBox="0 0 360 210" role="img" aria-label="Left: the sun's height is the angle above the horizon. Right: its bearing is the direction measured clockwise from north on a compass.">
+            <line class="ln" x1="16" y1="170" x2="168" y2="170"/>
+            <path class="ln" d="M36 170 L36 140 M30 140 L42 140"/>
+            <line class="dash" x1="36" y1="170" x2="136" y2="98"/>
+            <circle class="sun" cx="140" cy="95" r="12"/>
+            <path class="ln" d="M76 170 A40 40 0 0 0 68.4 146.5"/>
+            <text class="tb" x="82" y="160">36°</text>
+            <text class="tb" x="16" y="196">Height</text><text class="t" x="70" y="196">above the horizon</text>
+            <line class="thin" x1="180" y1="20" x2="180" y2="190"/>
+            <circle class="thin" cx="272" cy="98" r="58"/>
+            <text class="tb" x="267" y="32">N</text><text class="t" x="336" y="102">E</text><text class="t" x="268" y="170">S</text><text class="t" x="199" y="102">W</text>
+            <path class="ln" d="M272 98 L242 150"/>
+            <path class="ln" d="M272 70 A28 28 0 1 1 258 122.2"/>
+            <path class="ink" d="M258 122.2 l9 -1 l-4 -8 z"/>
+            <circle class="sun" cx="234" cy="164" r="12"/>
+            <text class="tb" x="208" y="128">210°</text>
+            <text class="tb" x="196" y="196">Bearing</text><text class="t" x="258" y="196">from north</text>
+          </svg>
+          <h3>Two numbers place the sun</h3>
+          <p><b>Height</b> is the angle above the horizon. <b>Bearing</b> is the direction, measured clockwise from north: 90° is east, 180° south, 270° west.</p>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 360 210" role="img" aria-label="Looking south: the sun's path across the sky is a high arc in June, a middle arc in March and September, and a low short arc in December.">
+            <line class="ln" x1="12" y1="176" x2="348" y2="176"/>
+            <path class="sunln" d="M20 176 Q180 -52 340 176"/>
+            <path class="sunln" d="M58 176 Q180 40 302 176" style="opacity:.75"/>
+            <path class="sunln" d="M118 176 Q180 128 242 176" style="opacity:.55"/>
+            <circle class="sun" cx="180" cy="62" r="10"/><text class="tb" x="180" y="44" text-anchor="middle">21 June · 59°</text>
+            <circle class="sun" cx="180" cy="108" r="9"/><text class="tb" x="180" y="93" text-anchor="middle">March, Sept · 36°</text>
+            <circle class="sun" cx="180" cy="152" r="8"/><text class="tb" x="180" y="139" text-anchor="middle">21 Dec · 12°</text>
+            <text class="t" x="12" y="196">East</text><text class="t" x="163" y="196">South</text><text class="t" x="318" y="196">West</text>
+            <text class="t" x="12" y="20">Midday height at Gleniff, looking south</text>
+          </svg>
+          <h3>They change every hour and every season</h3>
+          <p>At Gleniff the midday sun is 59° high in late June but only 12° in late December. In summer it rises in the north-east and sets in the north-west; in winter it stays low in the south.</p>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 360 210" role="img" aria-label="The heliodon: a model on a turntable, a curved arc beside it, and a light on the arc shining at the model. The light slides along the arc; the turntable turns.">
+            <line class="ln" x1="12" y1="186" x2="348" y2="186"/>
+            <path class="plyln" d="M286 184 A176 176 0 0 0 178 21"/>
+            <rect class="ply" x="38" y="176" width="144" height="10"/>
+            <rect class="card" x="62" y="152" width="96" height="24"/>
+            <path class="card" d="M92 152 v-14 h16 v14 z"/>
+            <line class="dash" x1="236" y1="76" x2="110" y2="160"/>
+            <rect class="ink" x="232" y="68" width="16" height="16" rx="2" transform="rotate(-33 240 76)"/>
+            <circle class="sun" cx="232" cy="80" r="5"/>
+            <path class="ln" d="M266 44 A176 176 0 0 1 286 92"/>
+            <path class="ink" d="M266 44 l-1 10 l8 -3 z"/><path class="ink" d="M286 92 l-7 -6 l8 -2 z"/>
+            <text class="tb" x="276" y="40">slide</text><text class="t" x="276" y="54">= height</text>
+            <path class="ln" d="M44 196 C70 206 150 206 176 196"/>
+            <path class="ink" d="M176 196 l-9 -2 l3 8 z"/>
+            <text class="tb" x="186" y="203">turn</text><text class="t" x="220" y="203">= bearing</text>
+          </svg>
+          <h3>The heliodon makes two moves</h3>
+          <p>The light <b>slides</b> along the arc to the sun's height. The model <b>turns</b> on the turntable until the sun's bearing is at the index mark. It's the model that turns, not the sun, but the shadows come out the same.</p>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 360 210" role="img" aria-label="A 1 metre post and its shadow at midday: short in June, longer in March, very long in December.">
+            <line class="ln" x1="16" y1="66" x2="348" y2="66"/><line class="ln" x1="16" y1="126" x2="348" y2="126"/><line class="ln" x1="16" y1="186" x2="348" y2="186"/>
+            <line class="sunln" x1="40" y1="36" x2="58" y2="66" style="opacity:.6"/>
+            <rect class="shade" x="40" y="62" width="18" height="4"/><path class="ln" d="M40 66 V36"/>
+            <line class="sunln" x1="40" y1="96" x2="81" y2="126" style="opacity:.6"/>
+            <rect class="shade" x="40" y="122" width="41" height="4"/><path class="ln" d="M40 126 V96"/>
+            <line class="sunln" x1="40" y1="156" x2="181" y2="186" style="opacity:.6"/>
+            <rect class="shade" x="40" y="182" width="141" height="4"/><path class="ln" d="M40 186 V156"/>
+            <text class="tb" x="200" y="44">21 June</text><text class="t" x="200" y="58">0.6 m · 3 mm</text>
+            <text class="tb" x="200" y="104">March, Sept</text><text class="t" x="200" y="118">1.4 m · 7 mm</text>
+            <text class="tb" x="200" y="164">21 Dec</text><text class="t" x="200" y="178">4.6 m · 23 mm</text>
+            <text class="t" x="16" y="20">Midday shadow of a 1 m post · on a 1:200 model</text>
+          </svg>
+          <h3>Same angle, same shadow</h3>
+          <p>The lower the sun, the longer the shadow. On a 1:200 model a 5 mm pin is a 1 m post: at midday its shadow is 3 mm in June and 23 mm in December.</p>
+        </figure>
+      </div>
+      <p class="how-key">So for any date and time you only need two numbers: the sun's <b>height</b> and its <b>bearing</b>. The setting table and the Sun &amp; climate page give you both.</p>
+    </div>
+  </section>
+
   <section id="view">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">01 · See it in 3D</div>
+        <div class="eyebrow">02 · See it in 3D</div>
         <div>
           <h2>Try it before you build it</h2>
           <p>A 250 mm model of the ground around the mill, cut from the lidar survey, on the heliodon. Pick a date and time and the turntable and light move to match. Switch between the LED and true sunlight to see how close the bench gets, and add the trees. If you have set up a square on <a href="model.html">Your model</a> in this browser, the view opens on <b>your</b> model, and follows any change you make there.</p>
@@ -70,7 +182,7 @@
   <section id="use">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">02 · Using it</div>
+        <div class="eyebrow">03 · Using it</div>
         <div>
           <h2>Three settings</h2>
           <p>Read the sun's height and bearing for your date and time off the setting table in the build guide, or from <b>Sun height now</b> and <b>Sun bearing</b> on the <a href="sun.html">Sun &amp; climate</a> page.</p>
@@ -88,7 +200,7 @@
   <section id="build">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">03 · Build it</div>
+        <div class="eyebrow">04 · Build it</div>
         <div>
           <h2>Files to make it</h2>
           <p>47 parts on nine 600 × 400 mm sheets of 6 mm plywood, plus dowels, a few bolts, a lazy-susan bearing and a 20–30 W COB LED. Two people, and one night for the glue.</p>
@@ -105,7 +217,7 @@
   <section id="limits">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">04 · What it gets right</div>
+        <div class="eyebrow">05 · What it gets right</div>
         <div>
           <h2>And what it doesn't</h2>
           <p>The heliodon shows the shadows of whatever is on the model, at the right angle, for any day of the year. Know its limits before you trust it.</p>
