@@ -175,13 +175,23 @@
   {
    "id": "trees",
    "group": "Site layers",
-   "label": "Trees on the site (Model kit page: tree plan, 1:500 template and downloads)",
+   "label": "Trees on the site · Model kit page (tree plan, 1:500 and 1:200 templates, downloads)",
    "sel": "#trees, .trees-link",
    "parent": "kit",
    "on": true,
    "from": "",
    "note": "",
    "groupNote": "Extra layers of site information. Switch one off to hide it from students; it stays hidden while its page is off."
+  },
+  {
+   "id": "model-trees",
+   "group": "Site layers",
+   "label": "Trees on the site · Your model page (trees on the plan, tree template for the student's own square, whole-site templates)",
+   "sel": "#mTrees",
+   "parent": "model",
+   "on": true,
+   "from": "",
+   "note": ""
   },
   {
    "id": "fmt-card",
@@ -399,7 +409,9 @@
     "concept",
     "design",
     "design-developed",
-    "design-portfolio"
+    "design-portfolio",
+    "trees",
+    "model-trees"
    ]
   }
  ]

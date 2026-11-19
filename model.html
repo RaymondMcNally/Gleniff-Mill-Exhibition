@@ -158,6 +158,15 @@
             <p class="small only-hand">One A3 sheet with your square at true scale: every contour is the edge of one layer of card, numbered from the bottom up, with your name and the scale in the title block. Print it at actual size (100%).</p>
             <p class="small only-cnc">The ZIP holds the model as an STL to import into VCarve Pro, and a setup sheet for the technician. VCarve makes the toolpaths and G-code.</p>
             <p class="small only-mould">The mould is your square upside down and mirrored, so the plaster cast comes out the right way round. Fill it to the brim: the rim is the pour line.</p>
+            <!-- TREES ADD-ON: switched on and off from the admin page (item "model-trees"). Files: js/model-trees.js, data/trees.json, downloads/trees/. -->
+            <div class="mtrees" id="mTrees" style="margin-top:22px;padding-top:14px;border-top:2px solid var(--ink)">
+              <span class="lbl">Trees on the site</span>
+              <label class="check"><span><input type="checkbox" id="mTreeShow" checked>Show trees on the plan</span><small>every tree of 3 m and over from the drone lidar, drawn the size of its crown; also printed on the 1:100 plan</small></label>
+              <p class="small" id="mTreeCount">Loading the trees…</p>
+              <div class="mbtns"><button type="button" class="primary" id="dlTrees" disabled>Download tree template for your square (A3 PDF)</button></div>
+              <p class="small">Your square at your model scale, with every tree's position and crown, and a schedule of heights in model millimetres. Print at 100% and lay it over your model, edges lined up. Large squares come on several A3 sheets that join on the grid.</p>
+              <p class="small">Whole-site templates: <a href="downloads/trees/Gleniff_Trees_1-200_A3_tiles.pdf" download>1:200 on 19 × A3</a> · <a href="downloads/trees/Gleniff_Trees_1-500_A1.pdf" download>1:500 on A1</a> · <a href="downloads/trees/Gleniff_Trees_1-500_A3_tiles.pdf" download>1:500 on 4 × A3</a> · <a href="downloads/trees/Gleniff_Tree_Schedule_A4.pdf" download>tree schedule</a></p>
+            </div>
           </div>
         </div>
       </div>
@@ -274,6 +283,7 @@
 <script src="js/hershey.js?v=20261027a"></script>
 <script src="js/model-core.js?v=20261027a"></script>
 <script src="js/overlays.js"></script>
-<script src="js/model.js?v=20261105a"></script>
+<script src="js/model-trees.js?v=20261119a"></script>
+<script src="js/model.js?v=20261119a"></script>
 </body>
 </html>

@@ -56,6 +56,7 @@
     const c = P.ctx;
     P.base({ contourAlpha: 0.75 }); P.features({ alpha: 0.8, tags: 'focus' });
     window.SiteOverlays && window.SiteOverlays.drawPlan(P);   // map layers from data/overlays.json (js/overlays.js)
+    window.ModelTrees && window.ModelTrees.drawPlan(P);       // trees layer (js/model-trees.js, admin item "model-trees")
     if (S.tile) {
       const [nc, nr] = tileCount(); c.save(); c.strokeStyle = css('--muted'); c.globalAlpha = .5; c.lineWidth = 1; c.setLineDash([4, 4]);
       const q = Q();
@@ -74,6 +75,9 @@
     P.north(); P.scalebar();
   };
   window.addEventListener('overlays-change', () => P.draw());
+  window.addEventListener('trees-change', () => P.draw());
+  // read by add-ons (js/model-trees.js): the square in metres from the survey's SW corner
+  window.MyModelState = () => ({ x0: S.x / 5, y0: S.y / 5, side: Q() / 5, scale: S.scale, size: S.size, name: S.name, tile: S.tile ? tileId() : '', site: pack.name });
   const cv = $('pickPlan');
   let drag = null;
   const evPos = e => { const r = cv.getBoundingClientRect(); return P.inv(e.clientX - r.left, e.clientY - r.top); };
@@ -636,6 +640,7 @@
     // site features (approximate)
     drawFeatures(doc, X, Y, [dx0, dy0, dx0 + D, dy0 + D], Gm);
     window.SiteOverlays && window.SiteOverlays.drawPDF(doc, X, Y, [dx0, dy0, dx0 + D, dy0 + D]);
+    window.ModelTrees && window.ModelTrees.drawPDF(doc, X, Y, [dx0, dy0, dx0 + D, dy0 + D]);
     // drawing frame + grid ticks
     doc.setDrawColor(0); doc.setLineWidth(0.35); doc.rect(dx0, dy0, D, D);
     doc.setFontSize(7); doc.setLineWidth(0.2);
@@ -670,7 +675,7 @@
     doc.setFontSize(7.5); doc.setTextColor(60);
     const notes = [cstep < 1 ? 'Contours every 0.5 m; whole metres labelled; heavy line every 5 m.' : `Contours every ${cstep} m; heavy and labelled every ${idx} m.`, `Spot heights on a ${grid} m grid. Grid figures are metres from the SW corner.`,
       G.relative ? 'Levels in metres relative to the site datum: 0 m is the lowest ground of the survey.' : `Levels in metres as given for the site (lowest ground ${G.lo.toFixed(1)} m).`,
-      pack.survey ? 'Survey: ' + pack.survey + '.' : 'From the site terrain model.', 'Blue dashed: watercourses. Grey: roads. Dashed outlines: buildings (approx.).', 'Grey fill: outside survey. Print at 100%: the scale bar must measure 100 mm.'];
+      pack.survey ? 'Survey: ' + pack.survey + '.' : 'From the site terrain model.', 'Blue dashed: watercourses. Grey: roads. Dashed outlines: buildings (approx.).', 'Grey fill: outside survey. Print at 100%: the scale bar must measure 100 mm.'].concat(window.ModelTrees && window.ModelTrees.on() ? ['Green circles: tree crowns from the drone lidar, labelled T + tree number and height.'] : []);
     let ny2 = ty; notes.forEach(t => doc.splitTextToSize(t, tw).forEach(line => { doc.text(line, tx, ny2); ny2 += 4; }));
     return doc.output('blob');
   }
