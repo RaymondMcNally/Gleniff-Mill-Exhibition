@@ -63,6 +63,7 @@
       '<dl class="tb-dl"><dt>Height</dt><dd>' + t.h.toFixed(1) + ' m</dd><dt>Crown</dt><dd>' + t.d.toFixed(1) + ' m across</dd>' +
       '<dt>Size band</dt><dd>' + t.b.name + '</dd><dt>Square</dt><dd>' + t.sq + '</dd>' +
       '<dt>At 1:500</dt><dd>' + (t.h * 2).toFixed(0) + ' mm tall, ' + (t.d * 2).toFixed(0) + ' mm across</dd>' +
+      '<dt>At 1:200</dt><dd>' + (t.h * 5).toFixed(0) + ' mm tall, ' + (t.d * 5).toFixed(0) + ' mm across</dd>' +
       '<dt>Position</dt><dd>' + t.x.toFixed(1) + ' m east, ' + t.y.toFixed(1) + ' m north of the south-west corner</dd></dl>' +
       (t.check ? '<p class="small tb-chk">On the mill platform: this may be part of the ruin, not a tree. Check on site.</p>' : '');
   }
