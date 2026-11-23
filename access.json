@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-17T21:33:22.732Z",
+ "updated": "2026-11-23T10:38:47.413Z",
  "message": "It opens later in the project.",
  "sibling": {
   "label": "Student site",
@@ -198,7 +198,7 @@
    "group": "Your model: formats",
    "label": "Laser cutter",
    "sel": "#oCard",
-   "on": false,
+   "on": true,
    "from": "",
    "note": ""
   },
